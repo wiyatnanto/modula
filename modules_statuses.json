@@ -1,0 +1,6 @@
+{
+    "Theme": true,
+    "Auth": true,
+    "Crud": true,
+    "Dashboard": true
+}

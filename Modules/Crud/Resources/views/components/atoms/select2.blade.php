@@ -1,4 +1,4 @@
-@props(['placeholder' => 'Select Roles', 'id'])
+@props(['placeholder' => 'Select Roles', 'name', 'id'])
 <div wire:ignore>
     <div x-data="{ selected: @entangle('roles') }" x-init="select = $($refs.select).select2({
         allowClear: true,
@@ -11,7 +11,8 @@
         select.val('');
         select.trigger('change');
     });">
-        <select {{ $attributes }} x-ref="select" class="js-example-basic-multiple form-select" multiple="multiple" placeholder="{{ $placeholder }}" id="{{ $id }}">
+        <select {{ $attributes }} x-ref="select" class="form-select {{ $name }} @error($name) is-invalid @enderror" multiple="multiple"
+            placeholder="{{ $placeholder }}" id="{{ $id }}">
             {{ $slot }}
         </select>
     </div>
@@ -22,6 +23,18 @@
         <style>
             .select2-container {
                 width: 100% !important;
+            }
+
+            .was-validated .form-select:invalid+.select2 .select2-selection {
+                border-color: #dc3545 !important;
+            }
+
+            .was-validated .form-select:valid+.select2 .select2-selection {
+                border-color: #28a745 !important;
+            }
+
+            *:focus {
+                outline: 0px;
             }
         </style>
     @endpush

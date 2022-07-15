@@ -9,34 +9,28 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <strong>Name:</strong>
-                    <input placeholder="Name" class="form-control @error('name') is-invalid @enderror" type="text"
-                        wire:model="name">
-                    <x-crud::atoms.input type="password" placeholder="Name" name="name" wire.model.defer="name" />
+                    <x-crud::atoms.input type="password" placeholder="Name" name="name" wire:model="name" />
                     @error('name')
                         <label id="name-error" class="error invalid-feedback" for="name">{{ $message }}</label>
                     @enderror
                 </div>
                 <div class="mb-3">
                     <strong>Email:</strong>
-                    <input placeholder="Email" class="form-control @error('email') is-invalid @enderror" type="text"
-                        wire:model="email">
+                    <x-crud::atoms.input type="email" placeholder="Email" name="email" wire:model="email" />
                     @error('email')
                         <label id="email-error" class="error invalid-feedback" for="email">{{ $message }}</label>
                     @enderror
                 </div>
                 <div class="mb-3">
                     <strong>Password:</strong>
-                    <input placeholder="Password" class="form-control @error('password') is-invalid @enderror"
-                        type="password" wire:model="password">
+                    <x-crud::atoms.input type="password" placeholder="Password" name="password" wire:model="password" />
                     @error('password')
                         <label id="password-error" class="error invalid-feedback" for="password">{{ $message }}</label>
                     @enderror
                 </div>
                 <div class="mb-3">
                     <strong>Confirm Password:</strong>
-                    <input placeholder="Confirm Password"
-                        class="form-control @error('password_confirmation') is-invalid @enderror" type="password"
-                        wire:model="password_confirmation">
+                    <x-crud::atoms.input type="password" placeholder="Confirm Password" name="password_confirmation" wire:model="password_confirmation" />
                     @error('password_confirmation')
                         <label id="password_confirmation-error" class="error invalid-feedback"
                             for="password_confirmation">{{ $message }}</label>
@@ -44,7 +38,7 @@
                 </div>
                 <div class="mb-3">
                     <strong>Role:</strong>
-                    <x-crud::atoms.select2 id="selectRoles">
+                    <x-crud::atoms.select2 name="roles" id="selectRoles">
                         @foreach ($rolesOptions as $val)
                             <option value="{{ $val }}">{{ $val }}</option>
                         @endforeach
@@ -62,3 +56,14 @@
         </div>
     </div>
 </div>
+@once
+ @push('script')
+    <script>
+        $(function() {
+            $('#createModal').on('hide.bs.modal', function() {
+                livewire.emit('resetInputFields');
+            });
+        });
+    </script>
+ @endpush   
+@endonce

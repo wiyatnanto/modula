@@ -19,6 +19,14 @@ class Users extends Component
 
     protected $listeners = ['resetInputFields' => 'resetInputFields'];
     protected $paginationTheme = 'bootstrap';
+
+    protected $messages = [
+        'name.required' => 'The Name cannot be empty.',
+        'email.required' => 'The Email Address cannot be empty.',
+        'password.required' => 'The Password cannot be empty.',
+        'password_confirmation.required' => 'The Confirm Password cannot be empty.',
+        'roles.required' => 'The Role cannot be empty.',
+    ];
     /**
      * The attributes that are mass assignable.
      *
@@ -54,7 +62,6 @@ class Users extends Component
      */
     public function store()
     {
-        dd($this->name);
         $this->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email',

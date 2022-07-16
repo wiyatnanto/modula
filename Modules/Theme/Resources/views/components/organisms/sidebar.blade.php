@@ -1,7 +1,6 @@
-<!-- partial:../../partials/_sidebar.html -->
 <nav class="sidebar">
     <div class="sidebar-header">
-        <a href="#" class="sidebar-brand">
+        <a href="{{ url('/dashboard') }}" class="sidebar-brand">
             Noble<span>UI</span>
         </a>
         <div class="sidebar-toggler not-active">
@@ -12,7 +11,7 @@
     </div>
     <div class="sidebar-body">
         <ul class="nav">
-            
+
             <li class="nav-item nav-category">Main</li>
             <li class="nav-item">
                 <a href="{{ url('/dashboard') }}" class="nav-link">
@@ -22,36 +21,36 @@
             </li>
             <li class="nav-item nav-category">Admin</li>
             @role('superadmin')
-            <li class="nav-item">
-                <a href="{{ url('/crud/builder') }}" class="nav-link">
-                    <i class="link-icon" data-feather="code"></i>
-                    <span class="link-title">CRUD Builder</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="{{ url('/crud/builder') }}" class="nav-link">
+                        <i class="link-icon" data-feather="code"></i>
+                        <span class="link-title">CRUD Builder</span>
+                    </a>
+                </li>
             @endrole
             @can('view.users')
-            <li class="nav-item">
-                <a href="{{ url('/auth/users') }}" class="nav-link">
-                    <i class="link-icon" data-feather="user"></i>
-                    <span class="link-title">Users</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="{{ url('/auth/users') }}" class="nav-link">
+                        <i class="link-icon" data-feather="user"></i>
+                        <span class="link-title">Users</span>
+                    </a>
+                </li>
             @endcan
             @can('view.roles')
-            <li class="nav-item">
-                <a href="{{ url('/auth/roles') }}" class="nav-link">
-                    <i class="link-icon" data-feather="users"></i>
-                    <span class="link-title">Role</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="{{ url('/auth/roles') }}" class="nav-link">
+                        <i class="link-icon" data-feather="users"></i>
+                        <span class="link-title">Role</span>
+                    </a>
+                </li>
             @endcan
             @can('view.permissions')
-            <li class="nav-item">
-                <a href="{{ url('/auth/permissions') }}" class="nav-link">
-                    <i class="link-icon" data-feather="shield"></i>
-                    <span class="link-title">Permission</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="{{ url('/auth/permissions') }}" class="nav-link">
+                        <i class="link-icon" data-feather="shield"></i>
+                        <span class="link-title">Permission</span>
+                    </a>
+                </li>
             @endcan
             <li class="nav-item nav-category">web apps</li>
             <li class="nav-item">
@@ -170,8 +169,8 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#advancedUI" role="button" aria-expanded="false"
-                    aria-controls="advancedUI">
+                <a class="nav-link" data-bs-toggle="collapse" href="#advancedUI" role="button"
+                    aria-expanded="false" aria-controls="advancedUI">
                     <i class="link-icon" data-feather="anchor"></i>
                     <span class="link-title">Advanced UI</span>
                     <i class="link-arrow" data-feather="chevron-down"></i>
@@ -288,8 +287,8 @@
             </li>
             <li class="nav-item nav-category">Pages</li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" role="button" aria-expanded="false"
-                    aria-controls="general-pages">
+                <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" role="button"
+                    aria-expanded="false" aria-controls="general-pages">
                     <i class="link-icon" data-feather="book"></i>
                     <span class="link-title">Special pages</span>
                     <i class="link-arrow" data-feather="chevron-down"></i>
@@ -318,8 +317,8 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#authPages" role="button" aria-expanded="false"
-                    aria-controls="authPages">
+                <a class="nav-link" data-bs-toggle="collapse" href="#authPages" role="button"
+                    aria-expanded="false" aria-controls="authPages">
                     <i class="link-icon" data-feather="unlock"></i>
                     <span class="link-title">Authentication</span>
                     <i class="link-arrow" data-feather="chevron-down"></i>
@@ -336,8 +335,8 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#errorPages" role="button" aria-expanded="false"
-                    aria-controls="errorPages">
+                <a class="nav-link" data-bs-toggle="collapse" href="#errorPages" role="button"
+                    aria-expanded="false" aria-controls="errorPages">
                     <i class="link-icon" data-feather="cloud-off"></i>
                     <span class="link-title">Error</span>
                     <i class="link-arrow" data-feather="chevron-down"></i>
@@ -389,13 +388,11 @@
             <h6 class="text-muted mb-2">Light Theme:</h6>
             <a class="theme-item active" href="../../../demo1/dashboard.html">
                 <div class="page-content">
-                    <img src="{{ asset('modules/theme/backend/images/screenshots/light.jpg') }}"
-                        alt="light theme">
+                    <img src="{{ asset('modules/theme/backend/images/screenshots/light.jpg') }}" alt="light theme">
             </a>
             <h6 class="text-muted mb-2">Dark Theme:</h6>
             <a class="theme-item" href="../../../demo2/dashboard.html">
-                <img src="{{ asset('modules/theme/backend/images/screenshots/dark.jpg') }}"
-                    alt="light theme">
+                <img src="{{ asset('modules/theme/backend/images/screenshots/dark.jpg') }}" alt="light theme">
             </a>
         </div>
     </div>

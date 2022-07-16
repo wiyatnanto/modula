@@ -4,14 +4,7 @@
         <i data-feather="menu"></i>
     </a>
     <div class="navbar-content">
-        <form class="search-form">
-            <div class="input-group">
-                <div class="input-group-text">
-                    <i data-feather="search"></i>
-                </div>
-                <input type="text" class="form-control" id="navbarForm" placeholder="Search here...">
-            </div>
-        </form>
+        <x-theme::molecules.search />
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button"
@@ -33,8 +26,8 @@
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="appsDropdown" role="button" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="appsDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i data-feather="grid"></i>
                 </a>
                 <div class="dropdown-menu p-0" aria-labelledby="appsDropdown">
@@ -238,7 +231,8 @@
                 <div class="dropdown-menu p-0" aria-labelledby="profileDropdown">
                     <div class="d-flex flex-column align-items-center border-bottom px-5 py-3">
                         <div class="mb-3">
-                            <img class="wd-80 ht-80 rounded-circle" src="https://via.placeholder.com/80x80" alt="">
+                            <img class="wd-80 ht-80 rounded-circle" src="https://via.placeholder.com/80x80"
+                                alt="">
                         </div>
                         <div class="text-center">
                             <p class="tx-16 fw-bolder">Amiah Burton</p>

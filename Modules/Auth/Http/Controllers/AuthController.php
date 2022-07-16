@@ -6,8 +6,9 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use Session;
 use Socialite;
 use Storage;
@@ -85,15 +86,22 @@ class AuthController extends Controller
 
     public function postLogin(Request $request)
     {
-        $request->validate([
+        
+        $validator = Validator::make($request->all(), [
             'email' => 'required',
             'password' => 'required',
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->route('login')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('error','Email and password field is required');
+        }
+
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            return redirect('dashboard')->with('message', 'You have Successfully loggedin');
-
+            return redirect('dashboard')->with('success', 'You have Successfully loggedin');
         }
         return redirect()->route('login')->with('error','Oppes! You have entered invalid credentials');
     }
@@ -118,7 +126,7 @@ class AuthController extends Controller
 
         auth()->login($user);
 
-        return redirect('dashboard')->with('message', 'You have Successfully registered with Google account');
+        return redirect('dashboard')->with('success', 'You have Successfully registered with Google account');
     }
 
     public function logout()

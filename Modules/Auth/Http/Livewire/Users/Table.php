@@ -6,18 +6,21 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Arr;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use DB;
 
-class Users extends Component
+class Table extends Component
 {
     use WithPagination;
 
-    public $userRole, $name, $email, $password, $password_confirmation;
+    public $userId, $userRole, $name, $email, $password, $password_confirmation;
+    public $isOpen = false;
     public $roles = [];
     public $rolesOptions = [];
 
-    protected $listeners = ['resetInputFields' => 'resetInputFields'];
+    protected $listeners = ['resetInputFields' => 'resetInputFields', 'delete' => 'delete'];
     protected $paginationTheme = 'bootstrap';
 
     protected $messages = [
@@ -35,7 +38,7 @@ class Users extends Component
     public function render()
     {
         $this->rolesOptions = Role::pluck('name','name')->all();
-        return view('auth::livewire.users.users', [
+        return view('auth::livewire.users.table', [
             'users' => User::orderBy('id', 'desc')->paginate(10)
         ])
         ->extends('theme::backend.layouts.master');
@@ -51,7 +54,7 @@ class Users extends Component
         $this->email = '';
         $this->password = '';
         $this->password_confirmation = '';
-        $this->role = [];
+        $this->roles = [];
         $this->resetErrorBag();
     }
 
@@ -77,8 +80,9 @@ class Users extends Component
             'avatar' => '-'
         ]);
         $user->assignRole($this->roles);
-        $this->dispatchBrowserEvent('closeCreateModal');
+        $this->dispatchBrowserEvent('closeModal');
         $this->resetInputFields();
+        session()->flash('success', 'User has been created');
     }
 
     /**
@@ -89,8 +93,13 @@ class Users extends Component
     public function edit($id)
     {
         $user = User::find($id);
-        $roles = Role::pluck('name', 'name')->all();
-        $userRole = $user->roles->pluck('name', 'name')->all();
+        $this->userId = $id;
+        $this->name = $user->name;
+        $this->email = $user->email;
+        $this->rolesOptions = Role::pluck('name','name')->all();
+        $this->roles = $user->roles->pluck('name')->all();
+        $this->isOpen = true;
+        $this->dispatchBrowserEvent('openModal');
     }
 
     /**
@@ -98,32 +107,37 @@ class Users extends Component
      *
      * @var array
      */
-    public function update()
+    public function update($id)
     {
-        $validator = Validator::make($request->all(), [
+        // Validator::make($request->all(), [
+        //     'name' => 'required',
+        //     'email' => 'required|email|unique:users,email,'.$id,
+        //     'password' => 'confirmed',
+        //     'roles' => 'required'
+        // ]);
+        $this->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed',
-            'password_confirmation' => 'required',
+            'email' => 'required|email|unique:users,email,'.$id,
+            'password' => 'confirmed',
             'roles' => 'required'
         ]);
-
-        if ($validator->fails()) {
-            return redirect('auth/users/create')
-                        ->withErrors($validator)
-                        ->withInput();
+    
+        $user = User::find($id);
+        $user->name = $this->name;
+        $user->email = $this->email;
+        if(!empty($this->password)) { 
+            $user->password = Hash::make($this->password);
         }
+        $user->update();
+
+        DB::table('model_has_roles')
+            ->where('model_id', $id)
+            ->delete();
     
-        $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
+        $user->assignRole($this->roles);
     
-        $user = User::create($input);
-        $user->assignRole($request->input('roles'));
-  
-        session()->flash('message', 
-            $this->post_id ? 'Post Updated Successfully.' : 'Post Created Successfully.');
-  
-        $this->resetInputFields();
+        return redirect('auth/users')
+            ->with('success', 'User updated successfully.');
     }
      
     /**
@@ -133,7 +147,8 @@ class Users extends Component
      */
     public function delete($id)
     {
-        Post::find($id)->delete();
-        session()->flash('message', 'Post Deleted Successfully.');
+        User::find($id)->delete();
+        // session()->flash('message', 'User has been deleted');
+        return redirect()->to('/auth/users')->with('success','User has been deleted!');
     }
 }

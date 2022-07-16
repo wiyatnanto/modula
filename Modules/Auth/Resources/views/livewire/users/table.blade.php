@@ -7,15 +7,10 @@
     </nav>
     <div class="row">
         <div class="col-md-12">
-            @if (\Session::has('success'))
-                <div class="alert alert-success mb-2">
-                    <p>{{ \Session::get('success') }}</p>
-                </div>
-            @endif
             <div class="card">
                 <div class="card-header">Users
                     <span class="float-right ms-2">
-                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Add
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#createUser">Add
                             New User</button>
                     </span>
                 </div>
@@ -56,12 +51,38 @@
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="">Show</a>
                                                 @can('edit.users')
-                                                    <a class="dropdown-item" href="">Edit</a>
+                                                    <button class="dropdown-item" wire:click="edit({{ $user->id }})">Edit</button>
                                                 @endcan
                                                 @can('delete.users')
-                                                    {!! Form::open(['method' => 'DELETE', 'style' => 'display:inline']) !!}
-                                                    {!! Form::submit('Delete', ['class' => 'dropdown-item']) !!}
-                                                    {!! Form::close() !!}
+                                                    <div x-data>
+                                                        <button class="dropdown-item action-delete"
+                                                            x-on:click="
+                                                            bootbox.dialog({
+                                                                closeButton: false,
+                                                                size: 'small',
+                                                                centerVertical: true,
+                                                                message: `
+                                                                    Are you sure delete this items?
+                                                                `,
+                                                                buttons: {
+                                                                    ok:{
+                                                                        label: 'Yes',
+                                                                        className: 'btn-sm btn-danger',
+                                                                        callback: function(){
+                                                                            @this.emit('delete', {{ $user->id }})              
+                                                                        }
+                                                                    },
+                                                                    no:{
+                                                                        label: 'Cancel',
+                                                                        className: 'btn-sm btn-secondary',
+                                                                        callback: function(){
+                                                                                            
+                                                                        }
+                                                                    }
+                                                                }     
+                                                            });
+                                                        ">Delete</button>
+                                                    </div>
                                                 @endcan
                                             </div>
                                         </div>
@@ -77,5 +98,6 @@
             </div>
         </div>
     </div>
+    @include('auth::livewire.users.update')
     @include('auth::livewire.users.create')
 </div>

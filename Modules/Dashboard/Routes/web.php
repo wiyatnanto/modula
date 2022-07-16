@@ -12,5 +12,7 @@
 */
 
 Route::prefix('dashboard')->group(function() {
-    Route::get('/', 'DashboardController@index');
+    Route::group(['middleware' => ['auth']], function() {
+        Route::get('/', 'DashboardController@index');
+    });
 });

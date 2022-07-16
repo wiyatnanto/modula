@@ -26,8 +26,26 @@ class PermissionTableSeeder extends Seeder
         Permission::create(['name' => 'delete.posts']);
         Permission::create(['name' => 'publish.posts']);
         Permission::create(['name' => 'unpublish.posts']);
+        Permission::create(['name' => 'view.users']);
+        Permission::create(['name' => 'create.users']);
+        Permission::create(['name' => 'edit.users']);
+        Permission::create(['name' => 'delete.users']);
+        Permission::create(['name' => 'publish.users']);
+        Permission::create(['name' => 'unpublish.users']);
+        Permission::create(['name' => 'view.roles']);
+        Permission::create(['name' => 'create.roles']);
+        Permission::create(['name' => 'edit.roles']);
+        Permission::create(['name' => 'delete.roles']);
+        Permission::create(['name' => 'publish.roles']);
+        Permission::create(['name' => 'unpublish.roles']);
+        Permission::create(['name' => 'view.permissions']);
+        Permission::create(['name' => 'create.permissions']);
+        Permission::create(['name' => 'edit.permissions']);
+        Permission::create(['name' => 'delete.permissions']);
+        Permission::create(['name' => 'publish.permissions']);
+        Permission::create(['name' => 'unpublish.permissions']);
 
-        $writerRole = Role::create(['name' => 'writer']);
+        $writerRole = Role::create(['name' => 'user']);
         $writerRole->givePermissionTo('view.posts');
         $writerRole->givePermissionTo('create.posts');
         $writerRole->givePermissionTo('edit.posts');

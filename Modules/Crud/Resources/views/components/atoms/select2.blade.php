@@ -1,17 +1,29 @@
-@props(['placeholder' => 'Select Roles', 'name', 'id'])
+@props(['placeholder' => 'Select Roles', 'dropdownParent' => null, 'name', 'id' => null])
 <div wire:ignore>
-    <div x-data="{ selected: @entangle('roles') }" x-init="select = $($refs.select).select2({
-        allowClear: true,
-        dropdownParent: $('#createModal')
+    <div x-data="{ model: @entangle('roles'), }" x-init="select = $($refs.select).not('.select2-hidden-accessible').select2({
+        width: 'resolve',
+        closeOnSelect: false,
+        dropdownParent: $('#{{ $dropdownParent }}')
     });
-    select.on('change', function(e) {
-        @this.set('roles', select.select2('data').map(e => e.id))
+    select.on('select2:select', (event) => {
+        console.log('select', select.select2('data').map(e => e.id))
+        model = select.select2('data').map(e => e.id)
     });
-    $('#createModal').on('hide.bs.modal', function() {
-        select.val('');
+
+    select.on('select2:unselect', (event) => {
+        console.log('unselect', select.select2('data').map(e => e.id))
+        model = select.select2('data').map(e => e.id)
+    });
+    $('#{{ $dropdownParent }}').on('hide.bs.modal', function() {
+        select.val(model);
         select.trigger('change');
-    });">
-        <select {{ $attributes }} x-ref="select" class="form-select {{ $name }} @error($name) is-invalid @enderror" multiple="multiple"
+    });
+    $watch('model', (value) => {
+        select.trigger('change');
+    });
+    ">
+        <select {{ $attributes }} x-ref="select"
+            class="form-select {{ $name }} @error($name) is-invalid @enderror" multiple="multiple"
             placeholder="{{ $placeholder }}" id="{{ $id }}">
             {{ $slot }}
         </select>

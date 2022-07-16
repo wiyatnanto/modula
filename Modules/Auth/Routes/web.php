@@ -15,11 +15,12 @@ use Modules\Auth\Http\Controllers\UserController;
 use Modules\Auth\Http\Controllers\RoleController;
 use Modules\Auth\Http\Controllers\PermissionController;
 
-use Modules\Auth\Http\Livewire\Users\Users;
+use Modules\Auth\Http\Livewire\Auth\Login;
+use Modules\Auth\Http\Livewire\Users\Table;
 
 Route::prefix('auth')->group(function() {
     Route::controller(AuthController::class)->group(function () {
-        Route::get('/login', 'login')->name('login');
+        Route::get('/login', Login::class)->name('login');
         Route::post('/login', 'postLogin')->name('login.post');
         Route::get('/logout', 'logout')->name('logout');
         Route::get('/register', 'register')->name('register');
@@ -29,7 +30,7 @@ Route::prefix('auth')->group(function() {
         Route::get('/google/callback', 'handleGoogleCallback');
     });
     Route::group(['middleware' => ['auth']], function() {
-        Route::get('/users', Users::class);
+        Route::get('/users', Table::class);
         // Route::resources([
         //     'users' => UserController::class,
         //     'roles' => RoleController::class,

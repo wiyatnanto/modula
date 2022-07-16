@@ -77,7 +77,10 @@
     <!-- End custom js for this page -->
     @livewireScripts
     @once
-    <x-theme::molecules.toast/>
+        <x-theme::molecules.toast />
+        <script>
+            
+        </script>
     @endonce
 </body>
 

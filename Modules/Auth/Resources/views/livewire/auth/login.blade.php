@@ -17,7 +17,7 @@
                                     @csrf
                                     <div class="mb-3">
                                         <label for="userEmail" class="form-label">{{ __('auth::auth.email') }}</label>
-                                        <x-crud::atoms.input type="email" placeholder="Email" name="email"/>
+                                        <x-crud::atoms.input type="email" placeholder="Email" name="email" value="superadmin@modula.com"/>
                                         @error('email')
                                             <label id="password-error" class="error invalid-feedback"
                                                 for="email">{{ $message }}</label>
@@ -26,7 +26,7 @@
                                     <div class="mb-3">
                                         <label for="userPassword"
                                             class="form-label">{{ __('auth::auth.password') }}</label>
-                                        <x-crud::atoms.input type="password" placeholder="Password" name="password"/>
+                                        <x-crud::atoms.input type="password" placeholder="Password" name="password" value="password"/>
                                         @error('password')
                                             <label id="password-error" class="error invalid-feedback"
                                                 for="password">{{ $message }}</label>

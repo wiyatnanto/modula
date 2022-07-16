@@ -31,7 +31,7 @@
     </div>
     <div class="mb-3">
         <strong>Role:</strong>
-        <x-crud::atoms.select2 name="roles" dropdownParent="createUser">
+        <x-crud::atoms.select2 name="roles" dropdownParent="createUser" id="selectRoles">
             @foreach ($rolesOptions as $val)
                 <option value="{{ $val }}">{{ $val }}</option>
             @endforeach

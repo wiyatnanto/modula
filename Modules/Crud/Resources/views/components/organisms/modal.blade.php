@@ -11,10 +11,29 @@
                 {{ $slot }}
             </div>
             <div class="modal-footer">
-                <button type="button" data-bs-dismiss="modal" class="btn btn-sm btn-secondary">Cancel</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"
+                    aria-label="btn-close">Cancel</button>
                 <button type="button" wire:click.prevent="{{ $preventSubmit }}"
                     class="btn btn-sm btn-primary">{{ $submitLabel }}</button>
             </div>
         </div>
     </div>
 </div>
+@once
+    @push('script')
+        <script>
+            $(function() {
+                // MODAL
+                window.addEventListener('openModal', event => {
+                    $('#{{ $id }}').modal('show');
+                });
+                window.addEventListener('closeModal', event => {
+                    $('#{{ $id }}').modal('hide');
+                });
+                $('#{{ $id }}').on('hidden.bs.modal', function(e) {
+                    Livewire.emit('closeModal')
+                })
+            });
+        </script>
+    @endpush
+@endonce

@@ -78,9 +78,7 @@
     @livewireScripts
     @once
         <x-theme::molecules.toast />
-        <script>
-            
-        </script>
+        <script></script>
     @endonce
 </body>
 

@@ -26,7 +26,12 @@ class Table extends Component
     public $createMode = false;
     public $updateMode = false;
 
-    protected $listeners = ['resetInputFields' => 'resetInputFields', 'delete' => 'delete'];
+    protected $listeners = [
+        'openModal' => 'openModal', 
+        'closeModal' => 'closeModal',
+        'edit' => 'edit',
+        'delete' => 'delete'
+    ];
     protected $paginationTheme = 'bootstrap';
 
     protected $messages = [
@@ -36,11 +41,7 @@ class Table extends Component
         'password_confirmation.required' => 'The Confirm Password cannot be empty.',
         'roles.required' => 'The Role cannot be empty.',
     ];
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    
     public function render()
     {
         $this->rolesOptions = Role::pluck('name','name')->all();
@@ -52,11 +53,6 @@ class Table extends Component
         ->extends('theme::backend.layouts.master');
     }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     public function resetInputFields() {
         $this->name = '';
         $this->email = '';
@@ -69,11 +65,6 @@ class Table extends Component
         $this->resetErrorBag();
     }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     public function store()
     {
         $this->validate([
@@ -108,47 +99,37 @@ class Table extends Component
         $this->sortField = $field;
     }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     public function create()
     {
         $this->createMode = true;
-        $this->dispatchBrowserEvent('openModalCreate');
     }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    public function openModal($id)
+    {
+        $this->dispatchBrowserEvent('openModal', $id);
+    }
+
+    public function closeModal()
+    {
+        $this->dispatchBrowserEvent('closeModal');
+        $this->createMode = false;
+        $this->updateMode = false;
+    }
+
     public function edit($id)
     {
         $this->updateMode = true;
+
         $user = User::find($id);
         $this->userId = $id;
         $this->name = $user->name;
         $this->email = $user->email;
         $this->rolesOptions = Role::pluck('name','name')->all();
         $this->roles = $user->roles->pluck('name')->all();
-        $this->dispatchBrowserEvent('openModalUpdate');
     }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     public function update($id)
     {
-        // Validator::make($request->all(), [
-        //     'name' => 'required',
-        //     'email' => 'required|email|unique:users,email,'.$id,
-        //     'password' => 'confirmed',
-        //     'roles' => 'required'
-        // ]);
         $this->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
@@ -174,15 +155,9 @@ class Table extends Component
             ->with('success', 'User updated successfully.');
     }
      
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     public function delete($id)
     {
         User::find($id)->delete();
-        // session()->flash('message', 'User has been deleted');
         return redirect()->to('/auth/users')->with('success','User has been deleted!');
     }
 }

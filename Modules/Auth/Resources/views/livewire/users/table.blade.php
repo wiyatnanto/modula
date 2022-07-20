@@ -11,12 +11,13 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="flex-grow-1">
-                            <button class="btn btn-sm btn-primary" wire:click="create()">Add
-                                New User</button>
+                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#createUser"
+                                wire:click="create()">Add
+                                New User {{ $createMode }} - {{ $updateMode }}</button>
                         </div>
                         <div class="me-2">
-                            <input type="text" class="form-control form-control-sm"
-                                placeholder="Search here..." wire:model.lazy="search">
+                            <input type="text" class="form-control form-control-sm" placeholder="Search here..."
+                                wire:model.lazy="search">
                         </div>
                         <div>
                             <button type="button" class="btn btn-sm btn-inverse-light btn-icon">
@@ -62,7 +63,8 @@
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="">Show</a>
                                                 @can('edit.users')
-                                                    <button class="dropdown-item"
+                                                    <button class="dropdown-item" data-bs-toggle="modal"
+                                                        data-bs-target="#updateUser"
                                                         wire:click="edit({{ $user->id }})">Edit</button>
                                                 @endcan
                                                 @can('delete.users')
@@ -110,6 +112,6 @@
             </div>
         </div>
     </div>
-    @include('auth::livewire.users.update')
     @include('auth::livewire.users.create')
+    @include('auth::livewire.users.update')
 </div>

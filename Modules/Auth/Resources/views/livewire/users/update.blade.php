@@ -1,5 +1,5 @@
 <x-crud::organisms.modal  preventSubmit="update({{$userId}})" submitLabel="Update" id="updateUser" title="Update User">
-    @if ($isOpen)
+    @if ($updateMode)
         <div class="mb-3">
             <strong>Name:</strong>
             <x-crud::atoms.input type="text" placeholder="Name" name="name" wire:model="name" />
@@ -30,9 +30,8 @@
                     for="password_confirmation">{{ $message }}</label>
             @enderror
         </div>
-
         <div class="mb-3">
-            <strong>Role: {{ json_encode($roles) }} {{ json_encode($rolesOptions) }}</strong>
+            <strong>Role:</strong>
             <x-crud::atoms.select2 name="roles" dropdownParent="updateUser">
                 @foreach ($rolesOptions as $val)
                     <option value="{{ $val }}" @if (in_array($val, $roles)) selected @endif">
@@ -52,13 +51,13 @@
             $(function() {
                 $('#updateUser').on('hide.bs.modal', function() {
                     livewire.emit('resetInputFields');
-                    @this.set('isOpen', false)
                 });
-                window.addEventListener('openModal', event => {
+                window.addEventListener('openModalUpdate', event => {
                     $('#updateUser').modal('show');
                 });
-                window.addEventListener('closeModal', event => {
+                window.addEventListener('closeModalUpdate', event => {
                     $('#updateUser').modal('hide');
+                    livewire.emit('resetInputFields');
                 });
             });
         </script>

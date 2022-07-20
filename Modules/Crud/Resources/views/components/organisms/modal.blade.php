@@ -12,7 +12,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" data-bs-dismiss="modal" class="btn btn-sm btn-secondary">Cancel</button>
-                <button type="button" wire:click.prevent="{{ $preventSubmit }}" class="btn btn-sm btn-primary">{{ $submitLabel }}</button>
+                <button type="button" wire:click.prevent="{{ $preventSubmit }}"
+                    class="btn btn-sm btn-primary">{{ $submitLabel }}</button>
             </div>
         </div>
     </div>

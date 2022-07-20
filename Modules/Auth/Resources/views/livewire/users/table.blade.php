@@ -8,20 +8,31 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Users
-                    <span class="float-right ms-2">
-                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#createUser">Add
-                            New User</button>
-                    </span>
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="flex-grow-1">
+                            <button class="btn btn-sm btn-primary" wire:click="create()">Add
+                                New User</button>
+                        </div>
+                        <div class="me-2">
+                            <input type="text" class="form-control form-control-sm"
+                                placeholder="Search here..." wire:model.lazy="search">
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-inverse-light btn-icon">
+                                <span wire:ignore><i data-feather="filter"></i></span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <table class="table">
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Roles</th>
+                                <th wire:click.prevent="sortBy('name')">Name</th>
+                                <th wire:click.prevent="sortBy('email')">Email</th>
+                                <th wire:click.prevent="sortBy('role')">Roles</th>
                                 <th width="280px">Action</th>
                             </tr>
                         </thead>
@@ -51,7 +62,8 @@
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="">Show</a>
                                                 @can('edit.users')
-                                                    <button class="dropdown-item" wire:click="edit({{ $user->id }})">Edit</button>
+                                                    <button class="dropdown-item"
+                                                        wire:click="edit({{ $user->id }})">Edit</button>
                                                 @endcan
                                                 @can('delete.users')
                                                     <div x-data>

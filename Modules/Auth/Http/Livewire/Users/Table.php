@@ -16,9 +16,15 @@ class Table extends Component
     use WithPagination;
 
     public $userId, $userRole, $name, $email, $password, $password_confirmation;
-    public $isOpen = false;
     public $roles = [];
     public $rolesOptions = [];
+
+    public $sortField ='id';
+    public $sortAsc = true;
+    public $search = '';
+
+    public $createMode = false;
+    public $updateMode = false;
 
     protected $listeners = ['resetInputFields' => 'resetInputFields', 'delete' => 'delete'];
     protected $paginationTheme = 'bootstrap';
@@ -39,7 +45,9 @@ class Table extends Component
     {
         $this->rolesOptions = Role::pluck('name','name')->all();
         return view('auth::livewire.users.table', [
-            'users' => User::orderBy('id', 'desc')->paginate(10)
+            'users' => User::where('name','like', '%' . $this->search . '%')
+            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+            ->paginate(10)
         ])
         ->extends('theme::backend.layouts.master');
     }
@@ -49,12 +57,15 @@ class Table extends Component
      *
      * @var array
      */
-    public function resetInputFields(){
+    public function resetInputFields() {
         $this->name = '';
         $this->email = '';
         $this->password = '';
         $this->password_confirmation = '';
         $this->roles = [];
+
+        $this->createMode = false;
+        $this->updateMode = false;
         $this->resetErrorBag();
     }
 
@@ -80,9 +91,32 @@ class Table extends Component
             'avatar' => '-'
         ]);
         $user->assignRole($this->roles);
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatchBrowserEvent('closeModalCreate');
         $this->resetInputFields();
-        session()->flash('success', 'User has been created');
+        return redirect('auth/users')
+            ->with('success', 'User updated successfully.');
+    }
+
+    public function sortBy($field)
+    {
+        if($this->sortField === $field)
+        {
+            $this->sortAsc = ! $this->sortAsc;
+        } else {
+            $this->sortAsc = true;
+        }
+        $this->sortField = $field;
+    }
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    public function create()
+    {
+        $this->createMode = true;
+        $this->dispatchBrowserEvent('openModalCreate');
     }
 
     /**
@@ -92,14 +126,14 @@ class Table extends Component
      */
     public function edit($id)
     {
+        $this->updateMode = true;
         $user = User::find($id);
         $this->userId = $id;
         $this->name = $user->name;
         $this->email = $user->email;
         $this->rolesOptions = Role::pluck('name','name')->all();
         $this->roles = $user->roles->pluck('name')->all();
-        $this->isOpen = true;
-        $this->dispatchBrowserEvent('openModal');
+        $this->dispatchBrowserEvent('openModalUpdate');
     }
 
     /**

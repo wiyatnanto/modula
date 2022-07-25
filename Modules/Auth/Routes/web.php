@@ -16,7 +16,9 @@ use Modules\Auth\Http\Controllers\RoleController;
 use Modules\Auth\Http\Controllers\PermissionController;
 
 use Modules\Auth\Http\Livewire\Auth\Login;
-use Modules\Auth\Http\Livewire\Users\Table;
+use Modules\Auth\Http\Livewire\Users\Table as UserTable;
+use Modules\Auth\Http\Livewire\Roles\Table as RoleTable;
+use Modules\Auth\Http\Livewire\Permissions\Table as PermissionTable;
 
 Route::prefix('auth')->group(function() {
     Route::controller(AuthController::class)->group(function () {
@@ -30,11 +32,8 @@ Route::prefix('auth')->group(function() {
         Route::get('/google/callback', 'handleGoogleCallback');
     });
     Route::group(['middleware' => ['auth']], function() {
-        Route::get('/users', Table::class);
-        // Route::resources([
-        //     'users' => UserController::class,
-        //     'roles' => RoleController::class,
-        //     'permissions' => PermissionController::class,
-        // ]);
+        Route::get('/users', UserTable::class);
+        Route::get('/roles', RoleTable::class);
+        Route::get('/permissions', PermissionTable::class);
     });
 });

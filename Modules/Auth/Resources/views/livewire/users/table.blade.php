@@ -11,9 +11,37 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="flex-grow-1">
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#createUser"
-                                wire:click="create()">Add
-                                New User {{ $createMode }} - {{ $updateMode }}</button>
+                            <x-crud::atoms.button size="sm" color="primary" text="Add New User"
+                                data-bs-toggle="modal" data-bs-target="#createUser" />
+                            @if (count($selected) > 0)
+                                <span x-data
+                                    x-on:click="
+                                    bootbox.dialog({
+                                        closeButton: false,
+                                        size: 'small',
+                                        centerVertical: true,
+                                        message: `
+                                            Are you sure delete this items?
+                                        `,
+                                        buttons: {
+                                            ok:{
+                                                label: 'Yes',
+                                                className: 'btn-sm btn-danger',
+                                                callback: function(){
+                                                    @this.emit('bulkDelete')              
+                                                }
+                                            },
+                                            no:{
+                                                label: 'Cancel',
+                                                className: 'btn-sm btn-secondary',
+                                                callback: function(){}
+                                            }
+                                        }     
+                                    });
+                                ">
+                                    <x-crud::atoms.button size="sm" color="danger" text="Delete" />
+                                </span>
+                            @endif
                         </div>
                         <div class="me-2">
                             <input type="text" class="form-control form-control-sm" placeholder="Search here..."
@@ -30,26 +58,42 @@
                     <table class="table">
                         <thead class="thead-dark">
                             <tr>
-                                <th>#</th>
-                                <th wire:click.prevent="sortBy('name')">Name</th>
-                                <th wire:click.prevent="sortBy('email')">Email</th>
-                                <th wire:click.prevent="sortBy('role')">Roles</th>
+                                <th width="50">
+                                    <x-crud::atoms.checkbox wire:model="selectAll" />
+                                </th>
+                                <th width="80" wire:click.prevent="sortBy('id')">ID
+                                    <x-crud::molecules.sorticon name="id" sortField="{{ $sortField }}"
+                                        sortAsc="{{ $sortAsc }}" />
+                                </th>
+                                <th wire:click.prevent="sortBy('name')">Name
+                                    <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
+                                        sortAsc="{{ $sortAsc }}" />
+                                </th>
+                                <th wire:click.prevent="sortBy('email')">Email
+                                    <x-crud::molecules.sorticon name="email" sortField="{{ $sortField }}"
+                                        sortAsc="{{ $sortAsc }}" />
+                                </th>
+                                <th wire:click.prevent="sortBy('role')" width="200">Roles</th>
                                 <th width="280px">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($users as $key => $user)
                                 <tr>
+                                    <td>
+                                        <x-crud::atoms.checkbox name="userIds[]" wire:model="selected"
+                                            value="{{ $user->id }}" />
+                                    </td>
                                     <td>{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>
                                         @if (!empty($user->getRoleNames()))
-                                            @foreach ($user->getRoleNames() as $val)
+                                            @foreach (collect($user->getRoleNames())->sort() as $val)
                                                 @if ($val === 'superadmin')
-                                                    <span class="badge bg-danger">{{ $val }}</span>
+                                                    <x-crud::atoms.badge type="danger" text="{{ $val }}" />
                                                 @else
-                                                    <span class="badge bg-primary">{{ $val }}</span>
+                                                    <x-crud::atoms.badge type="primary" text="{{ $val }}" />
                                                 @endif
                                             @endforeach
                                         @endif
@@ -114,4 +158,5 @@
     </div>
     @include('auth::livewire.users.create')
     @include('auth::livewire.users.update')
+    <x-theme::molecules.toast />
 </div>

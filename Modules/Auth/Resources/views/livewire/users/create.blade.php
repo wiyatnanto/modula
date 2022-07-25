@@ -31,8 +31,7 @@
     </div>
     <div class="mb-3">
         <strong>Role: {{ json_encode($roles) }}</strong>
-        <x-crud::atoms.select2 name="roles" dropdownParent="createUser" wire:model="roles">
-            <option></option>
+        <x-crud::atoms.select2 name="roles" dropdownParent="createUser" wire:model.defer="roles" multiple="multiple">
             @foreach ($rolesOptions as $val)
                 <option value="{{ $val }}">{{ $val }}</option>
             @endforeach

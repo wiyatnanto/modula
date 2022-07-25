@@ -30,6 +30,7 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/fonts/feather-font/css/iconfont.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/flag-icon-css/css/flag-icon.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/mdi/css/materialdesignicons.min.css') }}">
     <!-- endinject -->
 
     <!-- Layout styles -->
@@ -39,7 +40,7 @@
     <link rel="shortcut icon" href="{{ asset('modules/theme/backend/images/favicon.png') }}" />
     @stack('style')
 
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @vite('resources/js/app.js')
     @livewireStyles
 </head>
 
@@ -70,16 +71,11 @@
     <script src="{{ asset('modules/theme/backend/js/template.js') }}"></script>
     <!-- endinject -->
 
-    @stack('modal')
-
+    <x-theme::molecules.toast />
     <!-- Custom js for this page -->
     @stack('script')
     <!-- End custom js for this page -->
     @livewireScripts
-    @once
-        <x-theme::molecules.toast />
-        <script></script>
-    @endonce
 </body>
 
 </html>

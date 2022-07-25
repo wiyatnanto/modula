@@ -36,3 +36,51 @@
         </script>
     @endif
 </div>
+@push('script')
+    <script>
+        $(function() {
+            window.livewire.on('toast', data => {
+                const type = data[0];
+                const message = data[1];
+                let icon = 'fa fa-check mr-1';
+                switch (type) {
+                    case 'success':
+                        $.toast({
+                            text: message,
+                            position: 'top-center',
+                            loaderBg: '#0bb197'
+                        });
+                        break;
+                    case 'error':
+                        $.toast({
+                            text: message,
+                            position: 'top-center',
+                            loaderBg: '#ff3d60'
+                        });
+                        break;
+                    case 'info':
+                        $.toast({
+                            text: message,
+                            position: 'top-center',
+                            loaderBg: '#2c6299'
+                        });
+                        break;
+                    case 'warning':
+                        $.toast({
+                            text: message,
+                            position: 'top-center',
+                            loaderBg: '#fcb92c'
+                        });
+                        break;
+                    default:
+                        $.toast({
+                            text: message,
+                            position: 'top-center',
+                            loaderBg: '#0bb197'
+                        });
+                        break;
+                }
+            });
+        })
+    </script>
+@endpush

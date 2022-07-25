@@ -22,6 +22,12 @@
             <li class="nav-item nav-category">Admin</li>
             @role('superadmin')
                 <li class="nav-item">
+                    <a href="{{ url('/crud/build') }}" class="nav-link">
+                        <i class="link-icon" data-feather="code"></i>
+                        <span class="link-title">CRUD Livewire</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ url('/crud/builder') }}" class="nav-link">
                         <i class="link-icon" data-feather="code"></i>
                         <span class="link-title">CRUD Builder</span>

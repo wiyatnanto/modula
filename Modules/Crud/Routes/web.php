@@ -11,8 +11,16 @@
 |
 */
 use Modules\Crud\Http\Controllers\BuilderController;
+use Modules\Crud\Http\Livewire\Cruds\Table as CrudTable;
+use Modules\Crud\Http\Livewire\Builder\Config as ConfigInfo;
 
-Route::prefix('crud')->middleware(['auth'])->group(function() {
+Route::prefix('crud')->group(function() {
+    Route::group(['middleware' => ['auth']], function() {
+        Route::get('/build', CrudTable::class);
+        Route::get('/build/config/{name}', ConfigInfo::class);
+        // Route::get('/roles', RoleTable::class);
+        // Route::get('/permissions', PermissionTable::class);
+    });
     Route::controller(BuilderController::class)->group(function () {
         Route::get('builder','index');
         Route::get('builder/create','getCreate');
@@ -61,4 +69,5 @@ Route::prefix('crud')->middleware(['auth'])->group(function() {
         Route::post('builder/duplicate/{any?}','postDuplicate');
         Route::post('builder/savetemplate/{any?}','savetemplate');
     });
+    
 });

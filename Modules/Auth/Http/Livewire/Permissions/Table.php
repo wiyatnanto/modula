@@ -4,17 +4,16 @@ namespace Modules\Auth\Http\Livewire\Permissions;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Modules\Crud\Http\Traits\WithSorting;
 
 use Spatie\Permission\Models\Permission;
 
 class Table extends Component
 {
-    use WithPagination;
+    use WithPagination, WithSorting;
 
     public $permissionId, $name;
 
-    public $sortField ='id';
-    public $sortAsc = true;
     public $search = '';
 
     public $selectAll = false;
@@ -42,22 +41,12 @@ class Table extends Component
 
     public function updatedSelectAll($value) {
         if($value){
-            $this->selected = User::where('name','like', '%' . $this->search . '%')
+            $this->selected = User::where('name','ILIKE', '%' . $this->search . '%')
             ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
             ->pluck('id');
         }else{
             $this->selected = [];
         }
-    }
-
-    public function render()
-    {
-        return view('auth::livewire.permissions.table', [
-            'permissions' => Permission::where('name','like', '%' . $this->search . '%')
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->paginate(10)
-        ])
-        ->extends('theme::backend.layouts.master');
     }
 
     public function store()
@@ -67,21 +56,9 @@ class Table extends Component
         ]);
         
         Permission::create(['name' => $this->name]);
-        session()->flash('success', 'Permission created successfully.');
+        $this->emit('toast', ['success', 'Permission has been created']);
         $this->dispatchBrowserEvent('closeModal');
     }
-
-    public function sortBy($field)
-    {
-        if($this->sortField === $field)
-        {
-            $this->sortAsc = ! $this->sortAsc;
-        } else {
-            $this->sortAsc = true;
-        }
-        $this->sortField = $field;
-    }
-
 
     public function edit($id)
     {
@@ -99,21 +76,32 @@ class Table extends Component
         $permission = Permission::find($id);
         $permission->name = $this->name;
         $permission->update();
-        session()->flash('success', 'Permission updated successfully.');
+        $this->emit('toast', ['success', 'Permission has been updated']);
+
         $this->dispatchBrowserEvent('closeModal');
     }
      
     public function delete($id)
     {
         Permission::find($id)->delete();
-        session()->flash('success', 'Permission deleted successfully.');
+        $this->emit('toast', ['success', 'Permission has been deleted']);
         $this->dispatchBrowserEvent('closeModal');
     }
 
     public function bulkDelete()
     {
         Permission::whereIn('id', $this->selected)->delete();
-        session()->flash('success', 'Permissions deleted successfully.');
+        $this->emit('toast', ['success', 'Permissions has been deleted']);
         $this->dispatchBrowserEvent('closeModal');
+    }
+
+    public function render()
+    {
+        return view('auth::livewire.permissions.table', [
+            'permissions' => Permission::where('name','ILIKE', '%' . $this->search . '%')
+            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+            ->fastPaginate(10)
+        ])
+        ->extends('theme::backend.layouts.master');
     }
 }

@@ -3,5 +3,9 @@
     "Auth": true,
     "Crud": true,
     "Dashboard": true,
-    "Module": true
+    "Module": true,
+    "Survey": true,
+    "Core": true,
+    "Blog": true,
+    "Store": true
 }

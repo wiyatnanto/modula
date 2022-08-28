@@ -4,6 +4,8 @@ namespace Modules\Auth\Http\Livewire\Users;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Modules\Crud\Http\Traits\WithSorting;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Arr;
@@ -13,7 +15,7 @@ use DB;
 
 class Table extends Component
 {
-    use WithPagination;
+    use WithPagination, WithSorting;
 
     public $userId, $userRole, $name, $email, $password, $password_confirmation;
     public $roles = [];
@@ -54,22 +56,12 @@ class Table extends Component
 
     public function updatedSelectAll($value) {
         if($value){
-            $this->selected = User::where('name','like', '%' . $this->search . '%')
+            $this->selected = User::where('name','ILIKE', '%' . $this->search . '%')
             ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
             ->pluck('id');
         }else{
             $this->selected = [];
         }
-    }
-
-    public function render()
-    {
-        return view('auth::livewire.users.table', [
-            'users' => User::where('name','like', '%' . $this->search . '%')
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->paginate(10)
-        ])
-        ->extends('theme::backend.layouts.master');
     }
 
     public function store()
@@ -89,21 +81,9 @@ class Table extends Component
             'avatar' => '-'
         ]);
         $user->assignRole($this->roles);
-        session()->flash('success', 'User updated successfully.');
+        $this->emit('toast', ['success', 'User has been created']);
         $this->dispatchBrowserEvent('closeModal');
     }
-
-    public function sortBy($field)
-    {
-        if($this->sortField === $field)
-        {
-            $this->sortAsc = ! $this->sortAsc;
-        } else {
-            $this->sortAsc = true;
-        }
-        $this->sortField = $field;
-    }
-
 
     public function edit($id)
     {
@@ -136,21 +116,36 @@ class Table extends Component
             ->where('model_id', $id)
             ->delete();
         $user->assignRole($this->roles);
-        session()->flash('success', 'User updated successfully.');
+        $this->emit('toast', ['success', 'User has been updated']);
         $this->dispatchBrowserEvent('closeModal');
     }
      
     public function delete($id)
     {
         User::find($id)->delete();
-        session()->flash('success', 'User deleted successfully.');
+        $this->emit('toast', ['success', 'User has been deleted']);
         $this->dispatchBrowserEvent('closeModal');
     }
 
     public function bulkDelete()
     {
         User::whereIn('id', $this->selected)->delete();
-        session()->flash('success', 'Users deleted successfully.');
+        $this->emit('toast', ['success', 'Users has been deleted']);
         $this->dispatchBrowserEvent('closeModal');
+    }
+
+    public function render()
+    {
+       $user =  User::find(1);
+    //    dd($user->tokens()->first()->token);
+        // $user->createToken('auth_token')->plainTextToken;
+        // dd($user->createToken('auth_token')->plainTextToken);
+
+        return view('auth::livewire.users.table', [
+            'users' => User::where('name','ILIKE', '%' . $this->search . '%')
+            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+            ->fastPaginate(10)
+        ])
+        ->extends('theme::backend.layouts.master');
     }
 }

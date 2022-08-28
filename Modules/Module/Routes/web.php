@@ -10,7 +10,10 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Modules\Module\Http\Livewire\Modules\Table as ModuleTable;
+use Modules\Module\Http\Livewire\Modules\Setting as Setting;
 
 Route::prefix('module')->group(function() {
-    Route::get('/', 'ModuleController@index');
+    Route::get('/', ModuleTable::class);
+    Route::get('/setting/{name}', Setting::class);
 });

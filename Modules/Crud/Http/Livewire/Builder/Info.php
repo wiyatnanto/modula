@@ -12,6 +12,7 @@ class Info extends Component
 
     public function mount($name){
         $crud = Crud::where('name', $name)->first();
+        $this->config = \CrudHelpers::CF_decode_json($crud->config,true); 
         $this->title = $crud->title;
         $this->name = $crud->name;
         $this->note = $crud->note;
@@ -19,8 +20,8 @@ class Info extends Component
         $this->db = $crud->db;
         $this->db_key = $crud->db_key;
         $this->author = $crud->author;
+        $this->table = $this->config['table_db'];
         $this->type = $crud->type;
-        $this->config = \CrudHelpers::CF_decode_json($crud->config,true); 
         $this->setting = [
                 'gridtype'        => (isset($this->config['setting']) ? $this->config['setting']['gridtype'] : 'native'  ),
                 'orderby'        => (isset($this->config['setting']) ? $this->config['setting']['orderby'] : $this->db_key  ),

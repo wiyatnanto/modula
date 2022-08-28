@@ -11,8 +11,10 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="flex-grow-1">
-                            <x-crud::atoms.button size="sm" color="primary" text="Add New Crud"
-                                data-bs-toggle="modal" data-bs-target="#createCrud" />
+                            <x-crud::atoms.button size="sm" color="primary" data-bs-toggle="modal"
+                                data-bs-target="#createCrud">
+                                Add New Crud
+                            </x-crud::atoms.button>
                             @if (count($selected) > 0)
                                 <span x-data
                                     x-on:click="
@@ -39,7 +41,9 @@
                                         }     
                                     });
                                 ">
-                                    <x-crud::atoms.button size="sm" color="danger" text="Delete" />
+                                    <x-crud::atoms.button size="sm" color="danger">
+                                        Delete
+                                    </x-crud::atoms.button>
                                 </span>
                             @endif
                         </div>
@@ -102,21 +106,16 @@
                                     <td>{{ $crud->db }}</td>
                                     <td>{{ $crud->db_key }}</td>
                                     <td>
-                                        <div class="dropdown">
-                                            <button type="button"
-                                                class="btn btn-xs btn-outline-primary dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">Action</button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="">Show</a>
-                                                @can('edit.users')
-                                                    <a class="dropdown-item"
-                                                        href="{{ url('/crud/build/config/' . $crud->name) }}">Edit</a>
-                                                @endcan
-                                                @can('delete.users')
-                                                    <div x-data>
-                                                        <button class="dropdown-item action-delete"
-                                                            x-on:click="
+                                        <x-crud::molecules.dropdown label="Action">
+                                            <a class="dropdown-item" href="">Show</a>
+                                            @can('users.update')
+                                                <a class="dropdown-item"
+                                                    href="{{ url('/crud/build/config/' . $crud->name) }}">Edit</a>
+                                            @endcan
+                                            @can('users.delete')
+                                                <div x-data>
+                                                    <button class="dropdown-item action-delete"
+                                                        x-on:click="
                                                             bootbox.dialog({
                                                                 closeButton: false,
                                                                 size: 'small',
@@ -142,10 +141,9 @@
                                                                 }     
                                                             });
                                                         ">Delete</button>
-                                                    </div>
-                                                @endcan
-                                            </div>
-                                        </div>
+                                                </div>
+                                            @endcan
+                                        </x-crud::molecules.dropdown>
                                     </td>
                                 </tr>
                             @endforeach
@@ -159,5 +157,4 @@
         </div>
     </div>
     @include('crud::livewire.cruds.create')
-    <x-theme::molecules.toast />
 </div>

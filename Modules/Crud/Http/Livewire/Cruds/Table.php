@@ -5,6 +5,8 @@ namespace Modules\Crud\Http\Livewire\Cruds;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Modules\Crud\Entities\Crud;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 use DB;
 
 class Table extends Component
@@ -22,8 +24,8 @@ class Table extends Component
         $table,
         $lang = 'en';
 
-    public $joinedToggle = true;
-    public $joinedTables = [];
+    public $joinedToggle = false;
+    public $joinedTables = [null];
     public $joinedMasters = [];
     public $joinedKeys = [];
 
@@ -36,6 +38,8 @@ class Table extends Component
 
     public $selectAll = false;
     public $selected = [];
+
+    public $permissionKeys = ['view','create','update','delete','export','import'];
 
     protected $paginationTheme = 'bootstrap';
 
@@ -51,16 +55,12 @@ class Table extends Component
         $database = config('database.connections');
 
         $this->db = $database[$driver]['database'];
-        // $this->dbuser = $database[$driver]['username'];
-        // $this->dbpass = $database[$driver]['password'];
-        // $this->dbhost = $database[$driver]['host'];
 
         $this->tableOptions = Crud::getTableList($this->db);
     }
 
     public function clear()
     {
-        // $this->reset();
         $this->resetErrorBag();
         $this->resetValidation();
     }
@@ -68,7 +68,7 @@ class Table extends Component
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $this->selected = User::where(
+            $this->selected = Crud::where(
                 'name',
                 'like',
                 '%' . $this->search . '%'
@@ -96,18 +96,30 @@ class Table extends Component
         ])->extends('theme::backend.layouts.master');
     }
 
-    public function updatingJoinedTables($value)
+    public function updated()
     {
+        
+    }
+    
+    public function updatedJoinedTables($value)
+    {
+        $new = [];
+        foreach($this->joinedTables as $val){
+            if($val !== ''){
+                $new[] = $val;
+            }
+        }
+        $this->joinedTables = $new;
     }
 
-    public function addJoinedCount()
+    public function addJoinedTables()
     {
-        // $this->joinedTables[] = null;
+        $this->joinedTables[] = null;
     }
 
-    public function removeJoinedCount($i)
+    public function removeJoinedTables($i)
     {
-        // unset($this->joinedTables[$i]);
+        unset($this->joinedTables[$i]);
     }
 
     public function store()
@@ -118,7 +130,6 @@ class Table extends Component
             'note' => 'required',
             'db' => 'required',
         ]);
-
         $joined = [];
         $query = ' SELECT * FROM ' . $this->table;
         if ($this->joinedToggle) {
@@ -144,26 +155,16 @@ class Table extends Component
             }
         }
         $columns = [];
-
         $results = Crud::getColoumnInfo($query);
-        $primary_exits = '';
+        $primary = $this->findPrimarykey($this->table);
         foreach ($results as $r) {
-            $Key =
-                isset($r['flags'][1]) && $r['flags'][1] == 'primary_key'
-                    ? 'PRI'
-                    : '';
-            if ($Key != '') {
-                $primary_exits = $r['name'];
-            }
             $columns[] = (object) [
                 'Field' => $r['name'],
                 'Table' => $r['table'],
                 'Type' => $r['native_type'],
-                'Key' => $Key,
+                'Key' => $primary === $r['name'] ? 'PRI' : '',
             ];
         }
-        $primary = $primary_exits != '' ? $primary_exits : '';
-
         $i = 0;
         $rowGrid = [];
         $rowForm = [];
@@ -203,7 +204,6 @@ class Table extends Component
             );
             $i++;
         }
-
         $json_data['table_db'] = $this->table;
         $json_data['primary_key'] = $primary;
         $json_data['join_table'] = $joined;
@@ -224,9 +224,41 @@ class Table extends Component
         ];
 
         $crudId = Crud::insertGetId($data);
-        session()->flash('success', 'Crud created successfully.');
+
+        Permission::create(['name' => strtolower(trim($this->name)).'.view']);
+        Permission::create(['name' => strtolower(trim($this->name)).'.create']);
+        Permission::create(['name' => strtolower(trim($this->name)).'.update']);
+        Permission::create(['name' => strtolower(trim($this->name)).'.delete']);
+        Permission::create(['name' => strtolower(trim($this->name)).'.export']);
+        Permission::create(['name' => strtolower(trim($this->name)).'.import']);
+
+        $this->emit('toast', ['success', 'Cruds has been created']);
         $this->dispatchBrowserEvent('closeModal');
     }
+
+    function findPrimarykey( $table )
+    {
+        if(env('DB_CONNECTION') =="mysql"){
+            $query = "SHOW columns FROM `{$table}` WHERE extra LIKE '%auto_increment%'";
+        }elseif(env('DB_CONNECTION') =="pgsql")
+        {
+            $query = "SELECT column_name FROM information_schema.key_column_usage WHERE  table_name = '{$table}'";
+        }
+
+        $primaryKey = '';
+  
+        foreach(\DB::select($query) as $key)
+        {
+         if(env('DB_CONNECTION') =="mysql"){
+            $primaryKey = $key->field;
+         }elseif(env('DB_CONNECTION') =="pgsql"){
+            $primaryKey = $key->column_name;
+         }         
+
+        }   
+        return $primaryKey;    
+    }  
+
 
     public function sortBy($field)
     {
@@ -238,54 +270,21 @@ class Table extends Component
         $this->sortField = $field;
     }
 
-    public function edit($id)
-    {
-        // $user = User::find($id);
-        // $this->userId = $id;
-        // $this->name = $user->name;
-        // $this->email = $user->email;
-        // $this->rolesOptions = Role::pluck('name','name')->all();
-        // $this->roles = $user->roles->pluck('name')->all();
-    }
-
-    public function update($id)
-    {
-        // $this->validate([
-        //     'name' => 'required',
-        //     'email' => 'required|email|unique:users,email,'.$id,
-        //     'password' => 'confirmed',
-        //     'roles' => 'required'
-        // ]);
-
-        // $user = User::find($id);
-        // $user->name = $this->name;
-        // $user->email = $this->email;
-        // if(!empty($this->password)) {
-        //     $user->password = Hash::make($this->password);
-        // }
-        // $user->update();
-
-        // DB::table('model_has_roles')
-        //     ->where('model_id', $id)
-        //     ->delete();
-
-        // $user->assignRole($this->roles);
-        // session()->flash('success', 'User updated successfully.');
-        // $this->dispatchBrowserEvent('closeModal');
-    }
-
     public function delete($id)
     {
-        // User::find($id)->delete();
-        // session()->flash('success', 'User deleted successfully.');
-        // $this->dispatchBrowserEvent('closeModal');
+        Crud::find($id)->delete();
+        foreach($this->permissionKeys as $key){
+            Permission::where(['name' => strtolower(trim($this->name)).'.'. $key])->delete();
+        }
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        $this->emit('toast', ['success', 'Crud has been deleted']);
     }
 
     public function bulkDelete()
     {
-        // User::whereIn('id', $this->selected)->delete();
-        // session()->flash('success', 'Users deleted successfully.');
-        // $this->dispatchBrowserEvent('closeModal');
+        Crud::whereIn('id', $this->selected)->delete();
+        $this->emit('toast', ['success', 'Cruds has been deleted']);
+        $this->selected = [];
     }
 
     public function configGrid($field, $alias, $type, $sort)
@@ -390,18 +389,35 @@ class Table extends Component
     public function buildRelation($table, $field)
     {
         $pdo = \DB::getPdo();
-        $sql =
-            "
-        SELECT
-            referenced_table_name AS 'table',
-            referenced_column_name AS 'column'
-        FROM
-            information_schema.key_column_usage
-        WHERE
-            referenced_table_name IS NOT NULL
-            AND table_schema = '" .
-            $this->db .
-            "'  AND table_name = '{$table}' AND column_name = '{$field}' ";
+        $type_database = env('DB_CONNECTION');
+		if($type_database == 'pgsql'){
+            $sql =
+                "
+            SELECT
+                table_name AS table,
+                column_name AS column
+            FROM
+                information_schema.key_column_usage
+            WHERE
+                table_name IS NOT NULL
+                AND table_schema = '" .
+                $this->db .
+                "'  AND table_name = '{$table}' AND column_name = '{$field}' ";
+        }else{
+            $sql =
+                "
+            SELECT
+                referenced_table_name AS 'table',
+                referenced_column_name AS 'column'
+            FROM
+                information_schema.key_column_usage
+            WHERE
+                referenced_table_name IS NOT NULL
+                AND table_schema = '" .
+                $this->db .
+                "'  AND table_name = '{$table}' AND column_name = '{$field}' ";
+        }
+        
         $Q = $pdo->query($sql);
         $rows = [];
         while ($row = $Q->fetch()) {

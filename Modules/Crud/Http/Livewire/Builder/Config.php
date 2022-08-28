@@ -7,6 +7,7 @@ use Livewire\Component;
 class Config extends Component
 {
     public $name;
+
     public function mount($name){
         $this->name = $name;
     }

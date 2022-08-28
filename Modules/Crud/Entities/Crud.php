@@ -52,6 +52,7 @@ class Crud extends Model {
 	{
 		$pdo = \DB::getPdo();
 		$res = $pdo->query($result);
+		
 		$i =0;	$coll=array();	
 		while ($i < $res->columnCount()) 
 		{
@@ -149,11 +150,11 @@ class Crud extends Model {
 	{
 	 	$t = array(); 
 		$dbname = 'Tables_in_'.$db ; 
-		$type_database = env('DB_CONNECTION');
+		$type_database = config('database.default');
 		if($type_database == 'pgsql'){
 			foreach(\DB::select("SELECT * FROM information_schema.tables WHERE table_schema = 'public' AND table_catalog = '{$db}'") as $table)
 	        {
-			    $t[$table->table_catalog] = $table->table_catalog;
+			    $t[$table->table_name] = $table->table_name;
 	        }
     	}else{
     		foreach(\DB::select("SHOW TABLES FROM {$db}") as $table)
@@ -443,4 +444,3 @@ class Crud extends Model {
 		return $data;
 	}	
 }
-

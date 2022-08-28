@@ -4,6 +4,7 @@ namespace Modules\Auth\Http\Livewire\Roles;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Modules\Crud\Http\Traits\WithSorting;
 
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -11,14 +12,12 @@ use DB;
 
 class Table extends Component
 {
-    use WithPagination;
+    use WithPagination, WithSorting;
 
     public $roleId, $name;
     public $permissions = [];
     public $permissionsOptions = [];
 
-    public $sortField ='id';
-    public $sortAsc = true;
     public $search = '';
 
     public $selectAll = false;
@@ -57,16 +56,6 @@ class Table extends Component
         }
     }
 
-    public function render()
-    {
-        return view('auth::livewire.roles.table', [
-            'roles' => Role::where('name','like', '%' . $this->search . '%')
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->paginate(10)
-        ])
-        ->extends('theme::backend.layouts.master');
-    }
-
     public function store()
     {
         $this->validate([
@@ -76,21 +65,10 @@ class Table extends Component
         $role = Role::create(['name' => $this->name]);
         $role->syncPermissions($this->permissions);
 
-        session()->flash('success', 'Role created successfully.');
+        $this->emit('toast', ['success', 'Role has been created']);
+
         $this->dispatchBrowserEvent('closeModal');
     }
-
-    public function sortBy($field)
-    {
-        if($this->sortField === $field)
-        {
-            $this->sortAsc = ! $this->sortAsc;
-        } else {
-            $this->sortAsc = true;
-        }
-        $this->sortField = $field;
-    }
-
 
     public function edit($id)
     {
@@ -113,21 +91,31 @@ class Table extends Component
         $role->name = $this->name;
         $role->update();
         $role->syncPermissions($this->permissions);
-        session()->flash('success', 'Role updated successfully.');
+        $this->emit('toast', ['success', 'Role has been updated']);
         $this->dispatchBrowserEvent('closeModal');
     }
      
     public function delete($id)
     {
         Role::find($id)->delete();
-        session()->flash('success', 'Role deleted successfully.');
+        $this->emit('toast', ['success', 'Role has been deleted']);
         $this->dispatchBrowserEvent('closeModal');
     }
 
     public function bulkDelete()
     {
         Role::whereIn('id', $this->selected)->delete();
-        session()->flash('success', 'Roles deleted successfully.');
+        $this->emit('toast', ['success', 'Roles has been deleted']);
         $this->dispatchBrowserEvent('closeModal');
+    }
+
+    public function render()
+    {
+        return view('auth::livewire.roles.table', [
+            'roles' => Role::where('name','ILIKE', '%' . $this->search . '%')
+            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+            ->paginate(10)
+        ])
+        ->extends('theme::backend.layouts.master');
     }
 }

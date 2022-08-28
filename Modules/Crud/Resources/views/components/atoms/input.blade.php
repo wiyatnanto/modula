@@ -1,2 +1,4 @@
-@props(['placeholder', 'name'])
-<input {{ $attributes }} class="form-control @error($name) is-invalid @enderror" placeholder="{{ $placeholder }}" name="{{ $name }}">
+@props(['placeholder' => ''])
+<input
+    {{ $attributes->merge(['class' => $errors->has($attributes->whereStartsWith('wire:model')->first()) ? 'form-control is-invalid' : 'form-control']) }}
+    placeholder="{{ $attributes->whereStartsWith('wire:model')->first() }}">

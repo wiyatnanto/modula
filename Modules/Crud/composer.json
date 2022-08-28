@@ -10,14 +10,15 @@
     "extra": {
         "laravel": {
             "providers": [],
-            "aliases": {
-
-            }
+            "aliases": {}
         }
     },
     "autoload": {
         "psr-4": {
             "Modules\\Crud\\": ""
         }
+    },
+    "require": {
+        "hammerstone/fast-paginate": "^0.1.7"
     }
 }

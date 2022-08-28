@@ -1,36 +1,36 @@
 <div>
-    <div class="row mb-2">
+    <div class="row mb-2 mt-3">
         <div class="col-md-8">
             <div class="mb-3">
-                <strong>Name/Title:</strong>
+                <label for="title" class="form-label">Title</label>
                 <x-crud::atoms.input type="text" placeholder="Name or Title" name="title" wire:model="title" />
                 @error('title')
                     <label id="title-error" class="error invalid-feedback" for="title">{{ $message }}</label>
                 @enderror
             </div>
             <div class="mb-3">
-                <strong>Module Note:</strong>
+                <label for="note" class="form-label">Module Note</label>
                 <x-crud::atoms.input type="text" placeholder="Note" name="note" wire:model="note" />
                 @error('note')
                     <label id="note-error" class="error invalid-feedback" for="note">{{ $message }}</label>
                 @enderror
             </div>
             <div class="mb-3">
-                <strong>Description:</strong>
+                <label for="desc" class="form-label">Description</label>
                 <x-crud::atoms.input type="text" placeholder="Description" name="desc" wire:model="desc" />
                 @error('desc')
                     <label id="desc-error" class="error invalid-feedback" for="desc">{{ $message }}</label>
                 @enderror
             </div>
             <div class="mb-3">
-                <strong>Author:</strong>
+                <label for="author" class="form-label">Author</label>
                 <x-crud::atoms.input type="text" placeholder="Author" name="author" wire:model="author" />
                 @error('author')
                     <label id="author-error" class="error invalid-feedback" for="author">{{ $message }}</label>
                 @enderror
             </div>
             <div class="mb-3">
-                <strong>Class Name:</strong>
+                <label for="name" class="form-label">Class Name</label>
                 <x-crud::atoms.input type="text" placeholder="Class Name" name="name" wire:model="name"
                     readonly />
                 @error('name')
@@ -38,16 +38,16 @@
                 @enderror
             </div>
             <div class="mb-3">
-                <strong>Table Master:</strong>
-                <x-crud::atoms.input type="text" placeholder="Table Name" name="db" wire:model="db" readonly />
-                @error('db')
-                    <label id="name-error" class="error invalid-feedback" for="db">{{ $message }}</label>
+                <label for="table" class="form-label">Table Master</label>
+                <x-crud::atoms.input type="text" placeholder="Table Name" name="table" wire:model="table" readonly />
+                @error('table')
+                    <label id="table-error" class="error invalid-feedback" for="table">{{ $message }}</label>
                 @enderror
             </div>
         </div>
         <div class="col-md-4">
             <div class="mb-3">
-                <strong>Crud Type:</strong>
+                <label for="type" class="form-label">Crud Type</label>
                 <x-crud::atoms.select2 name="type" wire:model.defer="type" defer="false">
                     <option></option>
                     <option value="datatable" @if ($type == '' or $type == 'datatable') selected @endif> DataTable Complete
@@ -60,7 +60,7 @@
                 @enderror
             </div>
             <div class="mb-3">
-                <strong>Order By:</strong>
+                <label for="setting-orderby" class="form-label">Order By</label>
                 <x-crud::atoms.select2 name="setting.orderby" wire:model.defer="setting.orderby" defer="false">
                     <option></option>
                     @foreach ($orderbyOptions as $val)
@@ -73,7 +73,7 @@
                 @enderror
             </div>
             <div class="mb-3">
-                <strong>Order Type:</strong>
+                <label for="setting-ordertype" class="form-label">Order Type</label>
                 <x-crud::atoms.select2 name="setting.ordertype" wire:model.defer="setting.ordertype" defer="false">
                     <option></option>
                     <option value="asc" @if ($setting['ordertype'] == 'asc') selected="selected" @endif> Ascending
@@ -87,7 +87,7 @@
                 @enderror
             </div>
             <div class="mb-3">
-                <strong>Display Rows {{ $setting['perpage'] }}:</strong>
+                <label for="perpage" class="form-label">Display Rows</label>
                 <x-crud::atoms.select2 name="setting.perpage" wire:model.defer="setting.perpage" defer="false">
                     <option></option>
                     @foreach (['10', '20', '30', '50'] as $val)

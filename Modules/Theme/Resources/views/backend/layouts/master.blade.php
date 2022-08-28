@@ -9,34 +9,23 @@
     <meta name="author" content="NobleUI">
     <meta name="keywords"
         content="nobleui, bootstrap, bootstrap 5, bootstrap5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
-
     <title>Modula Platform</title>
-
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <!-- End fonts -->
 
-    <!-- core:css -->
-    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/core/core.css') }}">
-    <!-- endinject -->
+    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/bootstrap/css/bootstrap.min.css') }}">
 
-    <!-- Plugin css for this page -->
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/jquery.toast/jquery.toast.min.css') }}">
-    <!-- End plugin css for this page -->
 
-    <!-- inject:css -->
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/fonts/feather-font/css/iconfont.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/flag-icon-css/css/flag-icon.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/mdi/css/materialdesignicons.min.css') }}">
-    <!-- endinject -->
 
-    <!-- Layout styles -->
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/css/light/style.css') }}">
-    <!-- End layout styles -->
-
     <link rel="shortcut icon" href="{{ asset('modules/theme/backend/images/favicon.png') }}" />
     @stack('style')
 
@@ -55,8 +44,12 @@
             <x-theme::organisms.footer />
         </div>
     </div>
+
     <!-- core:js -->
-    <script src="{{ asset('modules/theme/backend/vendors/core/core.js') }}"></script>
+    <script src="{{ asset('modules/theme/backend/vendors/jquery/jquery-3.6.0.min.js') }}" crossorigin="anonymous"></script>
+    <script src="{{ asset('modules/theme/backend/vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    {{-- <script src="https://unpkg.com/@popperjs/core@2"></script> --}}
+    <script src="{{ asset('modules/theme/backend/vendors/perfect-scrollbar/js/perfect-scrollbar.min.js') }}"></script>
     <!-- endinject -->
 
     <!-- Plugin js for this page -->
@@ -76,6 +69,7 @@
     @stack('script')
     <!-- End custom js for this page -->
     @livewireScripts
+    <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v0.x.x/dist/livewire-sortable.js"></script>
 </body>
 
 </html>

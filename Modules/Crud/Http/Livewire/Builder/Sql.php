@@ -10,7 +10,7 @@ class Sql extends Component
     public $title, $name, $note, $desc, $db, $db_key, $author, $type, $lang;
     public $config, $setting;
 
-    public $joinedToggle = true;
+    public $joinedToggle = false;
     public $joinedTables = [];
     public $joinedMasters = [];
     public $joinedKeys = [];
@@ -27,11 +27,21 @@ class Sql extends Component
         $this->config = \CrudHelpers::CF_decode_json($crud->config, true);
         $this->title = $crud->title;
         $this->name = $crud->name;
-        $this->join_table = $this->config['join_table'];
         $this->module = 'module';
         $this->tableOptions = Crud::getTableList($this->db);
         $this->type = $crud->type == 'ajax' ? 'addon' : $crud->type;
-        $this->table = $crud->db;
+        $this->table = $this->config['table_db'];
+
+        if(count($this->config['join_table']) > 0){
+            $this->joinedToggle = true;
+            foreach($this->config['join_table'] as $key => $val){
+                $this->joinedTables[] = $key;
+                $this->joinedMasters[] = $val['master'];
+                $this->joinedKeys[] = $val['join'];
+            }
+        }else{
+            $this->joinedTables[] = null;
+        }
     }
 
     public function render()
@@ -39,6 +49,27 @@ class Sql extends Component
         return view('crud::livewire.builder.sql')->extends(
             'theme::backend.layouts.master'
         );
+    }
+
+    public function updatedJoinedTables($value)
+    {
+        $new = [];
+        foreach($this->joinedTables as $val){
+            if($val !== ''){
+                $new[] = $val;
+            }
+        }
+        $this->joinedTables = $new;
+    }
+
+    public function addJoinedTables()
+    {
+        $this->joinedTables[] = null;
+    }
+
+    public function removeJoinedTables($i)
+    {
+        unset($this->joinedTables[$i]);
     }
 
     public function update()
@@ -67,26 +98,26 @@ class Sql extends Component
                 }
             }
         }
-        $columns = [];
+        // $columns = [];
 
-        $results = Crud::getColoumnInfo($query);
-        $primary_exits = '';
-        foreach ($results as $r) {
-            $Key =
-                isset($r['flags'][1]) && $r['flags'][1] == 'primary_key'
-                    ? 'PRI'
-                    : '';
-            if ($Key != '') {
-                $primary_exits = $r['name'];
-            }
-            $columns[] = (object) [
-                'Field' => $r['name'],
-                'Table' => $r['table'],
-                'Type' => $r['native_type'],
-                'Key' => $Key,
-            ];
-        }
-        $primary = $primary_exits != '' ? $primary_exits : '';
+        // $results = Crud::getColoumnInfo($query);
+        // $primary_exits = '';
+        // foreach ($results as $r) {
+        //     $Key =
+        //         isset($r['flags'][1]) && $r['flags'][1] == 'primary_key'
+        //             ? 'PRI'
+        //             : '';
+        //     if ($Key != '') {
+        //         $primary_exits = $r['name'];
+        //     }
+        //     $columns[] = (object) [
+        //         'Field' => $r['name'],
+        //         'Table' => $r['table'],
+        //         'Type' => $r['native_type'],
+        //         'Key' => $Key,
+        //     ];
+        // }
+        // $primary = $primary_exits != '' ? $primary_exits : '';
         
         try {
             \DB::select($query);
@@ -125,22 +156,21 @@ class Sql extends Component
                 }
                 $form[] = $forms;
             }
-
             $i++;
         }
-
-        unset($this->config['forms']);
-        unset($this->config['grid']);
-
         $new_config = [
             'join_table' => $joined,
             'grid' => $grid,
             'forms' => $form,
         ];
+        // dd(array_merge($this->config, $new_config));
+
         $crud = Crud::where('name', $this->name)->first();
         $crud->config = \CrudHelpers::CF_encode_json(array_merge($this->config, $new_config));
         $crud->update();
         $this->emit('toast', ['success', 'Crud has been updated']);
+        // $this->emitTo('crud::builder.table','refreshTable');
+        // $this->emitTo('crud::builder.form','refreshForm');
     }
 
     public function configGrid($field, $alias, $type, $sort)

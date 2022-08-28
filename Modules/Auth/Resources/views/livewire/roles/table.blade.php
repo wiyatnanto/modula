@@ -11,8 +11,10 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="flex-grow-1">
-                            <x-crud::atoms.button size="sm" color="primary" text="Add New Role"
-                                data-bs-toggle="modal" data-bs-target="#createRole" />
+                            <x-crud::atoms.button size="sm" color="primary" data-bs-toggle="modal"
+                                data-bs-target="#createRole">
+                                Add New Role
+                            </x-crud::atoms.button>
                             @if (count($selected) > 0)
                                 <span x-data
                                     x-on:click="
@@ -39,7 +41,9 @@
                                         }     
                                     });
                                 ">
-                                    <x-crud::atoms.button size="sm" color="danger" text="Delete" />
+                                    <x-crud::atoms.button size="sm" color="danger">
+                                        Delete
+                                    </x-crud::atoms.button>
                                 </span>
                             @endif
                         </div>
@@ -82,22 +86,17 @@
                                     <td>{{ $role->id }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>
-                                        <div class="dropdown">
-                                            <button type="button"
-                                                class="btn btn-xs btn-outline-primary dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">Action</button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="">Show</a>
-                                                @can('edit.roles')
-                                                    <button class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#updateRole"
-                                                        wire:click="edit({{ $role->id }})">Edit</button>
-                                                @endcan
-                                                @can('delete.roles')
-                                                    <div x-data>
-                                                        <button class="dropdown-item action-delete"
-                                                            x-on:click="
+                                        <x-crud::molecules.dropdown label="Action">
+                                            <a class="dropdown-item" href="">Show</a>
+                                            @can('roles.update')
+                                                <button class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#updateRole"
+                                                    wire:click="edit({{ $role->id }})">Edit</button>
+                                            @endcan
+                                            @can('roles.delete')
+                                                <div x-data>
+                                                    <button class="dropdown-item action-delete"
+                                                        x-on:click="
                                                             bootbox.dialog({
                                                                 closeButton: false,
                                                                 size: 'small',
@@ -123,10 +122,9 @@
                                                                 }     
                                                             });
                                                         ">Delete</button>
-                                                    </div>
-                                                @endcan
-                                            </div>
-                                        </div>
+                                                </div>
+                                            @endcan
+                                        </x-crud::molecules.dropdown>
                                     </td>
                                 </tr>
                             @endforeach
@@ -141,5 +139,4 @@
     </div>
     @include('auth::livewire.roles.create')
     @include('auth::livewire.roles.update')
-    <x-theme::molecules.toast />
 </div>

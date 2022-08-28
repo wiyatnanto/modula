@@ -1,2 +1,4 @@
-@props(['size', 'color' => 'default', 'text'])
-<button {{ $attributes }} class="btn btn-{{ $size }} btn-{{ $color }}">{{ $text }}</button>
+@props(['size' => 'md', 'color' => 'primary'])
+<button {{ $attributes->merge(['class' => "btn btn-${size} btn-${color}"]) }}>
+    {{ $slot }}
+</button>

@@ -11,8 +11,10 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="flex-grow-1">
-                            <x-crud::atoms.button size="sm" color="primary" text="Add New Permission"
-                                data-bs-toggle="modal" data-bs-target="#createPermission" />
+                            <x-crud::atoms.button size="sm" color="primary" data-bs-toggle="modal"
+                                data-bs-target="#createPermission">
+                                Add New
+                            </x-crud::atoms.button>
                             @if (count($selected) > 0)
                                 <span x-data
                                     x-on:click="
@@ -39,7 +41,9 @@
                                         }     
                                     });
                                 ">
-                                    <x-crud::atoms.button size="sm" color="danger" text="Delete" />
+                                    <x-crud::atoms.button size="sm" color="danger">
+                                        Delete
+                                    </x-crud::atoms.button>
                                 </span>
                             @endif
                         </div>
@@ -55,46 +59,42 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="table">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th width="50">
-                                    <x-crud::atoms.checkbox wire:model="selectAll" />
-                                </th>
-                                <th width="80" wire:click.prevent="sortBy('id')">ID
-                                    <x-crud::molecules.sorticon name="id" sortField="{{ $sortField }}"
-                                        sortAsc="{{ $sortAsc }}" />
-                                </th>
-                                <th wire:click.prevent="sortBy('name')">Name
-                                    <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
-                                        sortAsc="{{ $sortAsc }}" />
-                                </th>
-                                <th width="280px">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($permissions as $key => $permission)
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <x-crud::atoms.checkbox name="userIds[]" wire:model="selected"
-                                            value="{{ $permission->id }}" />
-                                    </td>
-                                    <td>{{ $permission->id }}</td>
-                                    <td>{{ $permission->name }}</td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button"
-                                                class="btn btn-xs btn-outline-primary dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">Action</button>
-                                            <div class="dropdown-menu">
+                                    <th width="50">
+                                        <x-crud::atoms.checkbox wire:model="selectAll" />
+                                    </th>
+                                    <th width="80" wire:click.prevent="sortBy('id')">ID
+                                        <x-crud::molecules.sorticon name="id" sortField="{{ $sortField }}"
+                                            sortAsc="{{ $sortAsc }}" />
+                                    </th>
+                                    <th wire:click.prevent="sortBy('name')">Name
+                                        <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
+                                            sortAsc="{{ $sortAsc }}" />
+                                    </th>
+                                    <th width="280px">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($permissions as $key => $permission)
+                                    <tr>
+                                        <td>
+                                            <x-crud::atoms.checkbox name="selected[]" wire:model="selected"
+                                                value="{{ $permission->id }}" />
+                                        </td>
+                                        <td>{{ $permission->id }}</td>
+                                        <td>{{ $permission->name }}</td>
+                                        <td>
+                                            <x-crud::molecules.dropdown label="Action">
                                                 <a class="dropdown-item" href="">Show</a>
-                                                @can('edit.permissions')
+                                                @can('permissions.update')
                                                     <button class="dropdown-item" data-bs-toggle="modal"
                                                         data-bs-target="#updatePermission"
                                                         wire:click="edit({{ $permission->id }})">Edit</button>
                                                 @endcan
-                                                @can('delete.permissions')
+                                                @can('permissions.delete')
                                                     <div x-data>
                                                         <button class="dropdown-item action-delete"
                                                             x-on:click="
@@ -125,13 +125,13 @@
                                                         ">Delete</button>
                                                     </div>
                                                 @endcan
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                            </x-crud::molecules.dropdown>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="mt-2">
                         {{ $permissions->links() }}
                     </div>
@@ -141,5 +141,4 @@
     </div>
     @include('auth::livewire.permissions.create')
     @include('auth::livewire.permissions.update')
-    <x-theme::molecules.toast />
 </div>

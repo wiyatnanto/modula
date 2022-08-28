@@ -1,0 +1,13 @@
+<?php
+
+namespace Modules\{Module}\Http\Livewire\{Name};
+
+use Livewire\Component;
+
+class Table extends Component
+{
+    public function render()
+    {
+        return view('{module}::livewire.{name}.table');
+    }
+}

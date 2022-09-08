@@ -1,4 +1,4 @@
-@props(['delay' => 500])
+@props(['delay' => 200])
 <div class="loader-wrapper">
     <div class="loader">
         <div class="loader-icon">
@@ -19,11 +19,12 @@
 
 <style>
     .loader-wrapper {
-        background-color: #ffffff;
+        background-color: #f9fafb;
         position: absolute;
         height: -webkit-fill-available;
         width: -webkit-fill-available;
         z-index: 99999;
+        margin-top: 60px;
     }
 
     .loader {

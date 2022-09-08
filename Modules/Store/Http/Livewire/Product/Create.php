@@ -64,7 +64,6 @@ class Create extends Component
         ]);
 
         if($validatedData){
-            // $product = Product::with('attributes','attribute_values')->find(1);
             $product = new Product;
             $product->brand_id = $validatedData['brand'];
             $product->sku = '-';
@@ -136,7 +135,7 @@ class Create extends Component
                 }
             }
             if($product){
-                return redirect()->to('/store/product');
+                $this->emit('toast', ['success', 'Product has been created']);
             }
         }
     }

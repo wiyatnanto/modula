@@ -75,9 +75,9 @@ class Table extends Component
         $role = Role::find($id);
         $this->roleId = $id;
         $this->name = $role->name;
-        $this->permissions = array_values(DB::table('role_has_permissions')
-            ->where('role_has_permissions.role_id', $id)
-            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
+        $this->permissions = array_values(DB::table('auth_role_has_permissions')
+            ->where('auth_role_has_permissions.role_id', $id)
+            ->pluck('auth_role_has_permissions.permission_id', 'auth_role_has_permissions.permission_id')
             ->all());
     }
 

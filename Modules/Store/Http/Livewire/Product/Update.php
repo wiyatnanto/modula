@@ -236,7 +236,6 @@ class Update extends Component
             'storefronts'=> StoreFront::get(),
             'attributeoptions' => Attribute::with('values')->get()
         ])
-        ->extends('core::layouts.default.master')
-        ->section('content');
+        ->extends('theme::backend.layouts.master');
     }
 }

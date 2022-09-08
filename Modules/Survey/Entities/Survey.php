@@ -12,7 +12,7 @@ class Survey extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'surveys';
+    protected $table = 'survey_surveys';
     protected $primaryKey = 'id';
 
     protected $fillable = [

@@ -11,9 +11,9 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="flex-grow-1">
-                            <x-crud::atoms.button size="sm" color="primary" data-bs-toggle="modal"
-                                data-bs-target="#createModule">
-                                Add New Permission
+                            <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary"
+                                data-bs-toggle="modal" data-bs-target="#createModule">
+                                <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add New
                             </x-crud::atoms.button>
                             @if (count($selected) > 0)
                                 <span x-data

@@ -5,6 +5,9 @@ namespace Modules\Theme\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 
+use Modules\Core\Entities\Menu;
+
+
 class ThemeServiceProvider extends ServiceProvider
 {
     /**

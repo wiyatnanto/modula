@@ -30,6 +30,9 @@ class Table extends Component
         'bulkDelete'
     ];
     
+    protected $messages = [
+        'name.required' => 'The Name cannot be empty.',
+    ];
 
     public function clear() {
         $this->reset();
@@ -47,6 +50,9 @@ class Table extends Component
 
     public function store()
     {
+        $this->validate([
+            'name' => 'required'
+        ]);
         Artisan::call("module:make {$this->name}");
         Artisan::call("cache:clear");
         $this->emit('toast', ['success', 'Module has been created']);

@@ -8,6 +8,8 @@
         "Modules\\Theme\\Providers\\ThemeServiceProvider"
     ],
     "aliases": {},
-    "files": [],
+    "files": [
+        "/Helpers/helpers.php"
+    ],
     "requires": []
 }

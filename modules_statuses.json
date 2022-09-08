@@ -7,5 +7,6 @@
     "Survey": true,
     "Core": true,
     "Blog": true,
-    "Store": true
+    "Store": true,
+    "Chat": true
 }

@@ -19,17 +19,17 @@
     <!-- End fonts -->
 
     <!-- core:css -->
-    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/core/core.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/core/core.css') }}">
     <!-- endinject -->
 
     <!-- Plugin css for this page -->
-    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/select2/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/jquery.toast/jquery.toast.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/jquery.toast/jquery.toast.min.css') }}">
     <!-- End plugin css for this page -->
 
     <!-- inject:css -->
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/fonts/feather-font/css/iconfont.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendors/flag-icon-css/css/flag-icon.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/flag-icon-css/css/flag-icon.min.css') }}">
     <!-- endinject -->
 
     <!-- Layout styles -->
@@ -44,16 +44,16 @@
         @yield('content')
     </div>
     <!-- core:js -->
-    <script src="{{ asset('modules/theme/backend/vendors/core/core.js') }}"></script>
+    <script src="{{ asset('modules/theme/backend/vendor/core/core.js') }}"></script>
     <!-- endinject -->
 
     <!-- Plugin js for this page -->
-    <script src="{{ asset('modules/theme/backend/vendors/jquery.toast/jquery.toast.min.js') }}"></script>
-    <script src="{{ asset('modules/theme/backend/vendors/select2/select2.min.js') }}"></script>
+    <script src="{{ asset('modules/theme/backend/vendor/jquery.toast/jquery.toast.min.js') }}"></script>
+    <script src="{{ asset('modules/theme/backend/vendor/select2/select2.min.js') }}"></script>
     <!-- End plugin js for this page -->
 
     <!-- inject:js -->
-    <script src="{{ asset('modules/theme/backend/vendors/feather-icons/feather.min.js') }}"></script>
+    <script src="{{ asset('modules/theme/backend/vendor/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('modules/theme/backend/js/template.js') }}"></script>
     <!-- endinject -->
 

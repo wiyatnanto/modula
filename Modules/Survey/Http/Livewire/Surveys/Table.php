@@ -54,7 +54,16 @@ class Table extends Component
             'name' => 'required',
         ]);
 
-        Survey::create(['name' => $this->name, 'json' => []]);
+        $survey = new Survey;
+        $survey->name = $this->name;
+        if (gettype($this->bg_header) === 'object') {
+            $this->bg_header->store('public/survey/bg_headers');
+            $survey->bg_header = 'survey/bg_headers/' . $this->bg_header->hashName();
+        }else{
+            $survey->bg_header = $this->bg_header;
+        }
+        $survey->json = [];
+        $survey->save();
         $this->emit('toast', ['success', 'Survey has been created']);
         $this->dispatchBrowserEvent('closeModal');
     }

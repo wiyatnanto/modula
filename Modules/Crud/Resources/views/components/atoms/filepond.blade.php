@@ -48,13 +48,12 @@
     }" style="overflow: hidden;">
         <x-crud::atoms.input x-ref="input" type="file" placeholder="{{ $placeholder }}" name="{{ $name }}" />
     </div>
-    @push('style')
-        <link rel="stylesheet" href="{{ asset('modules/crud/vendor/filepond/filepond.min.css') }}" />
-        <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
-            rel="stylesheet" />
-    @endpush
-    @push('script')
-        <script src="{{ asset('modules/crud/vendor/filepond/filepond.min.js') }}"></script>
-        <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-    @endpush
 </div>
+@push('style')
+    <link rel="stylesheet" href="{{ asset('modules/crud/vendor/filepond/filepond.min.css') }}" />
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet" />
+@endpush
+@push('script')
+    <script src="{{ asset('modules/crud/vendor/filepond/filepond.min.js') }}"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+@endpush

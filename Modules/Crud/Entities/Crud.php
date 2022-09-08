@@ -12,7 +12,7 @@ class Crud extends Model {
      *
      * @var string
      */
-	protected $table = 'crud';
+	protected $table = 'crud_cruds';
 
 	public function __construct() 
 	{

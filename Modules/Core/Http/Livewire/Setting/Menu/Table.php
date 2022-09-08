@@ -11,7 +11,8 @@ class Table extends Component
 {
     public $search;
     public $name = 'main';
-    public $menu_title, $target, $url;
+    public $menu_title, $target, $url, $icon, $isSeparator;
+    public $menus = [];
     public $addCategories = [];
     public $addPages = [];
 
@@ -21,6 +22,19 @@ class Table extends Component
         'refreshComponent' => '$refresh'
     ];
 
+    protected $queryString = ['name'];
+
+    public function mount()
+    {
+        $this->menus = collect(Menu::with('children')->where('name', $this->name)->get());
+    }
+
+    public function updatedName()
+    {
+        $this->mount();
+        $this->emit('refreshComponent');
+    }
+
     public function addToMenu($type)
     {
         switch ($type) {
@@ -29,7 +43,7 @@ class Table extends Component
                     if($page){
                         $page = Page::find($page)->first();
                         $menu = new Menu();
-                        $menu->name = 'main';
+                        $menu->name = $this->name;
                         $menu->type = $type;
                         $menu->url = '/p/'.Page::findOrFail($key)->slug;
                         $menu->target = '';
@@ -41,22 +55,36 @@ class Table extends Component
                 }
             break;
             case 'category':
+                foreach($this->addCategories as $key => $category){
+                    if($category){
+                        $menu = new Menu();
+                        $menu->name = $this->name;
+                        $menu->type = $type;
+                        $menu->url = '/category/'.Category::findOrFail($key)->slug;
+                        $menu->target = '';
+                        $menu->menu_title = Category::findOrFail($key)->name;
+                        $menu->custom_class = '';
+                        $menu->view = 1;
+                        $menu->save();
+                    }
+                }
             break;
             case 'custom':
                 $menu = new Menu();
                 $menu->name = $this->name;
-                $menu->type = $type;
-                $menu->url = $this->url;
+                $menu->type = $this->isSeparator ? 'separator' : $type;
+                $menu->url = $this->isSeparator ? '#' : $this->url;
                 $menu->menu_title = $this->menu_title;
                 $menu->target = $this->target ? '_blank' : '';
                 $menu->custom_class = '';
+                $menu->icon = $this->icon;
                 $menu->view = 1;
                 $menu->save();
             break;
             default:
         }
-        $this->emit('refreshComponent');
-        $this->emit('notify', 'Menu berhasil ditambah');
+        $this->mount();
+        $this->emit('toast', ['success', 'Menu has been updated']);
     }
 
     public function toggleView($id)
@@ -64,7 +92,7 @@ class Table extends Component
         $menu = Menu::findOrFail($id);
         $menu->view = $menu->view ? 0: 1;
         $menu->update();
-        $this->emit('notify', 'Menu berhasil diperbarui');
+        $this->emit('toast', ['success', 'Menu has been updated']);
     }
 
     public function updateOrderTree($datas){
@@ -90,6 +118,7 @@ class Table extends Component
                 }   
             }
         }
+        $this->mount();
         $this->emit('toast', ['success', 'Menu has been updated']);
     }
 
@@ -97,16 +126,15 @@ class Table extends Component
         $menu = Menu::findOrFail($id);
         if($menu){
             $menu->delete();
-            $this->emit('notify', 'Menu berhasil dihapus');
+            $this->mount();
+            $this->emit('toast', ['success', 'Menu has been updated']);
         }
     }
     
     public function render()
     {
-        // dd(Page::get());
         return view('core::livewire.setting.menu.table',[
             'names' => Menu::select('name')->groupBy('name')->get()->pluck('name'),
-            'menus' => Menu::with('children')->orderBy('sort_order', 'asc')->where('name', $this->name)->get(),
             'categories' => Category::get(),
             'pages' => Page::get()
         ])

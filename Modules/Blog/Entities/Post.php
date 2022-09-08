@@ -11,7 +11,7 @@ class Post extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'posts';
+    protected $table = 'blog_posts';
 
     protected $fillable = ['title', 'content', 'slug', 'status', 'featured_image', 'caption', 'published_at', 'user_id'];
 
@@ -23,12 +23,12 @@ class Post extends Model
 
     public function Categories()
     {
-        return $this->morphToMany(Category::class,'categoryable');
+        return $this->morphToMany(Category::class,'post', 'blog_post_has_categories');
     }
 
     public function Tags()
     {
-        return $this->morphToMany(Tag::class,'taggable');
+        return $this->morphToMany(Tag::class,'post','blog_post_has_tags');
     }
 
     public function User()

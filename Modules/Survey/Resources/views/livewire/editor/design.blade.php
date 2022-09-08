@@ -682,5 +682,5 @@
 
     @push('script')
         <script src="{{ asset('modules/survey/vendor/bootstrap5-editable/js/bootstrap-editable.min.js') }}"></script>
-        <script src="{{ asset('modules/theme/backend/vendors/jquery-ui/jquery-ui.min.js') }}"></script>
+        <script src="{{ asset('modules/theme/backend/vendor/jquery-ui/jquery-ui.min.js') }}"></script>
     @endpush

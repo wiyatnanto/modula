@@ -91,26 +91,19 @@
                                     <td>{{ $survey->name }}</td>
                                     <td>{{ $survey->slug }}</td>
                                     <td>
-                                        <div class="d-flex">
-                                            <x-crud::atoms.button class="btn-icon me-1" size="xs"
-                                                color="outline-success">
-                                                <span wire:ignore>
-                                                    <i data-feather="database"></i>
-                                                </span>
-                                            </x-crud::atoms.button>
-                                            <x-crud::molecules.dropdown label="Action">
-                                                <a class="dropdown-item" href="">Goto Survey</a>
-                                                <a class="dropdown-item"
-                                                    href="{{ url('survey/design/' . $survey->slug) }}">Designer</a>
-                                                @can('roles.update')
-                                                    <button class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#updateSurvey"
-                                                        wire:click="edit({{ $survey->id }})">Edit</button>
-                                                @endcan
-                                                @can('roles.delete')
-                                                    <div x-data>
-                                                        <button class="dropdown-item action-delete"
-                                                            x-on:click="
+                                        <x-crud::molecules.dropdown label="Action">
+                                            <a class="dropdown-item" href="">Goto Survey</a>
+                                            <a class="dropdown-item"
+                                                href="{{ url('survey/design/' . $survey->slug) }}">Designer</a>
+                                            @can('roles.update')
+                                                <button class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#updateSurvey"
+                                                    wire:click="edit({{ $survey->id }})">Edit</button>
+                                            @endcan
+                                            @can('roles.delete')
+                                                <div x-data>
+                                                    <button class="dropdown-item action-delete"
+                                                        x-on:click="() => {
                                                             bootbox.dialog({
                                                                 closeButton: false,
                                                                 size: 'small',
@@ -135,11 +128,10 @@
                                                                     }
                                                                 }     
                                                             });
-                                                        ">Delete</button>
-                                                    </div>
-                                                @endcan
-                                            </x-crud::molecules.dropdown>
-                                        </div>
+                                                        }">Delete</button>
+                                                </div>
+                                            @endcan
+                                        </x-crud::molecules.dropdown>
                                     </td>
                                 </tr>
                             @endforeach

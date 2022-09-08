@@ -1,5 +1,7 @@
-<x-crud::organisms.modal preventSubmit="update({{ $userId }})" submitLabel="Update" id="updateUser"
-    title="Update User">
+<x-crud::organisms.modal id="updateUser">
+    <x-slot name="header">
+        <h5 class="modal-title">Update User</h5>
+    </x-slot>
     <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <x-crud::atoms.input type="text" placeholder="Name" name="name" wire:model="name" />
@@ -43,6 +45,11 @@
                 for="roles">{{ $message }}</label>
         @enderror
     </div>
+    <x-slot name="footer">
+        <x-crud::atoms.button size="xs" color="secondary" data-bs-dismiss="modal" text="Cancel" />
+        <x-crud::atoms.button size="xs" color="primary" wire:click.prevent="update({{ $userId }})"
+            text="Update" />
+    </x-slot>
 </x-crud::organisms.modal>
 @push('script')
     <script>

@@ -11,7 +11,7 @@ class Tag extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'tags';
+    protected $table = 'blog_tags';
 
     protected $fillable = ['name'];
 

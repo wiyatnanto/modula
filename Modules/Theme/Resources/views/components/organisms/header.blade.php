@@ -6,7 +6,7 @@
     <div class="navbar-content">
         <x-theme::molecules.search />
         <ul class="navbar-nav">
-            <li class="nav-item dropdown">
+            {{-- <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="flag-icon flag-icon-us mt-1" title="us"></i> <span
@@ -24,11 +24,11 @@
                     <a href="javascript:;" class="dropdown-item py-2"><i class="flag-icon flag-icon-es" title="es"
                             id="es"></i> <span class="ms-1"> Spanish </span></a>
                 </div>
-            </li>
+            </li> --}}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="appsDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i data-feather="grid"></i>
+                    <x-crud::atoms.icon icon="stream" />
                 </a>
                 <div class="dropdown-menu p-0" aria-labelledby="appsDropdown">
                     <div class="px-3 py-2 d-flex align-items-center justify-content-between border-bottom">
@@ -73,7 +73,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i data-feather="mail"></i>
+                    <x-crud::atoms.icon icon="envelope" />
                 </a>
                 <div class="dropdown-menu p-0" aria-labelledby="messageDropdown">
                     <div class="px-3 py-2 d-flex align-items-center justify-content-between border-bottom">
@@ -155,7 +155,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i data-feather="bell"></i>
+                    <x-crud::atoms.icon icon="bell" />
                     <div class="indicator">
                         <div class="circle"></div>
                     </div>
@@ -258,12 +258,12 @@
                                 <span>{{ __('auth::auth.switchuser') }}</span>
                             </a>
                         </li>
-                        <li class="dropdown-item py-2">
-                            <a href="{{ url('auth/logout') }}" class="text-body ms-0">
-                                <i class="me-2 icon-md" data-feather="log-out"></i>
+                        <a href="{{ url('auth/logout') }}" class="text-body ms-0">
+                            <li class="dropdown-item py-2">
+                                <i class="far fa-sign-out me-2 icon-md"></i>
                                 <span>{{ __('auth::auth.logout') }}</span>
-                            </a>
-                        </li>
+                            </li>
+                        </a>
                     </ul>
                 </div>
             </li>

@@ -39,7 +39,7 @@ class Create extends Component
     public $attributeOptions = [];
     public $attributeValueOptions = [];
     public $productAttributes = [];
-    public $values;
+    // public $values;
 
     protected $listeners = [
         'selectAttributes' => 'selectAttributes',
@@ -72,16 +72,15 @@ class Create extends Component
 
     public function selectAttributes($index, $name)
     {
+        $values = [];
+        $attribute = Attribute::where('name', $name)->with('values')->first();
+        if($attribute){
+            $values = $attribute->values;
+        }
         $this->productAttributes[$index] = ['name' => $name, 'values' => []];
-        $this->emit('updateAttributeValueOptions', Attribute::where('name', $name)->with('values')->first()->values);
-    }
 
-    // public function selectAttributes($index, $value)
-    // {
-    //     $attribute = Attribute::where('name', $value)->with('values')->first();
-    //     $this->attributeValueOptions = $attribute->values;
-    //     $this->productAttributes[$index] = ['name' => $value, 'values' => []];
-    // }
+        $this->emit('updateAttributeValueOptions', $values);
+    }
 
     public function selectAttributeValues($index, $value)
     {

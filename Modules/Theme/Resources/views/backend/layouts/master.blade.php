@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/jquery.toast/jquery.toast.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/fonts/fontawesome-pro/css/all.min.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" /> --}}
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/css/light/style.css') }}">
     @stack('style')
 
@@ -154,7 +154,7 @@
     <x-theme::molecules.toast />
 
     <script src="{{ asset('js/chat.js') }}" defer></script>
-    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+    {{-- <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script>
         Pusher.logToConsole = true;
 
@@ -169,7 +169,7 @@
         channel.bind('Modules\\Chat\\Events\\MessageRead', function(data) {
             window.livewire.emitTo('chat::chat.chatbox', 'broadcastedMessageRead', data)
         });
-    </script>
+    </script> --}}
 
     @stack('script')
     @livewireScripts

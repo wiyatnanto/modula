@@ -131,7 +131,7 @@
                 @endif
             </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mt-2">
             <table class="table table-product">
                 <thead>
                     @if (count($products) > 0)
@@ -213,7 +213,7 @@
                                         @endforeach
                                         <div class="media-body">
                                             <p class="product-title">
-                                                <a href="{{ asset('store/product/edit-product/' . $product->id) }}">
+                                                <a href="{{ asset('store/products/edit-product/' . $product->id) }}">
                                                     {{ $product->name }}
                                                 </a>
                                             </p>

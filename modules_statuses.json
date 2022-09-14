@@ -3,10 +3,10 @@
     "Auth": true,
     "Crud": true,
     "Dashboard": true,
-    "Module": true,
-    "Survey": true,
+    "Module": false,
+    "Survey": false,
     "Core": true,
-    "Blog": true,
+    "Blog": false,
     "Store": true,
     "Chat": true
 }

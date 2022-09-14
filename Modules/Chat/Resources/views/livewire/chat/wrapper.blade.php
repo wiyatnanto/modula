@@ -71,7 +71,7 @@
                                 </form>
                             </div>
                             <div class="aside-body">
-                                <p class="text-muted mb-1 mt-2">Chat Terakhir</p>
+                                <p class="text-muted mb-1 mt-2">{{ __('Percakapan Terakhir') }}</p>
                                 <div class="chat-list-wrapper">
                                     @livewire('chat::chat.chat-list')
                                 </div>

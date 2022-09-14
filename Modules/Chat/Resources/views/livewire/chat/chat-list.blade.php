@@ -32,6 +32,6 @@
             </li>
         </ul>
     @else
-        you have no conversations
+        <div class="text-muted tx-13">Tidak ada percakapan</div>
     @endif
 </div>

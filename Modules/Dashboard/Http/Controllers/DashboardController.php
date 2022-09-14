@@ -6,6 +6,9 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
+use Analytics;
+use Spatie\Analytics\Period;
+
 class DashboardController extends Controller
 {
     /**
@@ -14,6 +17,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $analyticsData = Analytics::fetchVisitorsAndPageViews(Period::days(7));
+        // dd($analyticsData);
         return view('dashboard::index');
     }
 

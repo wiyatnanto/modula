@@ -20,7 +20,7 @@ class Table extends Component
     public $sortByFilter;
     public $search;
 
-    public $selected;
+    public $selected = [];
     public $selectAll = false;
 
     public $minimize = false;
@@ -42,10 +42,39 @@ class Table extends Component
     {
         $this->dispatchBrowserEvent('hydrateEvent');
     }
-    
-    public function toggleSidebar(){
-        $this->minimize = $this->minimize ? false : true;
-        $this->mount();
+
+    public function updatedSelectAll($value)
+    {
+        if($value){
+            $products = Product::with(['brand', 'images', 'categories',
+                'storefronts', 'attributeValues', 'attributes.values'
+            ]);
+            
+            if ($this->search !== null) {
+                // $products->where('name', 'like', '%' . $this->search . '%');
+                $products->where('name', 'ILIKE', '%' . $this->search . '%');
+            }
+            if(count($this->categoriesFilter) > 0){
+                $products->whereHas('categories', function ($query){
+                    $query->whereIn('category_id', $this->categoriesFilter);
+                });
+            }
+            if(count($this->storefrontsFilter) > 0){
+                $products->whereHas('storefronts', function ($query){
+                    $query->whereIn('storefront_id', $this->storefrontsFilter);
+                });
+            }
+            if($this->sortField !== false){
+                $products->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc');
+            }else{
+                $products->orderBy('created_at', 'desc');
+            }
+            foreach($products->get() as $item){
+                $this->selected[$item->id] = true;
+            }
+        }else{
+            $this->selected = [];
+        }
     }
 
     public function updatePrice($id, $value){
@@ -124,17 +153,6 @@ class Table extends Component
         $this->emit('toast', ['success', 'Product has been updated']);
     }
 
-    public function selectAll($selected)
-    {
-        $this->selected = null;
-        if(count($selected) > 0){
-            foreach($selected as $item){
-                $this->selected[$item] = true;
-            }
-        }
-        $this->dispatchBrowserEvent('delete-all');
-    }
-
     public function selectedUpdate()
     {
         $this->dispatchBrowserEvent('delete-all');
@@ -164,28 +182,23 @@ class Table extends Component
     {   
 
         $products = Product::with(['brand', 'images', 'categories',
-            'storefronts'
+            'storefronts', 'attributeValues', 'attributes.values'
         ]);
-        // if($this->tab === 1){
-        //     $products->where('status', 1);
-        // }
-        // if($this->tab === 2){
-        //     $products->where('status', 0);
-        // }
+        
         if ($this->search !== null) {
             // $products->where('name', 'like', '%' . $this->search . '%');
             $products->where('name', 'ILIKE', '%' . $this->search . '%');
         }
-        // if(count($this->categoriesFilter) > 0){
-        //     $products->whereHas('categories', function ($query){
-        //         $query->whereIn('category_id', $this->categoriesFilter);
-        //     });
-        // }
-        // if(count($this->storefrontsFilter) > 0){
-        //     $products->whereHas('storefronts', function ($query){
-        //         $query->whereIn('storefront_id', $this->storefrontsFilter);
-        //     });
-        // }
+        if(count($this->categoriesFilter) > 0){
+            $products->whereHas('categories', function ($query){
+                $query->whereIn('category_id', $this->categoriesFilter);
+            });
+        }
+        if(count($this->storefrontsFilter) > 0){
+            $products->whereHas('storefronts', function ($query){
+                $query->whereIn('storefront_id', $this->storefrontsFilter);
+            });
+        }
         if($this->sortField !== false){
             $products->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc');
         }else{

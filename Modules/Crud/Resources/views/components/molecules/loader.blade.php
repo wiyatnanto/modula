@@ -1,4 +1,4 @@
-@props(['delay' => 200])
+@props(['delay' => 0])
 <div class="loader-wrapper">
     <div class="loader">
         <div class="loader-icon">
@@ -20,11 +20,14 @@
 <style>
     .loader-wrapper {
         background-color: #f9fafb;
-        position: absolute;
-        height: -webkit-fill-available;
-        width: -webkit-fill-available;
-        z-index: 99999;
+        position: fixed;
+        height: 100%;
+        width: 100vw;
+        z-index: 9999999999;
         margin-top: 60px;
+        left: 0px;
+        top: -50px;
+        overflow: hidden;
     }
 
     .loader {
@@ -113,8 +116,10 @@
 @push('script')
     <script>
         $(function() {
+            document.body.style.overflowY = "hidden";
             setTimeout(() => {
                 $(".loader-wrapper").fadeOut();
+                document.body.style.overflowY = "auto";
             }, {{ $delay }});
         });
     </script>

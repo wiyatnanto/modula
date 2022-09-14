@@ -68,7 +68,7 @@ class Table extends Component
     {
         $this->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:auth_users,email',
             'password' => 'required|confirmed',
             'password_confirmation' => 'required',
             'roles' => 'required'
@@ -78,7 +78,7 @@ class Table extends Component
             'name' => $this->name,
             'email' => $this->email,
             'password' => Hash::make($this->password),
-            'avatar' => '-'
+            'avatar' => 'noimage.webp'
         ]);
         $user->assignRole($this->roles);
         $this->emit('toast', ['success', 'User has been created']);
@@ -99,7 +99,7 @@ class Table extends Component
     {
         $this->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:auth_users,email,'.$id,
             'password' => 'confirmed',
             'roles' => 'required'
         ]);
@@ -112,7 +112,7 @@ class Table extends Component
         }
         $user->update();
 
-        DB::table('model_has_roles')
+        DB::table('auth_model_has_roles')
             ->where('model_id', $id)
             ->delete();
         $user->assignRole($this->roles);

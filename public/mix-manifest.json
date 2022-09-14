@@ -1,5 +1,7 @@
 {
     "/js/crud.js": "/js/crud.js?id=0ab0ef5b365db59a916effc210cdeb75",
     "/js/monaco.js": "/js/monaco.js?id=d4cc46a1c0443ad9631cdb7603b1514f",
-    "/css/crud.css": "/css/crud.css?id=68b329da9893e34099c7d8ad5cb9c940"
+    "/css/crud.css": "/css/crud.css?id=68b329da9893e34099c7d8ad5cb9c940",
+    "/js/chat.js": "/js/chat.js?id=a9ba8f81267d4becf1fa9886a9a0fd47",
+    "/css/chat.css": "/css/chat.css?id=b9e29d28b4ad28f049702ad6cef4c6a3"
 }

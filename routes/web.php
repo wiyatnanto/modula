@@ -17,4 +17,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/', function () {
         return view('welcome');
     });
+
+    Route::get('test', function () {
+        event(new App\Events\ChatMessageSent('Monika'));
+        return "Event has been sent!";
+    });
 });

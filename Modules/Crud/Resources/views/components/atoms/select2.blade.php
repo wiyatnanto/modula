@@ -2,18 +2,21 @@
     'placeholder' => 'Select',
     'dropdownParent' => null,
     'closeOnSelect' => true,
-    'tags' => false,
+    'tag' => false,
 ])
 <div
     {{ $attributes->merge(['class' => $errors->has($attributes->whereStartsWith('wire:model')->first()) ? 'is-invalid' : '']) }}>
     <div wire:ignore>
-        <div x-data="{ select: null, selected: $wire.entangle('{{ $attributes->whereStartsWith('wire:model')->first() }}') }" x-init="() => {
+        <div x-data="{ selected: @entangle($attributes->whereStartsWith('wire:model')->first()) }" x-init="() => {
+            let select = $($refs.select)
+        
             function initSelect() {
-                select = $($refs.select).select2({
+                select.select2({
                     placeholder: 'Select here',
                     closeOnSelect: true,
                     dropdownClass: 'select2-on-modal',
-                    tags: '{{ $tags }}',
+                    tags: '{{ $tag }}',
+        
                     //minimumResultsForSearch: -1,
                     //ajax: {
                     //    url: 'http://modula.com.test/api/survey/options',
@@ -40,10 +43,6 @@
             $watch('selected', (value) => {
                 select.val(value).trigger('change.select2');
             });
-        
-            {{-- $(window).on('hidden.bs.modal', function() {
-                select.val(null).trigger('change');
-            }); --}}
         }">
             <select {{ $attributes }} x-ref="select" class="form-select" placeholder="{{ $placeholder }}">
                 {{ $slot }}

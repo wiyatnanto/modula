@@ -19,8 +19,8 @@ class BrandSeederTableSeeder extends Seeder
 
         DB::table('store_brands')->insert([
             [
-                'name'=>'Wisner Hiyutec',
-                'slug'=>'wisner-hiyutec',
+                'name'=>'Ray Ban',
+                'slug'=>'ray-ban',
                 'image'=>'nbRCvklliF4TekadjQO0SdYDXO8okt60wdAlNXuh.jpg',
                 'status'=>1,
                 'created_at'=>'2021-12-07 05:41:41',

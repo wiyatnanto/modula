@@ -2,20 +2,23 @@
     <x-crud::molecules.breadcrumb :items="['Home' => '/', 'Store' => '/store/products']" />
     <x-crud::molecules.card>
         <x-slot name="header">
-            <div class="d-flex justify-content-start align-items-center">
-                <div class="me-2">
-                    <x-crud::atoms.link href="{{ url('store/products/add-product') }}"
-                        class="btn btn-xs btn-primary btn-icon-text">
-                        <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add Product
-                    </x-crud::atoms.link>
+            <div class="d-flex justify-content-end align-items-center">
+                <div class="me-auto">
+                    <div class="card-title mb-0">Daftar Produk</div>
                 </div>
-                <div>
+                <div class="me-2">
                     <x-crud::molecules.dropdown label="Atur Sekaligus" color="light">
                         <a type="button" class="dropdown-item" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="Dalam Pengembangan">Tambah Sekaligus</a>
                         <a type="button" class="dropdown-item" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="Dalam Pengembangan">Ubah Sekaligus</a>
                     </x-crud::molecules.dropdown>
+                </div>
+                <div>
+                    <x-crud::atoms.link href="{{ url('store/products/add-product') }}"
+                        class="btn btn-xs btn-primary btn-icon-text">
+                        <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add Product
+                    </x-crud::atoms.link>
                 </div>
             </div>
         </x-slot>
@@ -86,13 +89,15 @@
                                         'quantity' => ['label' => 'Stok', 'asc' => 'Terbanyak', 'desc' => 'Tersedikit'],
                                     ];
                                     ?>
-                                    {{ $sortLabel[$sortField]['label'] }}
-                                    {{ $sortLabel[$sortField][$sortAsc ? 'asc' : 'desc'] }}
-                                    <button class="btn btn-xs btn-link p-0" wire:click="removeSort()"
-                                        style="font-size: 0px;">
-                                        <x-crud::atoms.icon icon="times" class="text-muted"
-                                            style="font-size: .65rem;" />
-                                    </button>
+                                    @if (isset($sortLabel[$sortField]))
+                                        {{ $sortLabel[$sortField]['label'] }}
+                                        {{ $sortLabel[$sortField][$sortAsc ? 'asc' : 'desc'] }}
+                                        <button class="btn btn-xs btn-link p-0" wire:click="removeSort()"
+                                            style="font-size: 0px;">
+                                            <x-crud::atoms.icon icon="times" class="text-muted"
+                                                style="font-size: .65rem;" />
+                                        </button>
+                                    @endif
                                 </span>
                             @endif
                             @if (count($categoriesFilter) > 0)
@@ -134,26 +139,28 @@
                             <th scope="col" width="50">
                                 <x-crud::atoms.checkbox wire:model="selectAll" />
                             </th>
-                            @if ($selected === null)
-                                <th scope="col" class="tx-bold" wire:click.prevent="sortBy('name')">
-                                    Brand {{ $sortField }}
+                            @if (!count($selected))
+                                <th scope="col" class="align-middle tx-bold" wire:click.prevent="sortBy('name')">
+                                    Produk
                                     <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
                                         sortAsc="{{ $sortAsc }}" />
                                 </th>
-                                <th scope="col">Statistik</th>
-                                <th scope="col">Merek</th>
-                                <th scope="col" wire:click.prevent="sortBy('price')">Harga
+                                <th scope="col" class="align-middle tx-bold">Statistik</th>
+                                <th scope="col" class="align-middle tx-bold">Merek</th>
+                                <th scope="col" class="align-middle tx-bold" wire:click.prevent="sortBy('price')">
+                                    Harga
                                     <x-crud::molecules.sorticon name="price" sortField="{{ $sortField }}"
                                         sortAsc="{{ $sortAsc }}" />
                                 </th>
-                                <th scope="col" wire:click.prevent="sortBy('quantity')">Stok
+                                <th scope="col" class="align-middle tx-bold" wire:click.prevent="sortBy('quantity')">
+                                    Stok
                                     <x-crud::molecules.sorticon name="quantity" sortField="{{ $sortField }}"
                                         sortAsc="{{ $sortAsc }}" />
                                 </th>
-                                <th scope="col" class="tx-bold" width="30">Aktif</th>
-                                <th scope="col" class="tx-bold" width="50"></th>
+                                <th scope="col" class="align-middle tx-bold" width="30">Aktif</th>
+                                <th scope="col" class="align-middle tx-bold" width="50"></th>
                             @else
-                                <th scope="col" class="tx-bold" colspan="7">
+                                <th scope="col" class="align-middle tx-bold p-0" colspan="7">
                                     <x-crud::atoms.button size="xs" color="danger" class="btn-icon-text"
                                         x-on:click="() => {
                                             bootbox.dialog({
@@ -181,8 +188,8 @@
                                                 }     
                                             });
                                         }">
-                                        Hapus
-                                        <x-crud::atoms.icon icon="trash" class="btn-icon-append" />
+                                        Hapus Sekaligus
+                                        <x-crud::atoms.icon icon="trash-alt" class="btn-icon-append" />
                                     </x-crud::atoms.button>
                                 </th>
                             @endif
@@ -217,7 +224,11 @@
                                 <td class="align-middle">
                                     <div class="d-flex">
                                         <div class="me-2">
-                                            <i class="far fa-eye text-muted"></i> 15
+                                            <span data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Produk dilihat berdasakarkan Google Analytics"><i
+                                                    class="far fa-eye text-muted"></i>
+                                                {{ count($product->attributeValues) }}
+                                            </span>
                                         </div>
                                         <div data-bs-toggle="tooltip" data-bs-placement="top"
                                             title="Dalam Pengembangan"><i class="fal fa-shopping-bag text-muted"></i>

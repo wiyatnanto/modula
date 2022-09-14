@@ -344,9 +344,10 @@
                 </div>
             </div>
             @if ($hasVarian)
-                <div class="col-md-12">
-                    <p class="mb-2"><strong>Panduan Varian</strong></p>
-                    <div wire:ignore x-data="{ file: @entangle('varianFile') }" x-init="() => {
+                {{-- <div class="col-md-12">
+                    <p class="mb-2"><strong>Panduan Varian {{ $varianFile }}</strong></p>
+
+                    <div wire:ignore x-data="{ varianFile: @entangle('varianFile') }" x-init="() => {
                         const file = FilePond.create($refs.input);
                         file.setOptions({
                             allowProcess: true,
@@ -384,50 +385,81 @@
                     }">
                         <input type="file" x-ref="input" />
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-md-12">
                     <table>
                         @if (count($productAttributes) > 0)
-                            @foreach ($productAttributes as $key => $attribute)
+                            @foreach ($productAttributes as $key => $attributex)
                                 <tr>
                                     <td width="300" class="pe-3">
+                                        {{-- {{ json_encode($productAttributes) }} --}}
                                         <label>Tipe Varian {{ $key + 1 }}</label>
-                                        <div wire:ignore class="mb-3" wire:key="type.{{ $key }}">
-                                            <div x-data="{ selected: @entangle('attributes') }" x-init="select = $($refs.select).select2({
-                                                tags: true
+                                        <div wire:ignore class="mb-3" x-data x-init="() => {
+                                            let select = $($refs.select)
+                                            select.select2({
+                                                tags: true,
+                                                maximumSelectionLength: 2,
+                                                placeholder: 'Pilih Varian'
                                             });
                                             select.on('select2:select', function(e) {
                                                 Livewire.emit('selectAttributes', {{ $key }}, e.target.value)
-                                            });
-                                            select.val('').trigger('change');">
-                                                <select x-ref="select" class="wd-100p"
-                                                    data-placeholder="Tipe Varian">
-                                                    @foreach ($attributeoptions as $attribute)
-                                                        <option value="{{ $attribute->name }}">
-                                                            {{ $attribute->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                            })
+                                        }">
+                                            <select x-ref="select" class="form-select">
+                                                @foreach ($attributeOptions as $attribute)
+                                                    <option></option>
+                                                    <option value="{{ $attribute->name }}">{{ $attribute->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </td>
                                     <td width="600">
+                                        {{-- {{ json_encode($attributex) }} --}}
                                         <label>Pilihan Varian {{ $key + 1 }}</label>
                                         <div wire:ignore class="mb-3" wire:key="value.{{ $key }}">
-                                            <div x-data="{ selected: '' }" x-init="select = $($refs.select).select2({
-                                                tags: true,
-                                                placeholder: 'Value'
-                                            });
-                                            select.on('change', function(e) {
-                                                selected = event.target.value;
-                                                Livewire.emit('selectAttributeValues', {{ $key }}, $($refs.select).select2('data'))
-                                            });
-                                            select.val('').trigger('change');">
+                                            <div x-data="{
+                                                selected: @entangle('productAttributes'),
+                                                disabled: true
+                                            }" x-init="() => {
+                                                let select = $($refs.select)
+                                            
+                                                function initSelect2() {
+                                                    select.select2({
+                                                        tags: true,
+                                                        placeholder: 'Value'
+                                                    });
+                                                }
+                                                initSelect2()
+                                            
+                                                select.on('change', function(e) {
+                                                    console.log('ss')
+                                                    Livewire.emit('selectAttributeValues', {{ $key }}, $($refs.select).select2('data'))
+                                                });
+                                            
+                                                $watch('selected', (value) => {
+                                                    disabled = value[0].name !== null ? false : true
+                                                });
+                                            
+                                                Livewire.on('updateAttributeValueOptions', options => {
+                                                    console.log(options.map(function(item) {
+                                                        return { id: item.value, text: item.value }
+                                                    }))
+                                                    select.empty().select2({
+                                                        tags: true,
+                                                        data: options.map(function(item) {
+                                                            return { id: item.value, text: item.value }
+                                                        })
+                                                    }).trigger('change');
+                                                })
+                                            }">
                                                 <select x-ref="select" class="wd-100p" multiple="multiple"
-                                                    data-placeholder="Varian">
-                                                    @foreach ($attribute['values'] as $value)
-                                                        <option value="">
-                                                            {{ $value }}</option>
-                                                    @endforeach
+                                                    data-placeholder="Varian" x-bind:disabled="disabled">
+                                                    {{-- @if ($attributeValueOptions)
+                                                        @foreach ($attributeValueOptions as $valueOption)
+                                                            <option>{{ $valueOption->value }}</option>
+                                                        @endforeach
+                                                    @endif --}}
                                                 </select>
                                             </div>
                                         </div>
@@ -447,11 +479,9 @@
                         </tr>
                     </table>
                 </div>
-                <div class="col-md-12">
-                    {{-- {{ json_encode($productAttributes) }} --}}
+                {{-- <div class="col-md-12">
                     @if (count($productAttributes) < 2)
-                        @if ($productAttributes[count($productAttributes) - 1]['name'] !== null &&
-                            count($productAttributes[count($productAttributes) - 1]['values']) > 0)
+                        @if ($productAttributes[count($productAttributes) - 1]['name'] !== null && count($productAttributes[count($productAttributes) - 1]['values']) > 0)
                             <button wire:key="addVarian" wire:click="addVarian()"
                                 class="btn btn-xs btn-primary btn-icon-text">
                                 <i class="far fa-plus btn-icon-prepend"></i> Tambah Varian
@@ -462,7 +492,7 @@
                             </button>
                         @endif
                     @endif
-                </div>
+                </div> --}}
                 @if (count($productAttributes) > 0)
                     <div class="col-md-12">
                         <div class="mt-3">
@@ -494,24 +524,23 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        $valuesKeys = [];
-                                        foreach ($productAttributes as $key => $value) {
-                                            $valuesCount[$value['name']] = 0;
-                                        }
-                                        if (isset($attributesCount)) {
-                                            for ($i = 0; $i < $attributesCount; $i++) {
-                                                foreach ($productAttributes as $key => $value) {
-                                                    if ($valuesCount[$value['name']] === count($value['values'])) {
-                                                        $valuesCount[$value['name']] = 0;
+                                        @php
+                                            $valuesKeys = [];
+                                            foreach ($productAttributes as $key => $value) {
+                                                $valuesCount[$value['name']] = 0;
+                                            }
+                                            if (isset($attributesCount)) {
+                                                for ($i = 0; $i < $attributesCount; $i++) {
+                                                    foreach ($productAttributes as $key => $value) {
+                                                        if ($valuesCount[$value['name']] === count($value['values'])) {
+                                                            $valuesCount[$value['name']] = 0;
+                                                        }
+                                                        $valuesKeys[$value['name']][] = $valuesCount[$value['name']];
+                                                        $valuesCount[$value['name']]++;
                                                     }
-                                                    $valuesKeys[$value['name']][] = $valuesCount[$value['name']];
-                                                    $valuesCount[$value['name']]++;
                                                 }
                                             }
-                                        }
-                                        // echo json_encode($valuesKeys);
-                                        ?>
+                                        @endphp
                                         @if (isset($attributesCount))
                                             @if ($attributesCount > 0)
                                                 @for ($i = 0; $i < $attributesCount; $i++)
@@ -780,9 +809,9 @@
 @push('script')
     <script src="{{ asset('modules/crud/vendor/filepond/filepond.min.js') }}"></script>
     <script src="{{ asset('modules/crud/vendor/maskMoney/jquery.maskMoney.min.js') }}"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="{{ asset('modules/crud/vendor/filepond/filepond-plugin-image-edit.js') }}""></script>
+    <script src="{{ asset('modules/crud/vendor/filepond/filepond-plugin-image-transform.js') }}""></script>
+    <script src="{{ asset('modules/crud/vendor/filepond/filepond-plugin-image-resize.js') }}""></script>
+    <script src="{{ asset('modules/crud/vendor/filepond/filepond-plugin-image-crop.js') }}""></script>
+    <script src="{{ asset('modules/crud/vendor/filepond/filepond-plugin-image-preview.js') }}""></script>
 @endpush

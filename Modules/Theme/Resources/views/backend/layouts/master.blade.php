@@ -7,29 +7,25 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="description" content="Responsive HTML Admin Dashboard Template based on Bootstrap 5">
     <meta name="author" content="NobleUI">
-    <meta name="keywords"
-        content="nobleui, bootstrap, bootstrap 5, bootstrap5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta name="keywords" content="modula">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Modula Platform</title>
-    <!-- Fonts -->
+    <link rel="shortcut icon" href="{{ asset('modules/theme/backend/images/favicon.png') }}" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <!-- End fonts -->
 
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/bootstrap/css/bootstrap.min.css') }}">
-
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/jquery.toast/jquery.toast.min.css') }}">
-
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/fonts/fontawesome-pro/css/all.min.css') }}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/css/light/style.css') }}">
-    <link rel="shortcut icon" href="{{ asset('modules/theme/backend/images/favicon.png') }}" />
     @stack('style')
 
     @vite('resources/js/app.js')
     @livewireStyles
-
     <style>
         .ps {
             overflow: hidden !important;
@@ -145,36 +141,46 @@
         </div>
     </div>
 
-    <!-- core:js -->
     <script src="{{ asset('modules/theme/backend/vendor/jquery/jquery-3.6.0.min.js') }}" crossorigin="anonymous"></script>
     <script src="{{ asset('modules/theme/backend/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    {{-- <script src="https://unpkg.com/@popperjs/core@2"></script> --}}
     <script src="{{ asset('modules/theme/backend/vendor/perfect-scrollbar/js/perfect-scrollbar.min.js') }}"></script>
-    <!-- endinject -->
-
-    <!-- Plugin js for this page -->
     <script src="{{ asset('modules/theme/backend/vendor/select2/select2.min.js') }}"></script>
     <script src="{{ asset('modules/theme/backend/vendor/select2/select2.multi-checkboxes.js') }}"></script>
     <script src="{{ asset('modules/theme/backend/vendor/jquery.toast/jquery.toast.min.js') }}"></script>
     <script src="{{ asset('modules/theme/backend/vendor/bootbox/bootbox.min.js') }}"></script>
-    <!-- End plugin js for this page -->
 
-    <!-- inject:js -->
-    <script src="{{ asset('modules/theme/backend/js/template.js') }}"></script>
-    <!-- endinject -->
-
+    {{-- <script src="{{ asset('modules/theme/backend/js/template.js') }}"></script> --}}
     <x-theme::molecules.toast />
-    <!-- Custom js for this page -->
-    @stack('script')
-    <!-- End custom js for this page -->
-    @livewireScripts
-    <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v0.x.x/dist/livewire-sortable.js"></script>
+
+    <script src="{{ asset('js/chat.js') }}" defer></script>
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script>
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('0065ae67d471dc7f2f3b', {
+            cluster: 'ap1'
+        });
+
+        var channel = pusher.subscribe('chat.{{ auth()->user()->id }}');
+        channel.bind('Modules\\Chat\\Events\\MessageSent', function(data) {
+            window.livewire.emitTo('chat::chat.chatbox', 'broadcastedMessageReceived', data)
+        });
+        channel.bind('Modules\\Chat\\Events\\MessageRead', function(data) {
+            window.livewire.emitTo('chat::chat.chatbox', 'broadcastedMessageRead', data)
+        });
+    </script>
+
+    @stack('script')
+    @livewireScripts
+
+    {{-- <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v0.x.x/dist/livewire-sortable.js"></script> --}}
+    {{-- <script>
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
-    </script>
+    </script> --}}
 </body>
 
 </html>

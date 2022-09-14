@@ -13,5 +13,7 @@
 use Modules\Chat\Http\Livewire\Chat\Wrapper;
 
 Route::prefix('chat')->group(function() {
-    Route::get('/', Wrapper::class);
+    Route::group(['middleware' => ['auth']], function() {
+        Route::get('/', Wrapper::class);
+    });
 });

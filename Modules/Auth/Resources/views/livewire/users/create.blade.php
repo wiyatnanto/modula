@@ -45,8 +45,8 @@
         @enderror
     </div>
     <x-slot name="footer">
-        <x-crud::atoms.button size="xs" color="secondary" data-bs-dismiss="modal" text="Cancel" />
-        <x-crud::atoms.button size="xs" color="primary" wire:click.prevent="store"
+        <x-crud::atoms.button size="sm" color="secondary" data-bs-dismiss="modal" text="Cancel" />
+        <x-crud::atoms.button size="sm" color="primary" wire:click.prevent="store"
             text="Create" />
     </x-slot>
 </x-crud::organisms.modal>

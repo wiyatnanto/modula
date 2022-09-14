@@ -1,19 +1,37 @@
 <nav class="sidebar" x-data x-init="() => {
     if ($('.sidebar .sidebar-body').length) {
-        const sidebarBodyScroll = new PerfectScrollbar('.sidebar-body')
+        const sidebarBodyScroll = new PerfectScrollbar('.sidebar-body', {
+            //maxScrollbarLength: 500,
+            scrollYMarginOffset: 100
+        })
     }
     $('.sidebar .sidebar-body').hover(
         function() {
+            $('body').css('overflow', 'hidden')
             if ($('body').hasClass('sidebar-folded')) {
                 $('body').addClass('open-sidebar-folded')
             }
         },
         function() {
+            $('body').css('overflow', 'auto')
             if ($('body').hasClass('sidebar-folded')) {
                 $('body').removeClass('open-sidebar-folded')
             }
         }
     )
+    $('.sidebar-toggler').on('click', function(e) {
+        {{-- e.preventDefault() --}}
+        $('.sidebar-header .sidebar-toggler').toggleClass(
+            'active not-active'
+        )
+        if (window.matchMedia('(min-width: 992px)').matches) {
+            e.preventDefault()
+            $('body').toggleClass('sidebar-folded')
+        } else if (window.matchMedia('(max-width: 991px)').matches) {
+            e.preventDefault()
+            $('body').toggleClass('sidebar-open')
+        }
+    })
 }">
     <div class="sidebar-header">
         <a href="{{ url('/dashboard') }}" class="sidebar-brand">
@@ -32,7 +50,7 @@
                 @if ($menu['type'] === 'separator')
                     <li class="nav-item nav-category">{{ $menu['menu_title'] }}</li>
                 @else
-                    <li class="nav-item {{ request()->is('dashboard/*') ? 'active' : '' }}">
+                    <li class="nav-item {{ request()->is(ltrim($menu['url'], '/')) ? 'active' : '' }}">
                         <a href="{{ url($menu['url']) }}" class="nav-link">
                             <x-crud::atoms.icon class="link-icon {{ $menu['icon'] }}" />
                             <span class="link-title">{{ $menu['menu_title'] }}</span>
@@ -40,106 +58,6 @@
                     </li>
                 @endif
             @endforeach
-            {{-- <li class="nav-item nav-category">Main</li>
-            <li class="nav-item {{ request()->is('dashboard/*') ? 'active' : '' }}">
-                <a href="{{ url('/dashboard') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="analytics" />
-                    <span class="link-title">Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('survey') ? 'active' : '' }}">
-                <a href="{{ url('/survey') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="poll" />
-                    <span class="link-title">Survey</span>
-                </a>
-            </li>
-            <li class="nav-item nav-category">Admin</li>
-            <li class="nav-item {{ request()->is('crud/*') ? 'active' : '' }}">
-                <a href="{{ url('/crud/build') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="dice-d6" />
-                    <span class="link-title">Crud</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('module/*') ? 'active' : '' }}">
-                <a href="{{ url('/module') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="layer-group" />
-                    <span class="link-title">Modules</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('auth/users') ? 'active' : '' }}">
-                <a href="{{ url('/auth/users') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="user" />
-                    <span class="link-title">Users</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('auth/roles') ? 'active' : '' }}">
-                <a href="{{ url('/auth/roles') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="user-tag" />
-                    <span class="link-title">Role</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('auth/permissions') ? 'active' : '' }}">
-                <a href="{{ url('/auth/permissions') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="user-shield" />
-                    <span class="link-title">Permission</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('core/menu') ? 'active' : '' }}">
-                <a href="{{ url('/core/menu') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="bars" />
-                    <span class="link-title">Menus</span>
-                </a>
-            </li>
-            <li class="nav-item nav-category">Store</li>
-            <li class="nav-item {{ request()->is('blog/pages') ? 'active' : '' }}">
-                <a href="{{ url('/store/products') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="store" />
-                    <span class="link-title">Products</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('blog/posts') ? 'active' : '' }}">
-                <a href="{{ url('/store/brands') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="star" />
-                    <span class="link-title">Brand</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('blog/categories') ? 'active' : '' }}">
-                <a href="{{ url('/store/categories') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="list" />
-                    <span class="link-title">Categories</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('blog/tags') ? 'active' : '' }}">
-                <a href="{{ url('/store/storefronts') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="cabinet-filing" />
-                    <span class="link-title">Store Fronts</span>
-                </a>
-            </li>
-            <li class="nav-item nav-category">Blog</li>
-            <li class="nav-item {{ request()->is('blog/pages') ? 'active' : '' }}">
-                <a href="{{ url('/blog/pages') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="file" />
-                    <span class="link-title">Pages</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('blog/posts') ? 'active' : '' }}">
-                <a href="{{ url('/blog/posts') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="paper-plane" />
-                    <span class="link-title">Posts</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('blog/categories') ? 'active' : '' }}">
-                <a href="{{ url('/blog/categories') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="list" />
-                    <span class="link-title">Categories</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('blog/tags') ? 'active' : '' }}">
-                <a href="{{ url('/blog/tags') }}" class="nav-link">
-                    <x-crud::atoms.icon class="link-icon" icon="tags" />
-                    <span class="link-title">Tags</span>
-                </a>
-            </li> --}}
         </ul>
     </div>
 </nav>

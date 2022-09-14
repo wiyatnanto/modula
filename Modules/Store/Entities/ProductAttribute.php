@@ -11,7 +11,7 @@ class ProductAttribute extends Model
 
     protected $table = 'store_product_attributes';
 
-    protected $fillable = ['attribute_id', 'product_id', 'value', 'quantity', 'price'];
+    protected $fillable = ['product_id', 'attribute_id', 'value_id', 'sku', 'quantity', 'price'];
 
     public function product()
     {
@@ -21,6 +21,11 @@ class ProductAttribute extends Model
     public function attribute()
     {
         return $this->belongsTo(Attribute::class);
+    }
+
+    public function attributeValue()
+    {
+        return $this->belongsTo(AttributeValue::class);
     }
     
     protected static function newFactory()

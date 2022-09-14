@@ -19,8 +19,8 @@ class CategorySeederTableSeeder extends Seeder
 
         DB::table('store_categories')->insert([
             [
-                'name'=>'Alat Ukur Industri',
-                'slug'=>'alat-ukur-industri',
+                'name'=>'Kacamata Baca',
+                'slug'=>'kacamata-baca',
                 'description'=>NULL,
                 'parent_id'=>1,
                 'featured'=>0,

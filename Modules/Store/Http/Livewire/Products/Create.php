@@ -23,18 +23,21 @@ class Create extends Component
     public $storefront;
     public $images;
     public $description;
-    public $quantity;
+    public $quantity = 1;
     public $price;
-    public $minOrder;
+    public $minOrder = 1;
     public $weightType;
-    public $weight;
-    public $length, $width, $height;
+    public $weight = '10';
+    public $length = '10';
+    public $width = '10';
+    public $height = '10';
     public $brand;
     public $sku;
 
-
     public $hasVarian = false;
     public $varianFile;
+    public $attributeOptions = [];
+    public $attributeValueOptions = [];
     public $productAttributes = [];
     public $values;
 
@@ -42,6 +45,11 @@ class Create extends Component
         'selectAttributes' => 'selectAttributes',
         'selectAttributeValues' => 'selectAttributeValues'
     ];
+
+    public function mount(){
+        $this->attributeOptions = Attribute::get();
+        $this->attributeValueOptions = AttributeValue::get();
+    }
 
     public function updatedHasVarian($value)
     {
@@ -51,6 +59,7 @@ class Create extends Component
             $this->productAttributes = [];
         }
     }
+
     public function addVarian()
     {
         $this->productAttributes[] = ['name' => null, 'values' => []];
@@ -61,12 +70,18 @@ class Create extends Component
         unset($this->productAttributes[$key]);
     }
 
-    public function selectAttributes($index, $value)
+    public function selectAttributes($index, $name)
     {
-        $attribute = Attribute::where('name', $value)->first();
-        $values = [];
-        $this->productAttributes[$index] = ['name' => $value, 'values' => $values];
+        $this->productAttributes[$index] = ['name' => $name, 'values' => []];
+        $this->emit('updateAttributeValueOptions', Attribute::where('name', $name)->with('values')->first()->values);
     }
+
+    // public function selectAttributes($index, $value)
+    // {
+    //     $attribute = Attribute::where('name', $value)->with('values')->first();
+    //     $this->attributeValueOptions = $attribute->values;
+    //     $this->productAttributes[$index] = ['name' => $value, 'values' => []];
+    // }
 
     public function selectAttributeValues($index, $value)
     {
@@ -134,7 +149,7 @@ class Create extends Component
             $product->storefronts()->sync(collect($validatedData['storefront'])->where('selected', true)->pluck('id')->merge($attach));
             if($this->hasVarian){
                 $attributes = [];
-                $attribute_values = [];
+                $attributeValues = [];
                 foreach ($this->productAttributes as $key => $attribute) {
                     if($attribute['name'] !== null){
                         $attribute_id = Attribute::firstOrCreate([
@@ -146,9 +161,9 @@ class Create extends Component
                                 'attribute_id' => $attribute_id,
                                 'value' => $value
                             ])->id;
-                            $attribute_values[] = array(
+                            $attributeValues[] = array(
                                 'value_id' => $value_id,
-                                'sku' => '',
+                                'sku' => 'asdas',
                                 'quantity' => 0
                             );
                         }
@@ -158,7 +173,7 @@ class Create extends Component
                     }
                 }
                 $product->attributes()->sync($attributes);
-                $product->attribute_values()->sync($attribute_values);
+                $product->attributeValues()->sync($attributeValues);
                 if(is_object($this->varianFile)){
                     $varianFileName = $this->varianFile->store('public/files/store/files', 'local');
                     $varianFile = new File(array(
@@ -171,22 +186,18 @@ class Create extends Component
             }
             if($product){
                 $this->emit('toast', ['success', 'Product has been created']);
+                return redirect()->to('/store/products');
             }
         }
     }
 
-    public function storeAndNext()
-    {
-
-    }
-
     public function render()
     {
+        // dd(Attribute::with('values')->get());
         return view('store::livewire.products.create',[
             'categories' => Category::get(),
             'brands' => Brand::get(),
-            'storefronts'=> StoreFront::get(),
-            'attributeoptions' => Attribute::with('values')->get()
+            'storefronts'=> StoreFront::get()
         ])
         ->extends('theme::backend.layouts.master');
     }

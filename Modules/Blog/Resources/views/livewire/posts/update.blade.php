@@ -37,7 +37,7 @@
                             <label for="tags" class="form-label">Tags</label>
                             {{ json_encode($tags) }}
 
-                            <x-crud::atoms.select2 tags="true" dropdownParent="updatePost" closeOnSelect="false"
+                            <x-crud::atoms.select2 tag="true" dropdownParent="updatePost" closeOnSelect="false"
                                 wire:model.defer="tags" multiple="multiple">
                                 @foreach ($tagOptions as $key => $tag)
                                     <option value="{{ $tag }}"

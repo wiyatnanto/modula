@@ -80,6 +80,8 @@
                 font-size: 18px;
                 content: "\f0c8";
                 padding-right: 10px;
+                top: 2px;
+                position: relative;
             }
 
             .select2-container--default .select2-results__option[aria-selected=true] .wrap::before {

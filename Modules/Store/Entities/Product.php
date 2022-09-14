@@ -62,9 +62,9 @@ class Product extends Model
         return $this->belongsToMany(Attribute::class, 'store_product_attributes', 'product_id', 'attribute_id');
     }
 
-    public function attribute_values()
+    public function attributeValues()
     {
-        return $this->belongsToMany(AttributeValue::class, 'store_product_attribute_values', 'product_id', 'value_id');
+        return $this->belongsToMany(AttributeValue::class, 'store_product_attribute_values', 'product_id', 'value_id')->withPivot('sku', 'quantity','price');
     }
 
     public function files()

@@ -2,6 +2,8 @@
 
 namespace Modules\Chat\Http\Livewire\Chat;
 use Livewire\Component;
+
+use App\Models\User;
 use Modules\Chat\Entities\Conversation;
 use Modules\Chat\Entities\Message;
 
@@ -21,44 +23,32 @@ class ChatList extends Component
 
     public function resetComponent()
     {
+        // dd('resetComponent');
         $this->selectedConversation = null;
         $this->receiverInstance = null;
-
-        # code...
     }
 
     public function chatUserSelected(Conversation $conversation, $receiverId)
     {
-        //  dd($conversation,$receiverId);
         $this->selectedConversation = $conversation;
         $receiverInstance = User::find($receiverId);
+        $this->emit('refresh');
         $this->emitTo(
-            'chat.chatbox',
+            'chat::chat.chatbox',
             'loadConversation',
             $this->selectedConversation,
             $receiverInstance
         );
-        $this->emitTo(
-            'chat.send-message',
-            'updateSendMessage',
-            $this->selectedConversation,
-            $receiverInstance
-        );
-
-        # code...
     }
     public function getChatUserInstance(Conversation $conversation, $request)
     {
-        # code...
         $this->auth_id = auth()->id();
-        //get selected conversation
 
         if ($conversation->sender_id == $this->auth_id) {
             $this->receiverInstance = User::firstWhere(
                 'id',
                 $conversation->receiver_id
             );
-            # code...
         } else {
             $this->receiverInstance = User::firstWhere(
                 'id',
@@ -68,7 +58,6 @@ class ChatList extends Component
 
         if (isset($request)) {
             return $this->receiverInstance->$request;
-            # code...
         }
     }
     public function mount()
@@ -78,8 +67,6 @@ class ChatList extends Component
             ->orWhere('receiver_id', $this->auth_id)
             ->orderBy('last_time_message', 'DESC')
             ->get();
-
-        # code...
     }
 
     public function render()

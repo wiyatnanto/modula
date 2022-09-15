@@ -27,7 +27,7 @@ class ThemeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->registerTranslations();
+        $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));

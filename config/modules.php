@@ -231,6 +231,7 @@ return [
     */
     'cache' => [
         'enabled' => true,
+        'driver' => 'redis',
         'key' => 'laravel-modules',
         'lifetime' => 60,
     ],
@@ -242,7 +243,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'register' => [
-        'translations' => true,
+        'translations' => false,
         /**
          * load files on boot or register method
          *

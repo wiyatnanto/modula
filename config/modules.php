@@ -243,7 +243,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'register' => [
-        'translations' => false,
+        'translations' => true,
         /**
          * load files on boot or register method
          *

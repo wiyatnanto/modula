@@ -9,124 +9,16 @@
     <meta name="author" content="NobleUI">
     <meta name="keywords" content="modula">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Modula Platform</title>
-    <link rel="shortcut icon" href="{{ asset('modules/theme/backend/images/favicon.png') }}" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/select2/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/theme/backend/vendor/jquery.toast/jquery.toast.min.css') }}">
+    <title>{{ config('core.siteName') }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/fonts/fontawesome-pro/css/all.min.css') }}">
-    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" /> --}}
-    <link rel="stylesheet" href="{{ asset('modules/theme/backend/css/light/style.css') }}">
-    @stack('style')
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 
+    @googlefonts
+
+    @stack('style')
     @vite('resources/js/app.js')
     @livewireStyles
-    <style>
-        .ps {
-            overflow: hidden !important;
-            overflow-anchor: none;
-            -ms-overflow-style: none;
-            touch-action: auto;
-            -ms-touch-action: auto
-        }
-
-        .ps__rail-x {
-            display: none;
-            opacity: 0;
-            transition: background-color .2s linear, opacity .2s linear;
-            -webkit-transition: background-color .2s linear, opacity .2s linear;
-            height: 15px;
-            bottom: 0;
-            position: absolute
-        }
-
-        .ps__rail-y {
-            display: none;
-            opacity: 0;
-            transition: background-color .2s linear, opacity .2s linear;
-            -webkit-transition: background-color .2s linear, opacity .2s linear;
-            width: 15px;
-            right: 0;
-            position: absolute
-        }
-
-        .ps--active-x>.ps__rail-x,
-        .ps--active-y>.ps__rail-y {
-            display: block;
-            background-color: transparent
-        }
-
-        .ps--focus>.ps__rail-x,
-        .ps--focus>.ps__rail-y,
-        .ps--scrolling-x>.ps__rail-x,
-        .ps--scrolling-y>.ps__rail-y,
-        .ps:hover>.ps__rail-x,
-        .ps:hover>.ps__rail-y {
-            opacity: .6
-        }
-
-        .ps .ps__rail-x.ps--clicking,
-        .ps .ps__rail-x:focus,
-        .ps .ps__rail-x:hover,
-        .ps .ps__rail-y.ps--clicking,
-        .ps .ps__rail-y:focus,
-        .ps .ps__rail-y:hover {
-            background-color: #eee;
-            opacity: .9
-        }
-
-        .ps__thumb-x {
-            background-color: #aaa;
-            border-radius: 6px;
-            transition: background-color .2s linear, height .2s ease-in-out;
-            -webkit-transition: background-color .2s linear, height .2s ease-in-out;
-            height: 6px;
-            bottom: 2px;
-            position: absolute
-        }
-
-        .ps__thumb-y {
-            background-color: #aaa;
-            border-radius: 6px;
-            transition: background-color .2s linear, width .2s ease-in-out;
-            -webkit-transition: background-color .2s linear, width .2s ease-in-out;
-            width: 6px;
-            right: 2px;
-            position: absolute
-        }
-
-        .ps__rail-x.ps--clicking .ps__thumb-x,
-        .ps__rail-x:focus>.ps__thumb-x,
-        .ps__rail-x:hover>.ps__thumb-x {
-            background-color: #999;
-            height: 11px
-        }
-
-        .ps__rail-y.ps--clicking .ps__thumb-y,
-        .ps__rail-y:focus>.ps__thumb-y,
-        .ps__rail-y:hover>.ps__thumb-y {
-            background-color: #999;
-            width: 11px
-        }
-
-        @supports (-ms-overflow-style:none) {
-            .ps {
-                overflow: auto !important
-            }
-        }
-
-        @media screen and (-ms-high-contrast:active),
-        (-ms-high-contrast:none) {
-            .ps {
-                overflow: auto !important
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -141,19 +33,17 @@
         </div>
     </div>
 
-    <script src="{{ asset('modules/theme/backend/vendor/jquery/jquery-3.6.0.min.js') }}" crossorigin="anonymous"></script>
+    {{-- <script src="{{ asset('modules/theme/backend/vendor/jquery/jquery-3.6.0.min.js') }}" crossorigin="anonymous"></script>
     <script src="{{ asset('modules/theme/backend/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    {{-- <script src="https://unpkg.com/@popperjs/core@2"></script> --}}
     <script src="{{ asset('modules/theme/backend/vendor/perfect-scrollbar/js/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('modules/theme/backend/vendor/select2/select2.min.js') }}"></script>
     <script src="{{ asset('modules/theme/backend/vendor/select2/select2.multi-checkboxes.js') }}"></script>
     <script src="{{ asset('modules/theme/backend/vendor/jquery.toast/jquery.toast.min.js') }}"></script>
-    <script src="{{ asset('modules/theme/backend/vendor/bootbox/bootbox.min.js') }}"></script>
-
-    {{-- <script src="{{ asset('modules/theme/backend/js/template.js') }}"></script> --}}
+    <script src="{{ asset('modules/theme/backend/vendor/bootbox/bootbox.min.js') }}"></script> --}}
+    <script src="{{ asset('js/theme.js') }}"></script>
     <x-theme::molecules.toast />
 
-    <script src="{{ asset('js/chat.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/chat.js') }}" defer></script> --}}
     {{-- <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script>
         Pusher.logToConsole = true;

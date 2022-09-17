@@ -8,6 +8,7 @@ use Modules\Crud\Http\Traits\WithSorting;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Livewire\WithFileUploads;
 use Illuminate\Support\Arr;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
@@ -15,9 +16,9 @@ use DB;
 
 class Table extends Component
 {
-    use WithPagination, WithSorting;
+    use WithPagination, WithSorting, WithFileUploads;
 
-    public $userId, $userRole, $name, $email, $password, $password_confirmation;
+    public $userId, $userRole, $name, $email, $password, $password_confirmation, $avatar;
     public $roles = [];
     public $rolesOptions = [];
 
@@ -93,6 +94,7 @@ class Table extends Component
         $this->email = $user->email;
         $this->rolesOptions = Role::pluck('name','name')->all();
         $this->roles = $user->roles->pluck('name')->all();
+        $this->avatar = $user->avatar;
     }
 
     public function update($id)
@@ -109,6 +111,12 @@ class Table extends Component
         $user->email = $this->email;
         if(!empty($this->password)) { 
             $user->password = Hash::make($this->password);
+        }
+        if (gettype($this->avatar) === 'object') {
+            $this->avatar->store('public/users/avatar');
+            $user->avatar = 'users/avatar/' . $this->avatar->hashName();
+        }else{
+            $user->avatar = $this->avatar;
         }
         $user->update();
 

@@ -321,7 +321,9 @@
                     @endif
                 </tbody>
             </table>
-            {{ $products->links() }}
+            <div class="mt-3">
+                {{ $products->links() }}
+            </div>
         </div>
     </x-crud::molecules.card>
 </div>
@@ -341,5 +343,5 @@
     </style>
 @endpush
 @push('script')
-    <script src="{{ asset('modules/crud/vendor/maskMoney/jquery.maskMoney.min.js') }}"></script>
+    <script src="{{ asset('js/store.js') }}"></script>
 @endpush

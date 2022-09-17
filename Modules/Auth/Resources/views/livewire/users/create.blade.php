@@ -3,6 +3,13 @@
         <h5 class="modal-title">Create User</h5>
     </x-slot>
     <div class="mb-3">
+        <label for="avatar" class="form-label">Avatar</label>
+        <x-crud::atoms.filepond name="avatar" wire:model="avatar" />
+        @error('avatar')
+            <label id="avatar-error" class="error invalid-feedback" for="avatar">{{ $message }}</label>
+        @enderror
+    </div>
+    <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <x-crud::atoms.input type="text" placeholder="Name" name="name" wire:model="name" />
         @error('name')
@@ -46,7 +53,6 @@
     </div>
     <x-slot name="footer">
         <x-crud::atoms.button size="sm" color="secondary" data-bs-dismiss="modal" text="Cancel" />
-        <x-crud::atoms.button size="sm" color="primary" wire:click.prevent="store"
-            text="Create" />
+        <x-crud::atoms.button size="sm" color="primary" wire:click.prevent="store" text="Create" />
     </x-slot>
 </x-crud::organisms.modal>

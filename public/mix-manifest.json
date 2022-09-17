@@ -1,7 +1,6 @@
 {
-    "/js/crud.js": "/js/crud.js?id=0ab0ef5b365db59a916effc210cdeb75",
-    "/js/monaco.js": "/js/monaco.js?id=d4cc46a1c0443ad9631cdb7603b1514f",
-    "/css/crud.css": "/css/crud.css?id=68b329da9893e34099c7d8ad5cb9c940",
-    "/js/chat.js": "/js/chat.js?id=a9ba8f81267d4becf1fa9886a9a0fd47",
-    "/css/chat.css": "/css/chat.css?id=b9e29d28b4ad28f049702ad6cef4c6a3"
+    "/js/store.js": "/js/store.js?id=4c05d664e510ab1dfd55775e4171aa08",
+    "/css/store.css": "/css/store.css?id=bab8cb6368b72d706f1d969e4d366781",
+    "/css/theme.css": "/css/theme.css?id=32ca4caea59bb7513574c24889cd4dee",
+    "/js/theme.js": "/js/theme.js?id=18ad1b1101c805982b74d045b0d5c0c2"
 }

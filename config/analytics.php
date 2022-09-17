@@ -12,7 +12,7 @@ return [
      * to learn how to get this file. You can also pass the credentials as an array
      * instead of a file path.
      */
-    'service_account_credentials_json' => storage_path('app/analytics/rezam-optical-group-test-295af6b3d2e4.json'),
+    'service_account_credentials_json' => storage_path('app/analytics/rezam-optical-group-site-331b0fc0f45d.json'),
 
     /*
      * The amount of minutes the Google API responses will be cached.

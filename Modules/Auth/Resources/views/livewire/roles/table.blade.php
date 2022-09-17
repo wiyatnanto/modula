@@ -54,10 +54,10 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th width="50">
+                        <th>
                             <x-crud::atoms.checkbox wire:model="selectAll" />
                         </th>
-                        <th width="80" wire:click.prevent="sortBy('id')">ID
+                        <th wire:click.prevent="sortBy('id')">ID
                             <x-crud::molecules.sorticon name="id" sortField="{{ $sortField }}"
                                 sortAsc="{{ $sortAsc }}" />
                         </th>
@@ -65,7 +65,7 @@
                             <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
                                 sortAsc="{{ $sortAsc }}" />
                         </th>
-                        <th width="280px">Action</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>

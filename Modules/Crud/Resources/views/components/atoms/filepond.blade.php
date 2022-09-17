@@ -1,4 +1,4 @@
-@props(['placeholder', 'name', 'previewHeight' => 185])
+@props(['previewHeight' => 185])
 <div>
     <div wire:ignore x-data="{ file: @entangle($attributes->whereStartsWith('wire:model')->first()) }" x-init="() => {
         FilePond.registerPlugin(FilePondPluginImagePreview);
@@ -46,7 +46,7 @@
             console.log('watch', @this.get('{{ $attributes->whereStartsWith('wire:model')->first() }}'))
         });
     }" style="overflow: hidden;">
-        <x-crud::atoms.input x-ref="input" type="file" placeholder="{{ $placeholder }}" name="{{ $name }}" />
+        <x-crud::atoms.input x-ref="input" type="file" {{ $attributes }} />
     </div>
 </div>
 @push('style')

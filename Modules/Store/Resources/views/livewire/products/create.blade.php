@@ -15,7 +15,7 @@
                     @for ($i = 1; $i <= 5; $i++)
                         <div class="col-6 col-sm">
                             <div class="mg-b-30">
-                                <div wire:ignore x-data="{ images: '' }" x-init="() => {
+                                <div wire:ignore x-data x-init="() => {
                                     FilePond.registerPlugin(
                                         FilePondPluginImagePreview,
                                         FilePondPluginImageCrop,
@@ -49,8 +49,6 @@
                                             }
                                         },
                                     });
-                                
-                                
                                 }">
                                     <input type="file" x-ref="input" />
                                 </div>
@@ -60,134 +58,6 @@
                             </div>
                         </div>
                     @endfor
-                </div>
-            </div>
-        </div>
-    </x-crud::molecules.card>
-    <x-crud::molecules.card class="mt-3">
-        <h5 class="mb-4">Virtual Try On Produk</h5>
-        <div class="row">
-            {{-- <div class="col-md-3">
-                <p class="mb-2"><strong>Editor Produk</strong> <span class="badge bg-light text-dark">wajib</span>
-                </p>
-                <p>Format gambar .jpg .jpeg .png dan ukuran minimum 300 x 300px (Untuk gambar
-                    optimal
-                    gunakan ukuran minimum 700 x 700 px).</p>
-                <p>Cantumkan min. 3 foto yang menarik agar produk semakin menarik pembeli.</p>
-            </div> --}}
-            <div class="col-md-12">
-                <div class="row row-sm mt-2">
-                    <div class="col-6 col-sm">
-                        <div class="mg-b-30">
-                            <div wire:ignore x-data="{ images: '' }" x-init="() => {
-                                FilePond.registerPlugin(
-                                    FilePondPluginImagePreview,
-                                );
-                                const file = FilePond.create($refs.input);
-                                file.setOptions({
-                                    labelIdle: `<span>Left Temple</span>`,
-                                    labelFileProcessingComplete: 'Uploaded',
-                                    allowProcess: true,
-                                    instantUpload: true,
-                                    server: {
-                                        process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
-                                            @this.upload('tryon.images.left', file, load, error, progress)
-                                        },
-                                        revert: (filename, load) => {
-                                            @this.removeUpload('tryon.images.left', filename, load)
-                                        },
-                                        load: (source, load, error, progress, abort, headers) => {
-                                            var myRequest = new Request(source);
-                                            fetch(myRequest).then(function(response) {
-                                                response.blob().then(function(myBlob) {
-                                                    load(myBlob)
-                                                });
-                                            });
-                                        }
-                                    },
-                                });
-                            }">
-                                <input type="file" x-ref="input" />
-                            </div>
-                            @error('images' . $i)
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-6 col-sm">
-                        <div class="mg-b-30">
-                            <div wire:ignore x-data="{ images: '' }" x-init="() => {
-                                FilePond.registerPlugin(
-                                    FilePondPluginImagePreview,
-                                );
-                                const file = FilePond.create($refs.input);
-                                file.setOptions({
-                                    labelIdle: `<span>Frame Front</span>`,
-                                    labelFileProcessingComplete: 'Uploaded',
-                                    allowProcess: true,
-                                    instantUpload: true,
-                                    server: {
-                                        process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
-                                            @this.upload('tryon.images.left', file, load, error, progress)
-                                        },
-                                        revert: (filename, load) => {
-                                            @this.removeUpload('tryon.images.left', filename, load)
-                                        },
-                                        load: (source, load, error, progress, abort, headers) => {
-                                            var myRequest = new Request(source);
-                                            fetch(myRequest).then(function(response) {
-                                                response.blob().then(function(myBlob) {
-                                                    load(myBlob)
-                                                });
-                                            });
-                                        }
-                                    },
-                                });
-                            }">
-                                <input type="file" x-ref="input" />
-                            </div>
-                            @error('images' . $i)
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-6 col-sm">
-                        <div class="mg-b-30">
-                            <div wire:ignore x-data="{ images: '' }" x-init="() => {
-                                FilePond.registerPlugin(
-                                    FilePondPluginImagePreview,
-                                );
-                                const file = FilePond.create($refs.input);
-                                file.setOptions({
-                                    labelIdle: `<span>Right Temple</span>`,
-                                    labelFileProcessingComplete: 'Uploaded',
-                                    allowProcess: true,
-                                    instantUpload: true,
-                                    server: {
-                                        process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
-                                            @this.upload('tryon.images.left', file, load, error, progress)
-                                        },
-                                        revert: (filename, load) => {
-                                            @this.removeUpload('tryon.images.left', filename, load)
-                                        },
-                                        load: (source, load, error, progress, abort, headers) => {
-                                            var myRequest = new Request(source);
-                                            fetch(myRequest).then(function(response) {
-                                                response.blob().then(function(myBlob) {
-                                                    load(myBlob)
-                                                });
-                                            });
-                                        }
-                                    },
-                                });
-                            }">
-                                <input type="file" x-ref="input" />
-                            </div>
-                            @error('images' . $i)
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -233,7 +103,7 @@
                         @this.set('brand', e.target.value);
                     });
                     select.val('').trigger('change');">
-                        <select x-ref="select" class="wd-100p" data-placeholder="Pilih Brand">
+                        <select x-ref="select" class="form-select wd-100p" data-placeholder="Pilih Brand">
                             @foreach ($brands as $brand)
                                 <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                             @endforeach
@@ -261,7 +131,7 @@
                         @this.set('category', e.target.value);
                     });
                     select.val('').trigger('change');">
-                        <select x-ref="select" class="wd-100p" data-placeholder="Pilih Kategori">
+                        <select x-ref="select" class="form-select wd-100p" data-placeholder="Pilih Kategori">
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
@@ -291,7 +161,8 @@
                         @this.set('storefront', $($refs.select).select2('data'));
                     });
                     select.val(selected).trigger('change');">
-                        <select x-ref="select" class="wd-100p" multiple="multiple" data-placeholder="Pilih Etalase">
+                        <select x-ref="select" class="form-select wd-100p" multiple="multiple"
+                            data-placeholder="Pilih Etalase">
                             @foreach ($storefronts as $storefront)
                                 <option value="{{ $storefront->id }}">{{ $storefront->name }}</option>
                             @endforeach
@@ -344,7 +215,7 @@
                 </div>
             </div>
             @if ($hasVarian)
-                {{-- <div class="col-md-12">
+                <div class="col-md-12">
                     <p class="mb-2"><strong>Panduan Varian {{ $varianFile }}</strong></p>
 
                     <div wire:ignore x-data="{ varianFile: @entangle('varianFile') }" x-init="() => {
@@ -385,7 +256,7 @@
                     }">
                         <input type="file" x-ref="input" />
                     </div>
-                </div> --}}
+                </div>
                 <div class="col-md-12">
                     <table>
                         @if (count($productAttributes) > 0)
@@ -748,10 +619,7 @@
 </div>
 
 @push('style')
-    <link rel="stylesheet" href="{{ asset('modules/crud/vendor/filepond/filepond.min.css') }}" />
-    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
-        rel="stylesheet" />
-    <link href="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('css/store.css') }}" />
     <style>
         .card {
             border-radius: 8px;
@@ -807,11 +675,5 @@
     </style>
 @endpush
 @push('script')
-    <script src="{{ asset('modules/crud/vendor/filepond/filepond.min.js') }}"></script>
-    <script src="{{ asset('modules/crud/vendor/maskMoney/jquery.maskMoney.min.js') }}"></script>
-    <script src="{{ asset('modules/crud/vendor/filepond/filepond-plugin-image-edit.js') }}""></script>
-    <script src="{{ asset('modules/crud/vendor/filepond/filepond-plugin-image-transform.js') }}""></script>
-    <script src="{{ asset('modules/crud/vendor/filepond/filepond-plugin-image-resize.js') }}""></script>
-    <script src="{{ asset('modules/crud/vendor/filepond/filepond-plugin-image-crop.js') }}""></script>
-    <script src="{{ asset('modules/crud/vendor/filepond/filepond-plugin-image-preview.js') }}""></script>
+    <script src="{{ asset('js/store.js') }}"></script>
 @endpush

@@ -15,7 +15,7 @@
                     or
                 </div>
                 <div>
-                    <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" x-data
+                    <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" x-data="{}"
                         x-on:click="
                             bootbox.prompt({
                                 title: 'Enter new Menu', 
@@ -164,7 +164,7 @@
                 </div>
             </div>
             <div class="col-md-8">
-                <div x-data x-init="() => {
+                <div x-data="{}" x-init="() => {
                     function initMenu() {
                         $($refs.tree).nestable({
                             maxDepth: 3,
@@ -201,12 +201,12 @@
                                                 <div class="d-flex align-items-center">
                                                     <div>
                                                         <button type="button"
-                                                            class="btn btn-link p-1 text-secondary">
-                                                            Edit
+                                                            class="btn btn-icon p-1 text-secondary">
+                                                            <x-crud::atoms.icon icon="edit" />
                                                         </button>
                                                     </div>
-                                                    <div class="border-start">
-                                                        <button type="button" class="btn btn-link p-1 text-secondary"
+                                                    <div>
+                                                        <button type="button" class="btn btn-icon p-1 text-danger"
                                                             x-on:click="bootbox.dialog({
                                                             closeButton: false,
                                                             size: 'small',
@@ -232,7 +232,7 @@
                                                             }     
                                                         });
                                                     ">
-                                                            Delete
+                                                            <x-crud::atoms.icon icon="trash-alt" />
                                                         </button>
                                                     </div>
                                                 </div>
@@ -260,10 +260,17 @@
                                                                             wire:model="menus.{{ $key }}.children.{{ $key2 }}.view"
                                                                             wire:click="toggleView({{ $menu2['id'] }})" />
                                                                     </div>
-                                                                    <div>
-                                                                        <button type="button"
-                                                                            class="btn btn-xs btn-link btn-icon"
-                                                                            x-on:click="bootbox.dialog({
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div>
+                                                                            <button type="button"
+                                                                                class="btn btn-icon p-1 text-secondary">
+                                                                                <x-crud::atoms.icon icon="edit" />
+                                                                            </button>
+                                                                        </div>
+                                                                        <div>
+                                                                            <button type="button"
+                                                                                class="btn btn-icon p-1 text-danger"
+                                                                                x-on:click="bootbox.dialog({
                                                                                 closeButton: false,
                                                                                 size: 'small',
                                                                                 centerVertical: true,
@@ -275,22 +282,22 @@
                                                                                         label: 'Yes',
                                                                                         className: 'btn-sm btn-danger',
                                                                                         callback: function(){
-                                                                                             @this.emit('deleteMenu', {{ $menu2['id'] }})              
+                                                                                            @this.emit('deleteMenu', {{ $menu2['id'] }})              
                                                                                         }
                                                                                     },
                                                                                     no:{
                                                                                         label: 'Cancel',
                                                                                         className: 'btn-sm btn-secondary',
                                                                                         callback: function(){
-                                                                                                                
+                                                                                                    
                                                                                         }
                                                                                     }
                                                                                 }     
                                                                             });
                                                                         ">
-                                                                            <i
-                                                                                class="mdi mdi-window-close text-secondary"></i>
-                                                                        </button>
+                                                                                <x-crud::atoms.icon icon="trash-alt" />
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -320,10 +327,19 @@
                                                                                                 wire:model="menus.{{ $key }}.children.{{ $key2 }}.children.{{ $key3 }}.view"
                                                                                                 wire:click="toggleView({{ $menu3['id'] }})" />
                                                                                         </div>
-                                                                                        <div>
-                                                                                            <button type="button"
-                                                                                                class="btn btn-xs btn-link btn-icon"
-                                                                                                x-on:click="bootbox.dialog({
+                                                                                        <div
+                                                                                            class="d-flex align-items-center">
+                                                                                            <div>
+                                                                                                <button type="button"
+                                                                                                    class="btn btn-icon p-1 text-secondary">
+                                                                                                    <x-crud::atoms.icon
+                                                                                                        icon="edit" />
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                <button type="button"
+                                                                                                    class="btn btn-icon p-1 text-danger"
+                                                                                                    x-on:click="bootbox.dialog({
                                                                                                     closeButton: false,
                                                                                                     size: 'small',
                                                                                                     centerVertical: true,
@@ -342,15 +358,16 @@
                                                                                                             label: 'Cancel',
                                                                                                             className: 'btn-sm btn-secondary',
                                                                                                             callback: function(){
-                                                                                                                
+                                                                                                                        
                                                                                                             }
                                                                                                         }
                                                                                                     }     
                                                                                                 });
                                                                                             ">
-                                                                                                <x-crud::atoms.icon
-                                                                                                    icon="times" />
-                                                                                            </button>
+                                                                                                    <x-crud::atoms.icon
+                                                                                                        icon="trash-alt" />
+                                                                                                </button>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
 
@@ -371,7 +388,11 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-12">
+                <p class="text-muted tx-13 my-3">* Maksimum menu 3 level</p>
+            </div>
         </div>
+
     </x-crud::molecules.card>
 </div>
 @push('style')

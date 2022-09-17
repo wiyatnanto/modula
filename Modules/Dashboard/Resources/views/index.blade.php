@@ -182,10 +182,10 @@
                         </div>
                         <div class="col-md-5 d-flex justify-content-md-end">
                             <div class="btn-group mb-3 mb-md-0" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-outline-primary">Hari ini</button>
-                                <button type="button" class="btn btn-outline-primary d-none d-md-block">Minggu</button>
-                                <button type="button" class="btn btn-primary">Bulan</button>
-                                <button type="button" class="btn btn-outline-primary">Tahun</button>
+                                <button type="button" class="btn btn-xs btn-outline-primary">Hari ini</button>
+                                <button type="button" class="btn btn-xs btn-outline-primary d-none d-md-block">Minggu</button>
+                                <button type="button" class="btn btn-xs btn-primary">Bulan</button>
+                                <button type="button" class="btn btn-xs btn-outline-primary">Tahun</button>
                             </div>
                         </div>
                     </div>

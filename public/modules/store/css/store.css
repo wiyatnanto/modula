@@ -1,3 +1,332 @@
+/*
+ * Modula Default Layout
+ *
+ * This style is use for default layout.
+ *
+ */
+@media (max-width: 991.98px) {
+    .app-modula.modula-sidebar-show .modula-sidebar {
+        left: 0;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .app-modula.modula-sidebar-show .modula-content {
+        transform: translateX(240px);
+    }
+}
+
+.modula-wrapper {
+    top: 55px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+@media (min-width: 992px) {
+    .modula-wrapper {
+        top: 60px;
+    }
+}
+
+@media (min-width: 992px) {
+    .modula-wrapper-two {
+        position: relative;
+        height: 100%;
+        top: auto;
+    }
+}
+
+.modula-sidebar {
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -240px;
+    width: 240px;
+    border-right: 1px solid rgba(72, 94, 144, 0.16);
+    opacity: 0;
+    visibility: hidden;
+    /*transition: all 0.3s;*/
+    animation: fade_in_show 0.5s;
+    margin-top: 60px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modula-sidebar {
+        transition: none;
+    }
+}
+
+@media (min-width: 992px) {
+    .modula-sidebar {
+        left: 0;
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+.modula-sidebar-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    max-height: 50px;
+    border-bottom: 1px solid rgba(72, 94, 144, 0.16);
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    display: none;
+}
+
+.modula-sidebar-header button {
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto,
+        sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.modula-sidebar-header button.btn-white {
+    font-weight: 700;
+}
+
+.modula-sidebar-header button + button {
+    margin-left: 10px;
+}
+
+.modula-sidebar-header .feather-arrow-right {
+    display: none;
+}
+
+.modula-sidebar-header button svg {
+    width: 12px;
+    height: 12px;
+    stroke-width: 2.5px;
+    margin-top: -1px;
+}
+
+.modula-sidebar-toggle {
+    white-space: nowrap;
+}
+
+.modula-sidebar-toggle svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.5px;
+    margin-top: -1px;
+    color: #8392a5;
+}
+
+.modula-sidebar-toggle span {
+    margin-left: 13px;
+    font-size: 13.5px;
+    color: #656d80;
+    animation: fade_in_show 0.5s;
+}
+
+@keyframes fade_in_show {
+    0% {
+        opacity: 0;
+        /*transform: scale(0)*/
+    }
+
+    100% {
+        opacity: 1;
+        /*transform: scale(1)*/
+    }
+}
+
+.modula-sidebar-body {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.modula-content {
+    margin-top: 60px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: all 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modula-content {
+        transition: none;
+    }
+}
+
+@media (min-width: 992px) {
+    .modula-content {
+        left: 240px;
+    }
+}
+
+.modula-content-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 55px;
+    border-bottom: 1px solid rgba(72, 94, 144, 0.16);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.modula-content-header .feather-search {
+    color: #8392a5;
+    align-self: center;
+    width: 18px;
+    stroke-width: 2.8px;
+    margin-right: 10px;
+    margin-top: -2px;
+}
+
+.modula-content-header .search-form {
+    display: flex;
+    align-items: center;
+}
+
+.modula-content-header .search-form .form-control {
+    border-width: 0;
+    background-color: transparent;
+    font-size: inherit;
+    padding: 0;
+    color: #1b2e4b;
+}
+
+.modula-content-header .nav-link {
+    padding: 0;
+}
+
+.modula-content-header .nav-link + .nav-link {
+    margin-left: 10px;
+}
+
+.modula-content-header .nav-link svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.2px;
+}
+
+.modula-content-header .nav-link svg.feather-settings {
+    width: 18px;
+    height: 18px;
+}
+
+.modula-content-body {
+    background-color: #f8f9fc;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+.modula-content-body.no-header {
+    top: 0px;
+}
+
+@media (min-width: 1024px) {
+    .modula-content-body > div:first-child {
+        /*max-width: 1140px;*/
+    }
+
+    .modula-sidebar.minimize {
+        width: 55px;
+    }
+
+    .modula-sidebar.minimize .modula-sidebar-toggle span {
+        display: none;
+    }
+
+    .modula-sidebar.minimize .modula-sidebar-header {
+        padding: 15px 20px;
+    }
+
+    .modula-sidebar.minimize .modula-sidebar-body div {
+        padding: 0px;
+        margin-left: 18px;
+        margin-top: 18px;
+    }
+
+    .modula-sidebar.minimize .modula-sidebar-body .nav-link span {
+        display: none;
+    }
+
+    .modula-sidebar.minimize
+        .modula-sidebar-body
+        .sidebar-nav
+        .nav-link.active::before {
+        display: none;
+    }
+
+    .modula-sidebar.minimize
+        .modula-sidebar-body
+        .sidebar-nav
+        .nav-item.show
+        .nav {
+        display: none;
+    }
+
+    .modula-sidebar.minimize .modula-sidebar-body .sidebar-nav .nav-link svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .modula-sidebar.minimize .modula-sidebar-body .sidebar-nav .nav-label {
+        display: none;
+    }
+
+    .modula-sidebar.minimize
+        .modula-sidebar-body
+        .sidebar-nav
+        .nav-link.with-sub::after {
+        display: none;
+    }
+
+    .modula-content.minimize {
+        left: 55px;
+    }
+}
+
+@media (min-width: 992px) {
+    .aside-modula + .content {
+        margin-left: 60px;
+    }
+}
+
+@media (min-width: 1020px) {
+    .modula-sidebar-header {
+        display: block;
+    }
+    .modula-sidebar-body {
+        top: 55px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .modula-sidebar-header {
+        display: block;
+    }
+    .modula-sidebar-body {
+        top: 55px;
+    }
+}
+
+.sidebar-nav .nav-item + .nav-item {
+    margin-top: 15px !important;
+}
+
 .nav-line .nav-link {
     padding: 8px 15px;
     cursor: pointer;

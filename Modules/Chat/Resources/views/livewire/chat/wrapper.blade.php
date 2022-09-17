@@ -39,10 +39,9 @@
                                         </div>
                                     </div>
                                     <div class="dropdown">
-                                        <button class="btn p-0" type="button" id="dropdownMenuButton"
+                                        <button class="btn btn-link p-0" type="button" id="dropdownMenuButton"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="icon-lg text-muted pb-3px" data-feather="settings"
-                                                data-bs-toggle="tooltip" title="Settings"></i>
+                                            <x-crud::atoms.icon icon="cog" class="icon-lg text-muted pb-3px" />
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i

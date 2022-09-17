@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "rezam-optical-group-site",
+  "private_key_id": "331b0fc0f45d9e4cb38075f7ce81761b5af1c819",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDX5FtF8kiE6PPi\nGlbq5UjNlSbMPQUbbBgE+hodk3mWXwhMJY5SQn0O5NeABw9xgHQqKIIxfi/IiwNs\nb44NpCZEw6ghaDAFgT4H+PblEzkv+/EvlU6gF5ZEHdN+xbBLFoWXk7D6aXSPwG+B\nLsft0bQwKPfNjR4L66W/Ztc+af7WQlXlS0gSHSwlrvPXHlscXWgi9XoLee5Mt9qk\nwYjznEEQsvP1YLOVyI5oXz8oxoijp1iy57d2VH/xE0zw+p/rT0O55LCumCfkCVxh\nKNe7rD//K7GnyZHmdVNfxSAGUnqpfAkqM+c6O0GlNR3iY9NMUE/96Yx9VmBWxPiu\n8EfwckONAgMBAAECggEAFivvDbtopDGyXj2bQItkkyxmrCH2JM9Qli5DQVdUbNN8\nrClNOPh4FG//C7ht5xeslmnLmR6e9KcGJnw8Z/08KuK3IRssl1wjDTmNzY/QVzO2\nHM9mID3b4kn33vSZetSoypzR15296Ud3jBpMUQmwyiNi85qzA8FjJ8l9gHztPX6p\nNT7FPGnlQ/uvDqAH1ifNeGBU8q3agtxuiT0E1eOHZbgwSGH2BckQDCuf022F/wsY\nTq0vMYAHNyKxzCUbsf3rCjm05IWYx1C9P+I8+fmNOGPTxhBKaWQbubyjBZlBhI2C\n6IfGAQpDBUo6zvEbJehJzZPiqLvuvREjT6tM6xJYhwKBgQD0nhL3XCVGhzd34+1W\n2SR4Wq2I4OhAemOnwtNLBTT64kDFRqADoyttJQ6JDRJEtATvxSdunWFBGjK3EqWh\nvLlb2CtjjyvzOB7LJacQNIpY4LTvx8ScBwrE8m7oMThDHXUqu5LorHw0vdv2ffk4\ncTVvCcqCPfSdkcjI266c8TSEzwKBgQDh8BmLhrQvt6X7PnriNqVysd3PUGJa7vP4\n2jnuLHbIKMtgUQ+sGMKteRxCl2vd+oJZ84hqN4SNlhYzDrx01LPgdZQiwtzp1uVk\nWHPh9GOj6XWNj5v2qiCXXxQe/HCcYx5DKxvA7Hu+ZVUUjtk/ZfUGbIkTKZV4trnz\nvGlpfDeA4wKBgBLYbsuhzLlfR3W0GJ/dQMMI8V+fPCVjiHPvPYoFD6zYa3cHVuKQ\n2pKhDTqfyC2E1PCH9t69vzVdyFR0WlBYkssxnz4fVJp7U1wBPZqxAYuRXD8w28PN\ngxXjO4ol6Ji7F0DAjLPiPftuORkHYYDor94rGe/oyASvq5FV42Dx8ELfAoGAYYaj\ncC/AHYzXT8Ejh/vwpLaUOUXIftoAY93G/cEhsLqzNysmabHybrEFetUj0ZitpahS\nrQ6z3+32PSnSPVgHIQ9/1xVoCGQjdpIby2ATlpBSlr1zpCDBmrWG2O08qrS6PmIg\nQ8GQlJnnBM24hv46qwA0lxnvFEFDuSsOEWN2DeMCgYAQyoWt3/jxYq5OLaVTLxlA\ns5b2+JD6rzDb8N1eL+SubONQshDLZVpY7VyYBCWs6H+tWr0ATfHFVGkMKCdu8hhi\nhpzj29xRGWIVc4ZFKR2NE7RruENclDjImsluWFUUtgZCe5fQ5h9N5sGOOfIbwu3z\neSI2w9n0LBK+2EXCWwFoYA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "rezamopticalgroup-google-api@rezam-optical-group-site.iam.gserviceaccount.com",
+  "client_id": "102692476144373467117",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/rezamopticalgroup-google-api%40rezam-optical-group-site.iam.gserviceaccount.com"
+}

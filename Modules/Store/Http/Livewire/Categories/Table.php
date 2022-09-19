@@ -5,29 +5,30 @@ namespace Modules\Store\Http\Livewire\Categories;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Livewire\WithPagination;
+use Modules\Crud\Http\Traits\WithSorting;
 
 use Modules\Store\Entities\Category;
 
 class Table extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WithPagination, WithSorting;
 
     public $search;
-    public $sortBy = false;
-    public $sortAsc = 'asc';
     public $filterActive = 0;
     public $view = 'list';
 
-    public $brandId;
+    public $categoryId;
     public $name;
     public $image;
 
+    public $categoriesTrees = [];
     public $updateMode = false;
     public $minimize = false;
 
     public $listeners = [
         'updateOrderTree' => 'updateOrderTree',
-        'delete' => 'delete'
+        'delete' => 'delete',
     ];
 
     protected $queryString = ['view'];
@@ -37,49 +38,62 @@ class Table extends Component
         $this->dispatchBrowserEvent('hydrateEvent');
     }
 
-    public function toggleSidebar(){
-        $this->minimize = $this->minimize ? false : true;
+    public function mount()
+    {
+        $this->categoriesTrees = collect(Category::with('children')->get());
     }
 
-    public function toggleFilterActive(){
+    public function toggleView($id)
+    {
+        $category = Category::findOrFail($id);
+        $category->status = $category->status ? 0: 1;
+        $category->update();
+        $this->emit('toast', ['success', 'Category has been updated']);
+    }
+
+    public function toggleFilterActive()
+    {
         $this->filterActive = $this->filterActive ? 0 : 1;
     }
 
-    public function toggleActive($id){
+    public function toggleActive($id)
+    {
         $category = Category::findOrFail($id);
         $category->status = $category->status ? 0 : 1;
         $category->update();
     }
 
-    public function updateOrder($list){
-        foreach($list as $key => $val){
+    public function updateOrder($list)
+    {
+        foreach ($list as $key => $val) {
             $category = Category::findOrFail($val['value']);
             $category->order_menu = $val['order'];
             $category->update();
         }
     }
 
-    public function updateOrderTree($datas){
-        foreach($datas as $key => $data){
-            if(isset($data['children'])){
-                foreach($data['children'] as $key2 => $data2){
-                    if(isset($data2['children'])){
-                        foreach($data2['children'] as $key3 => $data3){
+    public function updateOrderTree($datas)
+    {
+        foreach ($datas as $key => $data) {
+            if (isset($data['children'])) {
+                foreach ($data['children'] as $key2 => $data2) {
+                    if (isset($data2['children'])) {
+                        foreach ($data2['children'] as $key3 => $data3) {
                             $category = Category::findOrFail($data3['id']);
                             $category->order_menu = $key3;
                             $category->parent_id = $data2['id'];
                             $category->menu_level = 3;
                             $category->update();
                         }
-                    }else{
+                    } else {
                         $category = Category::findOrFail($data2['id']);
                         $category->order_menu = $key2;
                         $category->parent_id = $data['id'];
                         $category->menu_level = 2;
                         $category->update();
                     }
-                }   
-            }else{
+                }
+            } else {
                 $category = Category::findOrFail($data['id']);
                 $category->order_menu = $key;
                 $category->parent_id = 0;
@@ -89,21 +103,33 @@ class Table extends Component
         }
     }
 
-    private function resetInputFields(){
+    private function resetInputFields()
+    {
         $this->name = null;
         $this->image = null;
     }
 
     public function store()
     {
-        $category = new Category;
+        $category = new Category();
         $category->name = $this->name;
         $category->parent_id = 0;
-        if(is_object($this->image)){
-            $fileName = $this->image->store('public/files/store/categories', 'local');
-            $category->image = str_replace('public/files/store/categories/','', $fileName);
+        if (is_object($this->image)) {
+            $fileName = $this->image->store(
+                'public/files/store/categories',
+                'local'
+            );
+            $category->image = str_replace(
+                'public/files/store/categories/',
+                '',
+                $fileName
+            );
         }
         $category->save();
+        if ($category) {
+            $this->emit('toast', ['success', 'Category has been created']);
+            $this->dispatchBrowserEvent('closeModal');
+        }
     }
 
     public function edit($id)
@@ -119,9 +145,16 @@ class Table extends Component
     {
         $category = Category::find($this->categoryId);
         $category->name = $this->name;
-        if(is_object($this->image)){
-            $fileName = $this->image->store('public/files/store/categories', 'local');
-            $category->image = str_replace('public/files/store/categories/','', $fileName);
+        if (is_object($this->image)) {
+            $fileName = $this->image->store(
+                'public/files/store/categories',
+                'local'
+            );
+            $category->image = str_replace(
+                'public/files/store/categories/',
+                '',
+                $fileName
+            );
         }
         $category->update();
         $this->updateMode = false;
@@ -133,7 +166,7 @@ class Table extends Component
     {
         $brand = Category::findOrFail($id);
         $brand->delete();
-        $this->emit('notify', 'Kategori '.$brand->name.' berhasil dihapus');
+        $this->emit('notify', 'Kategori ' . $brand->name . ' berhasil dihapus');
     }
 
     public function cancel()
@@ -145,16 +178,15 @@ class Table extends Component
     public function render()
     {
         $categories = Category::with('children')->orderBy('order_menu', 'asc');
-        if($this->filterActive){
+        if ($this->filterActive) {
             $categories->where('status', $this->filterActive);
         }
         if ($this->search !== null) {
             $categories->where('name', 'like', '%' . $this->search . '%');
         }
 
-        return view('store::livewire.categories.table',[
-            'categories' => $categories->get()
-        ])
-        ->extends('theme::backend.layouts.master');
+        return view('store::livewire.categories.table', [
+            'categories' => $categories->fastPaginate(10)
+        ])->extends('theme::backend.layouts.master');
     }
 }

@@ -79,7 +79,7 @@ class Create extends Component
         }
         $this->productAttributes[$index] = ['name' => $name, 'values' => []];
 
-        $this->emit('updateAttributeValueOptions', $values);
+        $this->emit('updateAttributeValueOptions', ['index' => $index, 'options' => $values]);
     }
 
     public function selectAttributeValues($index, $value)

@@ -10,6 +10,8 @@ mix.styles([
     __dirname + '/Resources/assets/vendor/filepond/filepond.min.css',
     __dirname + '/Resources/assets/vendor/filepond/filepond-plugin-image-preview.css',
     __dirname + '/Resources/assets/vendor/filepond/filepond-plugin-image-edit.css',
+    __dirname + '/Resources/assets/vendor/nestable2/jquery.nestable.min.css',
+    __dirname + '/Resources/assets/css/app.css',
 ], '../../public/css/store.css').sourceMaps();
 
 mix.scripts([
@@ -19,7 +21,9 @@ mix.scripts([
     __dirname + '/Resources/assets/vendor/filepond/filepond-plugin-image-crop.js',
     __dirname + '/Resources/assets/vendor/filepond/filepond-plugin-image-edit.js',
     __dirname + '/Resources/assets/vendor/filepond/filepond.min.js',
-    __dirname + '/Resources/assets/vendor/maskMoney/jquery.maskMoney.min.js'
+    __dirname + '/Resources/assets/vendor/maskMoney/jquery.maskMoney.min.js',
+    __dirname + '/Resources/assets/vendor/nestable2/jquery.nestable.min.js',
+    __dirname + '/Resources/assets/js/app.js',
 ], '../../public/js/store.js').sourceMaps();
 
 if (mix.inProduction()) {

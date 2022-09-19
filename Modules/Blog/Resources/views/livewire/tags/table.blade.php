@@ -1,10 +1,5 @@
 <div>
-    <nav class="page-breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url('dashboard') }}">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Roles</li>
-        </ol>
-    </nav>
+    <x-crud::molecules.breadcrumb :items="['Dashboard' => '/dashboard', 'Posts' => '/blog/posts', 'Tags' => '/blog/tags']" />
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -12,8 +7,8 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="flex-grow-1">
                             <x-crud::atoms.button size="sm" color="primary" data-bs-toggle="modal"
-                                data-bs-target="#createPage">
-                                Add New Page
+                                data-bs-target="#createTag">
+                                Add New Tag
                             </x-crud::atoms.button>
                             @if (count($selected) > 0)
                                 <span x-data
@@ -65,10 +60,10 @@
                                 <th width="50">
                                     <x-crud::atoms.checkbox wire:model="selectAll" />
                                 </th>
-                                <th width="80" wire:click.prevent="sortBy('id')">ID
+                                {{-- <th width="80" wire:click.prevent="sortBy('id')">ID
                                     <x-crud::molecules.sorticon name="id" sortField="{{ $sortField }}"
                                         sortAsc="{{ $sortAsc }}" />
-                                </th>
+                                </th> --}}
                                 <th wire:click.prevent="sortBy('name')">Name
                                     <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
                                         sortAsc="{{ $sortAsc }}" />
@@ -77,21 +72,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($pages as $key => $page)
+                            @foreach ($tags as $key => $tag)
                                 <tr>
                                     <td>
-                                        <x-crud::atoms.checkbox wire:model="selected"
-                                            value="{{ $page->id }}" />
+                                        <x-crud::atoms.checkbox wire:model="selected" value="{{ $tag->id }}" />
                                     </td>
-                                    <td>{{ $page->id }}</td>
-                                    <td>{{ $page->title }}</td>
+                                    {{-- <td>{{ $tag->id }}</td> --}}
+                                    <td>{{ $tag->name }}</td>
                                     <td>
                                         <x-crud::molecules.dropdown label="Action">
                                             <a class="dropdown-item" href="">Show</a>
                                             @can('roles.update')
                                                 <button class="dropdown-item" data-bs-toggle="modal"
-                                                    data-bs-target="#updatePage"
-                                                    wire:click="edit({{ $page->id }})">Edit</button>
+                                                    data-bs-target="#updateTag"
+                                                    wire:click="edit({{ $tag->id }})">Edit</button>
                                             @endcan
                                             @can('roles.delete')
                                                 <div x-data>
@@ -109,7 +103,7 @@
                                                                         label: 'Yes',
                                                                         className: 'btn-sm btn-danger',
                                                                         callback: function(){
-                                                                            @this.emit('delete', {{ $page->id }})              
+                                                                            @this.emit('delete', {{ $tag->id }})              
                                                                         }
                                                                     },
                                                                     no:{
@@ -131,7 +125,7 @@
                         </tbody>
                     </table>
                     <div class="mt-2">
-                        {{ $pages->links() }}
+                        {{ $tags->links() }}
                     </div>
                 </div>
             </div>

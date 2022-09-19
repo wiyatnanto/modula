@@ -26,5 +26,5 @@ Route::prefix('store')->middleware('auth')->group(function() {
     Route::get('/brands', BrandTable::class)->name('store.brand');
     Route::get('/categories', CategoryTable::class)->name('store.category');
     Route::get('/storefronts', StoreFrontTable::class)->name('store.storefront');
-    Route::get('/storefronts/{id}', StoreFrontUpdate::class)->name('store.storefront.update');
+    Route::get('/storefronts/{id}/{slug}', StoreFrontUpdate::class)->name('store.storefront.update');
 });

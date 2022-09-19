@@ -1,10 +1,5 @@
 <div>
-    <nav class="page-breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url('dashboard') }}">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Pages</li>
-        </ol>
-    </nav>
+    <x-crud::molecules.breadcrumb :items="['Dashboard' => '/dashboard', 'Pages' => '/blog/pages']" />
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -65,10 +60,10 @@
                                 <th width="50">
                                     <x-crud::atoms.checkbox wire:model="selectAll" />
                                 </th>
-                                <th width="80" wire:click.prevent="sortBy('id')">ID
+                                {{-- <th width="80" wire:click.prevent="sortBy('id')">ID
                                     <x-crud::molecules.sorticon name="id" sortField="{{ $sortField }}"
                                         sortAsc="{{ $sortAsc }}" />
-                                </th>
+                                </th> --}}
                                 <th wire:click.prevent="sortBy('title')">Title
                                     <x-crud::molecules.sorticon name="title" sortField="{{ $sortField }}"
                                         sortAsc="{{ $sortAsc }}" />
@@ -85,7 +80,7 @@
                                     <td>
                                         <x-crud::atoms.checkbox wire:model="selected" value="{{ $page->id }}" />
                                     </td>
-                                    <td>{{ $page->id }}</td>
+                                    {{-- <td>{{ $page->id }}</td> --}}
                                     <td>{{ $page->title }}</td>
                                     <td>
                                         @if ($page->type === 'homepage')

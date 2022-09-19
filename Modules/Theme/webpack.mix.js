@@ -25,6 +25,14 @@ mix.scripts([
     __dirname + '/Resources/assets/backend/vendor/bootbox/bootbox.min.js'
 ], '../../public/js/theme.js').sourceMaps();
 
+mix.styles([
+    __dirname + '/Resources/assets/backend/vendor/grapes/css/grapes.min.css'
+], '../../public/css/theme-builder.css').sourceMaps();
+
+mix.scripts([
+    __dirname + '/Resources/assets/backend/vendor/grapes/grapes.min.js'
+], '../../public/js/theme-builder.js').sourceMaps();
+
 if (mix.inProduction()) {
     mix.version()
 }

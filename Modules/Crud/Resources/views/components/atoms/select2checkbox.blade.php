@@ -13,7 +13,7 @@
             function initSelect() {
                 select.select2MultiCheckboxes({
                     templateSelection: function(selected, total) {
-                        return 'Pilih kategori ' + (selected.length > 0 ? '( ' + selected.length + ' )' : '');
+                        return '{{ $placeholder }} ' + (selected.length > 0 ? '( ' + selected.length + ' )' : '');
                     }
                 });
                 select.on('select2:open', function(e) {

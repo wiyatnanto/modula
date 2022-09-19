@@ -43,6 +43,11 @@ class Table extends Component
         $this->dispatchBrowserEvent('hydrateEvent');
     }
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     public function updatedSelectAll($value)
     {
         if($value){
@@ -134,11 +139,8 @@ class Table extends Component
         $this->dispatchBrowserEvent('unselect2sort');
     }
 
-
     public function clearFilter()
     {
-        // $this->sortField = false;
-        // $this->sortAsc = 'asc';
         $this->categoriesFilter = [];
         $this->storefrontsFilter = [];
         $this->dispatchBrowserEvent('unselect2category', $this->categoriesFilter);

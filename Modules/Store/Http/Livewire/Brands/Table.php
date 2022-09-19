@@ -112,7 +112,7 @@ class Table extends Component
         if($brand->update()){
             $this->updateMode = false;
             $this->resetInputFields();
-            $this->emit('toast', ['success', 'Product has been deleted']);
+            $this->emit('toast', ['success', 'Brand has been updated']);
             $this->dispatchBrowserEvent('closeModal');
         }
     }
@@ -121,7 +121,7 @@ class Table extends Component
     {
         $brand = Brand::findOrFail($id);
         if($brand->delete()){
-            $this->emit('toast', ['success', 'Product has been deleted']);
+            $this->emit('toast', ['success', 'Brand has been deleted']);
             $this->dispatchBrowserEvent('closeModal');
         }
     }
@@ -140,9 +140,9 @@ class Table extends Component
             // $brands->where('name', 'like', '%' . $this->search . '%');
             $brands->where('name', 'ILIKE', '%' . $this->search . '%');
         }
-
         return view('store::livewire.brands.table', [
-            'brands' => $brands->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')->get(),
-        ])->extends('theme::backend.layouts.master');
+            'brands' => $brands->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')->fastPaginate(10),
+        ])
+        ->extends('theme::backend.layouts.master');
     }
 }

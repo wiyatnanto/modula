@@ -1,7 +1,6 @@
 <nav class="sidebar" x-data x-init="() => {
     if ($('.sidebar .sidebar-body').length) {
         const sidebarBodyScroll = new PerfectScrollbar('.sidebar-body', {
-            //maxScrollbarLength: 500,
             scrollYMarginOffset: 100
         })
     }
@@ -20,7 +19,6 @@
         }
     )
     $('.sidebar-toggler').on('click', function(e) {
-        {{-- e.preventDefault() --}}
         $('.sidebar-header .sidebar-toggler').toggleClass(
             'active not-active'
         )
@@ -35,8 +33,7 @@
 }">
     <div class="sidebar-header">
         <a href="{{ url('/dashboard') }}" class="sidebar-brand">
-            {{-- Rezam<span>Group</span> --}}
-            <img src="{{ url('modules/theme/backend/images/logo.png') }}" style="height: 40px;" />
+            <img src="{{ url('modules/theme/backend/images/logo.png') }}" style="height: 45px;" />
         </a>
         <div class="sidebar-toggler not-active">
             <span></span>

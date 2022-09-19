@@ -1,82 +1,70 @@
-<div wire:ignore.self class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-       <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ubah Kategori</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                 <div class="form-group">
-                    <label for="name">Kategori</label>
-                    <input type="text" wire:model="name" class="form-control" id="name" aria-describedby="nameHelp" placeholder="Nama Kategori">
-                  </div>
-                  <div class="form-group">
-                    <label for="image">Gambar</label>
-                    <div wire:ignore x-data="{ image: @entangle('image') }"
-                        x-init="() => {
-                            FilePond.registerPlugin(
-                                FilePondPluginImagePreview,
-                                FilePondPluginImageCrop,
-                                FilePondPluginImageResize,
-                                FilePondPluginImageTransform,
-                                FilePondPluginImageEdit
-                            );
-                            const file = FilePond.create($refs.input);
-                                file.setOptions({
-                                    allowProcess: true,
-                                    server: {
-                                        process:(fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
-                                            @this.upload('image', file, load, error, progress)
-                                        },
-                                        revert: (filename, load) => {
-                                            @this.removeUpload('image', filename, load)
-                                        },
-                                        load: (source, load, error, progress, abort, headers) => {
-                                            var myRequest = new Request(source);
-                                            fetch(myRequest).then(function(response) {
-                                                response.blob().then(function(myBlob) {
-                                                load(myBlob)
-                                                });
-                                            });         
-                                        }
-                                    },
-                                });
-                                if(image !== null){
-                                    alert('already exist')
-                                    file.server.load = (source, load, error, progress, abort, headers) => {
-                                        var myRequest = new Request(source);
-                                        fetch(myRequest).then(function(response) {
-                                            response.blob().then(function(myBlob) {
-                                            load(myBlob)
-                                            });
-                                        });         
-                                    }
-                                }
-                                $watch('image', function(value){
-                                    if(value !== null){
-                                        if(!value.includes('livewire-file:') && value !== null){
-                                            file.files = [{
-                                                source: '/storage/files/store/categories/' + value,
-                                                options:{
-                                                    type: 'local'
-                                                }
-                                            }];
-                                        }
-                                    }else{
-                                        file.removeFile()
-                                    }
-                                })
-                            }">
-                            <input type="file" x-ref="input" />
-                        </div>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" wire:click.prevent="cancel()" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                <button type="button" wire:click.prevent="update()" class="btn btn-primary" data-dismiss="modal">Simpan</button>
-            </div>
-       </div>
-    </div>
-</div>
+<x-crud::organisms.modal size="md" id="updateCategory">
+    <x-slot name="header">
+        <h5 class="modal-title">Update Category</h5>
+    </x-slot>
+    <x-crud::molecules.form-control name="name" label="Category">
+        <x-crud::atoms.input wire:model="name" />
+    </x-crud::molecules.form-control>
+    <x-crud::molecules.form-control name="image" label="Image">
+        <div wire:ignore x-data="{ image: @entangle('image') }" x-init="() => {
+            FilePond.registerPlugin(
+                FilePondPluginImagePreview,
+                FilePondPluginImageCrop,
+                FilePondPluginImageResize,
+                FilePondPluginImageTransform,
+                FilePondPluginImageEdit
+            );
+            const file = FilePond.create($refs.input);
+            file.setOptions({
+                allowProcess: true,
+                server: {
+                    process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                        @this.upload('image', file, load, error, progress)
+                    },
+                    revert: (filename, load) => {
+                        @this.removeUpload('image', filename, load)
+                    },
+                    load: (source, load, error, progress, abort, headers) => {
+                        var myRequest = new Request(source);
+                        fetch(myRequest).then(function(response) {
+                            response.blob().then(function(myBlob) {
+                                load(myBlob)
+                            });
+                        });
+                    }
+                },
+            });
+            if (image !== null) {
+                file.server.load = (source, load, error, progress, abort, headers) => {
+                    var myRequest = new Request(source);
+                    fetch(myRequest).then(function(response) {
+                        response.blob().then(function(myBlob) {
+                            load(myBlob)
+                        });
+                    });
+                }
+            }
+            $watch('image', function(value) {
+                if (value !== null) {
+                    if (!value.includes('livewire-file:') && value !== null) {
+                        file.files = [{
+                            source: '/storage/files/store/categories/' + value,
+                            options: {
+                                type: 'local'
+                            }
+                        }];
+                    }
+                } else {
+                    file.removeFile()
+                }
+            })
+        }">
+            <input type="file" x-ref="input" />
+        </div>
+    </x-crud::molecules.form-control>
+    <x-slot name="footer">
+        <x-crud::atoms.button size="sm" color="secondary" data-bs-dismiss="modal" aria-label="btn-close"
+            text="Cancel" />
+        <x-crud::atoms.button size="sm" color="primary" text="Create" wire:click.prevent="update" />
+    </x-slot>
+</x-crud::organisms.modal>

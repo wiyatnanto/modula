@@ -188,8 +188,7 @@
             </div>
             <div class="col-md-8">
                 <div class="mt-2">
-                    <textarea wire:model="description" class="form-control @error('description') is-invalid @enderror" rows="2"
-                        placeholder="Deskripsi produk" rows="7" style="min-height: 150px;"></textarea>
+                    <x-crud::atoms.froala-editor wire:model='"description' />
                     @error('description')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -217,8 +216,7 @@
             @if ($hasVarian)
                 <div class="col-md-12">
                     <p class="mb-2"><strong>Panduan Varian {{ $varianFile }}</strong></p>
-
-                    <div wire:ignore x-data="{ varianFile: @entangle('varianFile') }" x-init="() => {
+                    {{-- <div wire:ignore x-data="{ varianFile: @entangle('varianFile') }" x-init="() => {
                         const file = FilePond.create($refs.input);
                         file.setOptions({
                             allowProcess: true,
@@ -255,7 +253,7 @@
                         })
                     }">
                         <input type="file" x-ref="input" />
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-12">
                     <table>
@@ -293,7 +291,7 @@
                                                 selected: @entangle('productAttributes'),
                                                 disabled: true
                                             }" x-init="() => {
-                                                let select = $($refs.select)
+                                                var select = $($refs.select)
                                             
                                                 function initSelect2() {
                                                     select.select2({
@@ -312,20 +310,23 @@
                                                     disabled = value[0].name !== null ? false : true
                                                 });
                                             
-                                                Livewire.on('updateAttributeValueOptions', options => {
-                                                    console.log(options.map(function(item) {
+                                                Livewire.on('updateAttributeValueOptions', params => {
+                                                    {{-- console.log(options.map(function(item) {
                                                         return { id: item.value, text: item.value }
-                                                    }))
-                                                    select.empty().select2({
-                                                        tags: true,
-                                                        data: options.map(function(item) {
-                                                            return { id: item.value, text: item.value }
-                                                        })
-                                                    }).trigger('change');
+                                                    })) --}}
+                                                    if ({{ $key }} === params.index) {
+                                                        select.empty().select2({
+                                                            tags: true,
+                                                            data: params.options.map(function(item) {
+                                                                return { id: item.value, text: item.value }
+                                                            })
+                                                        }).trigger('change');
+                                                    }
                                                 })
                                             }">
                                                 <select x-ref="select" class="wd-100p" multiple="multiple"
-                                                    data-placeholder="Varian" x-bind:disabled="disabled">
+                                                    id="option-{{ $key }}" data-placeholder="Varian"
+                                                    x-bind:disabled="disabled">
                                                     {{-- @if ($attributeValueOptions)
                                                         @foreach ($attributeValueOptions as $valueOption)
                                                             <option>{{ $valueOption->value }}</option>
@@ -335,24 +336,28 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="10%">
-                                        <label class="d-none">Remove</label>
-                                        <div class="mt-3 mb-3">
-                                            <x-crud::atoms.button size="md" color="link" class="btn-icon">
-                                                <x-crud::atoms.icon icon="trash-alt" class="text-danger"
-                                                    wire:click="removeVarian({{ $key }})" />
-                                            </x-crud::atoms.button>
-                                        </div>
-                                    </td>
+                                    @if ($key !== 0)
+                                        <td class="10%">
+                                            <label class="d-none">Remove</label>
+                                            <div class="mt-3 mb-3">
+                                                <x-crud::atoms.button size="md" color="link" class="btn-icon">
+                                                    <x-crud::atoms.icon icon="trash-alt" class="text-danger"
+                                                        wire:click="removeVarian({{ $key }})" />
+                                                    {{ $key }}
+                                                </x-crud::atoms.button>
+                                            </div>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         @endif
                         </tr>
                     </table>
                 </div>
-                {{-- <div class="col-md-12">
+                <div class="col-md-12">
                     @if (count($productAttributes) < 2)
-                        @if ($productAttributes[count($productAttributes) - 1]['name'] !== null && count($productAttributes[count($productAttributes) - 1]['values']) > 0)
+                        @if ($productAttributes[count($productAttributes) - 1]['name'] !== null &&
+                            count($productAttributes[count($productAttributes) - 1]['values']) > 0)
                             <button wire:key="addVarian" wire:click="addVarian()"
                                 class="btn btn-xs btn-primary btn-icon-text">
                                 <i class="far fa-plus btn-icon-prepend"></i> Tambah Varian
@@ -363,7 +368,7 @@
                             </button>
                         @endif
                     @endif
-                </div> --}}
+                </div>
                 @if (count($productAttributes) > 0)
                     <div class="col-md-12">
                         <div class="mt-3">
@@ -509,9 +514,6 @@
         <div class="row mb-3">
             <div class="col-md-4">
                 <p class="mb-2"><strong>Status Produk</strong></p>
-                <p>Masukkan berat dengan menimbang produk
-                    <strong>setelah dikemas</strong>
-                </p>
             </div>
             <div class="col-md-8">
                 <x-crud::atoms.switch type="checkbox" checked disabled />

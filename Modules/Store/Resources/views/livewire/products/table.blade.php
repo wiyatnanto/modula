@@ -1,10 +1,10 @@
 <div>
-    <x-crud::molecules.breadcrumb :items="['Home' => '/', 'Store' => '/store/products']" />
+    <x-crud::molecules.breadcrumb :items="['Dashboard' => '/dashboard', 'Store' => '/store/products']" />
     <x-crud::molecules.card>
         <x-slot name="header">
             <div class="d-flex justify-content-end align-items-center">
                 <div class="me-auto">
-                    <div class="card-title mb-0">Daftar Produk</div>
+                    <h5 class="card-title mb-0">Daftar Produk</h5>
                 </div>
                 <div class="me-2">
                     <x-crud::molecules.dropdown label="Atur Sekaligus" color="light">
@@ -27,7 +27,7 @@
                 <x-crud::atoms.input wire:model="search" placeholder="Search Product" />
             </div>
             <div class="col-sm-3">
-                <x-crud::atoms.select2checkbox wire:model="categoriesFilter" placeholder="Select Store Front">
+                <x-crud::atoms.select2checkbox wire:model="categoriesFilter" placeholder="Select Category">
                     @foreach ($categories as $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
@@ -52,27 +52,6 @@
                 </x-crud::atoms.select2>
             </div>
             <div class="col-sm-12">
-                {{-- <ul class="nav nav-line" role="tablist">
-                    <li class="nav-item">
-                        <a wire:click="$set('tab',0)" class="nav-link {{ $tab === 0 ? 'active' : '' }}"
-                            data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Semua Produk
-                            ({{ $countActive + $countInActive }})</a>
-                    </li>
-                    @if ($countActive > 0)
-                        <li class="nav-item">
-                            <a wire:click="$set('tab',1)" class="nav-link {{ $tab === 1 ? 'active' : '' }}"
-                                data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Aktif
-                                ({{ $countActive }})</a>
-                        </li>
-                    @endif
-                    @if ($countInActive > 0)
-                        <li class="nav-item">
-                            <a wire:click="$set('tab',2)" class="nav-link {{ $tab === 2 ? 'active' : '' }}"
-                                data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false">Nonaktif
-                                ({{ $countInActive }})</a>
-                        </li>
-                    @endif
-                </ul> --}}
                 @if ($sortField !== 'id' || count($categoriesFilter) > 0 || count($storefrontsFilter) > 0)
                     <div class="d-flex mt-3 mb-3">
                         <div class="me-2">
@@ -273,9 +252,8 @@
                                 <td class="align-middle">
                                     <x-crud::molecules.dropdown label="Action">
                                         @can('roles.update')
-                                            <button class="dropdown-item" data-bs-toggle="modal"
-                                                data-bs-target="#updateProduct"
-                                                wire:click="edit({{ $product->id }})">Edit</button>
+                                            <a class="dropdown-item"
+                                                href="{{ url('store/products/edit-product/' . $product->id) }}">Edit</a>
                                         @endcan
                                         @can('roles.delete')
                                             <div x-data>
@@ -321,26 +299,14 @@
                     @endif
                 </tbody>
             </table>
-            <div class="mt-3">
-                {{ $products->links() }}
-            </div>
+        </div>
+        <div class="mt-3">
+            {{ $products->links('pagination::bootstrap-5-livewire') }}
         </div>
     </x-crud::molecules.card>
 </div>
 @push('style')
-    <style>
-        .media img {
-            border: 1px solid #eeeeee;
-            object-fit: contain;
-            width: 56px !important;
-            height: 56px !important;
-        }
-
-        .media .product-title a {
-            font-weight: 600;
-            color: #000000;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/store.css') }}">
 @endpush
 @push('script')
     <script src="{{ asset('js/store.js') }}"></script>

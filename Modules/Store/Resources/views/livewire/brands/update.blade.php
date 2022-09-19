@@ -35,7 +35,6 @@
                 },
             });
             if (image !== null) {
-                alert('already exist')
                 file.server.load = (source, load, error, progress, abort, headers) => {
                     var myRequest = new Request(source);
                     fetch(myRequest).then(function(response) {

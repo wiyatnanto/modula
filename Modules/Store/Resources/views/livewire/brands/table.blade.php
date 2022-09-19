@@ -1,20 +1,19 @@
 <div>
-    <x-crud::molecules.breadcrumb :items="['Home' => '/', 'Store' => '/store/products', 'Brands' => '/store/brands']" />
+    <x-crud::molecules.breadcrumb :items="['Dashboard' => '/dashboard', 'Store' => '/store/products', 'Brands' => '/store/brands']" />
     <x-crud::molecules.card>
         <x-slot name="header">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-end align-items-center">
+                <div class="me-auto">
+                    <h5 class="card-title mb-0">Brands</h5>
+                </div>
                 <div class="me-3">
+                    <x-crud::atoms.input size="sm" wire:model="search" placeholder="Search Brand" />
+                </div>
+                <div>
                     <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" data-bs-toggle="modal"
                         data-bs-target="#createBrand">
                         <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add Brand
                     </x-crud::atoms.button>
-                </div>
-                <div class="me-auto">
-                    {{-- <x-crud::atoms.switch type="checkbox" name="target" id="target" wire:model="filterActive"
-                        label="{{ $filterActive ? 'Tampil Hanya Aktif' : 'Tampil Semua' }}" /> --}}
-                </div>
-                <div>
-                    <x-crud::atoms.input size="sm" wire:model="search" placeholder="Search Brand" />
                 </div>
             </div>
         </x-slot>
@@ -43,7 +42,8 @@
                                             class="rounded me-2" alt="">
                                         <div class="media-body">
                                             <p class="product-title">
-                                                <a href="#">
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#updateBrand"
+                                                    wire:click="edit({{ $brand->id }})">
                                                     {{ $brand->name }}
                                                 </a>
                                             </p>
@@ -113,90 +113,17 @@
                     @endif
                 </tbody>
             </table>
-            @include('store::livewire.brands.create')
-            @include('store::livewire.brands.update')
         </div>
+        <div class="mt-3">
+            {{ $brands->links('pagination::bootstrap-5-livewire') }}
+        </div>
+        @include('store::livewire.brands.create')
+        @include('store::livewire.brands.update')
     </x-crud::molecules.card>
 </div>
 @push('style')
-    <style>
-        .media img {
-            border: 1px solid #eeeeee;
-            object-fit: contain;
-            width: 56px !important;
-            height: 56px !important;
-        }
-
-        .media .product-title a {
-            font-weight: 600;
-            color: #000000;
-        }
-    </style>
-@endpush
-@push('style')
-    <link rel="stylesheet" href="{{ asset('modules/crud/vendor/filepond/filepond.min.css') }}" />
-    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet" />
-    <link href="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css" rel="stylesheet" />
-    <style>
-        .card {
-            border-radius: 8px;
-        }
-
-        .card-body {
-            padding-left: 2rem;
-            padding-right: 2rem;
-            padding-top: 1.5rem;
-            padding-bottom: 1.5rem;
-        }
-
-        .card-body strong {
-            font-weight: 500 !important;
-        }
-
-        .card-body p {
-            color: #31353b;
-        }
-
-        .filepond--root .filepond--credits {
-            display: none !important
-        }
-
-        .filepond--root[data-style-panel-layout~=integrated] .filepond--image-preview-wrapper {
-            border-radius: 5px
-        }
-
-        .filepond--image-existed {
-            width: 123px;
-            height: 123px;
-            border: 1px solid #e1e5ed;
-            border-radius: 5px
-        }
-
-        .filepond--image-existed img {
-            border-radius: 5px
-        }
-
-        .filepond--root[data-style-panel-layout~=integrated] {
-            background-color: #eaecf026;
-            border-radius: 5px;
-            height: 122px !important;
-            width: 122px;
-            border: 2px dashed #e1e5ed
-        }
-
-        .is-invalid .filepond--root[data-style-panel-layout~=integrated] {
-            border: 2px dashed #ee828c;
-            background-color: #fff0f2;
-            opacity: 1
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/store.css') }}">
 @endpush
 @push('script')
-    <script src="{{ asset('modules/crud/vendor/filepond/filepond.min.js') }}"></script>
-    <script src="{{ asset('modules/crud/vendor/maskMoney/jquery.maskMoney.min.js') }}"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="{{ asset('js/store.js') }}"></script>
 @endpush

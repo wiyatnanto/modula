@@ -27,6 +27,15 @@ class Table extends Component
     public function mount()
     {
         $this->menus = collect(Menu::with('children')->where('name', $this->name)->get());
+        foreach(Category::get()->pluck('slug','id') as $id => $slug) {
+            $menu = Menu::where('type', 'category')->where('url', '/category/'.$slug)->first();
+            if($menu){
+                $this->addCategories[$id] = true;
+            }
+        }
+        foreach(Page::get()->pluck('id') as $id) {
+            $this->addPages[$id] = true;
+        }
     }
 
     public function updatedName()
@@ -49,21 +58,25 @@ class Table extends Component
                         $menu->target = '';
                         $menu->menu_title = Page::findOrFail($key)->title;
                         $menu->custom_class = '';
+                        $menu->icon = '';
                         $menu->view = 1;
                         $menu->save();
                     }
                 }
             break;
             case 'category':
-                foreach($this->addCategories as $key => $category){
-                    if($category){
+                $categories = Category::whereIn('id', array_keys($this->addCategories))->get();
+                foreach($categories as $key => $category){
+                    $menu = Menu::where('type', $type)->where('url', '/category/'.$category->slug)->first();
+                    if(!$menu){
                         $menu = new Menu();
                         $menu->name = $this->name;
                         $menu->type = $type;
-                        $menu->url = '/category/'.Category::findOrFail($key)->slug;
-                        $menu->target = '';
-                        $menu->menu_title = Category::findOrFail($key)->name;
+                        $menu->url = '/category/'.$category->slug;
+                        $menu->target = $this->target ? '_blank' : '';
+                        $menu->menu_title = $category->name;
                         $menu->custom_class = '';
+                        $menu->icon = '';
                         $menu->view = 1;
                         $menu->save();
                     }

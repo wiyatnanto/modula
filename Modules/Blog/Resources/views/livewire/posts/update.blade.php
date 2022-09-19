@@ -1,5 +1,8 @@
 <x-crud::organisms.modal size="xl" preventSubmit="update({{ $postId }})" submitLabel="Update" id="updatePost"
     title="Update Page">
+    <x-slot name="header">
+        <h5 class="modal-title">Update Post</h5>
+    </x-slot>
     <x-crud::molecules.tabs active="content">
         <x-crud::molecules.tab title="Content" name="content">
             <div class="mt-3">
@@ -90,4 +93,9 @@
             </div>
         </x-crud::molecules.tab>
     </x-crud::molecules.tabs>
+    <x-slot name="footer">
+        <x-crud::atoms.button size="sm" color="secondary" data-bs-dismiss="modal" aria-label="btn-close"
+            text="Cancel" />
+        <x-crud::atoms.button size="sm" color="primary" text="Update" wire:click.prevent="update" />
+    </x-slot>
 </x-crud::organisms.modal>

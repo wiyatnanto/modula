@@ -200,13 +200,12 @@
                                                 </div>
                                                 <div class="d-flex align-items-center">
                                                     <div>
-                                                        <button type="button"
-                                                            class="btn btn-icon p-1 text-secondary">
+                                                        <a type="button" class="mx-2 text-secondary">
                                                             <x-crud::atoms.icon icon="edit" />
-                                                        </button>
+                                                        </a>
                                                     </div>
                                                     <div>
-                                                        <button type="button" class="btn btn-icon p-1 text-danger"
+                                                        <a type="button" class="mx-2 text-danger"
                                                             x-on:click="bootbox.dialog({
                                                             closeButton: false,
                                                             size: 'small',
@@ -233,7 +232,7 @@
                                                         });
                                                     ">
                                                             <x-crud::atoms.icon icon="trash-alt" />
-                                                        </button>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -262,14 +261,13 @@
                                                                     </div>
                                                                     <div class="d-flex align-items-center">
                                                                         <div>
-                                                                            <button type="button"
-                                                                                class="btn btn-icon p-1 text-secondary">
+                                                                            <a type="button"
+                                                                                class="mx-2 text-secondary">
                                                                                 <x-crud::atoms.icon icon="edit" />
-                                                                            </button>
+                                                                            </a>
                                                                         </div>
                                                                         <div>
-                                                                            <button type="button"
-                                                                                class="btn btn-icon p-1 text-danger"
+                                                                            <a type="button" class="mx-2 text-danger"
                                                                                 x-on:click="bootbox.dialog({
                                                                                 closeButton: false,
                                                                                 size: 'small',
@@ -296,7 +294,7 @@
                                                                             });
                                                                         ">
                                                                                 <x-crud::atoms.icon icon="trash-alt" />
-                                                                            </button>
+                                                                            </a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -330,15 +328,15 @@
                                                                                         <div
                                                                                             class="d-flex align-items-center">
                                                                                             <div>
-                                                                                                <button type="button"
-                                                                                                    class="btn btn-icon p-1 text-secondary">
+                                                                                                <a type="button"
+                                                                                                    class="mx-2 text-secondary">
                                                                                                     <x-crud::atoms.icon
                                                                                                         icon="edit" />
-                                                                                                </button>
+                                                                                                </a>
                                                                                             </div>
                                                                                             <div>
-                                                                                                <button type="button"
-                                                                                                    class="btn btn-icon p-1 text-danger"
+                                                                                                <a type="button"
+                                                                                                    class="mx-2 text-danger"
                                                                                                     x-on:click="bootbox.dialog({
                                                                                                     closeButton: false,
                                                                                                     size: 'small',
@@ -366,7 +364,7 @@
                                                                                             ">
                                                                                                     <x-crud::atoms.icon
                                                                                                         icon="trash-alt" />
-                                                                                                </button>
+                                                                                                </a>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -392,54 +390,11 @@
                 <p class="text-muted tx-13 my-3">* Maksimum menu 3 level</p>
             </div>
         </div>
-
     </x-crud::molecules.card>
 </div>
 @push('style')
-    <link rel="stylesheet" href="{{ asset('modules/core/vendor/nestable2/jquery.nestable.min.css') }}">
-    <style type="text/css">
-        .dd {
-            max-width: 700px !important;
-        }
-
-        .dd-handle {
-            height: auto;
-            margin: 0px;
-            border: none;
-            box-shadow: none !important;
-            background-color: #ffffff !important;
-        }
-
-        .dd-collapse,
-        .dd-expand {
-            display: none !important;
-        }
-
-        .dd-edit {
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #e9ecef;
-            margin-top: -3px;
-            z-index: 1;
-            position: relative;
-            border-radius: 0px 0px 4px 4px;
-        }
-
-        .accordion-button:not(.collapsed) {
-            color: #000000;
-            background-color: #f2f4f9;
-            box-shadow: inset 0 -1px 0 #e9ecef;
-        }
-
-        .separator-title {
-            color: #7987a1;
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/core.css') }}">
 @endpush
 @push('script')
-    <script src="{{ asset('modules/core/vendor/nestable2/jquery.nestable.min.js') }}"></script>
+    <script src="{{ asset('js/core.js') }}"></script>
 @endpush

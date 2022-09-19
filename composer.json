@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "beyondcode/laravel-websockets": "^1.13",
         "guzzlehttp/guzzle": "^7.2",
         "hammerstone/fast-paginate": "^0.1.7",
         "laravel/framework": "^9.19",
@@ -44,7 +45,8 @@
         "files": [
             "Modules/Crud/Helpers/CrudHelpers.php",
             "Modules/Crud/Helpers/SiteHelpers.php",
-            "Modules/Crud/Helpers/SximoHelpers.php"
+            "Modules/Crud/Helpers/SximoHelpers.php",
+            "Modules/Core/Helpers/helpers.php"
         ]
     },
     "autoload-dev": {

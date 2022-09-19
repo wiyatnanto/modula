@@ -9,13 +9,15 @@
     <meta name="author" content="NobleUI">
     <meta name="keywords" content="modula">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('core.siteName') }}</title>
+    <title>{{ setting('site_name') }}</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
     <link rel="stylesheet" href="{{ asset('modules/theme/backend/fonts/fontawesome-pro/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
-
-    @googlefonts
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,100;1,300;1,400;1,500;1,700&display=swap"
+        rel="stylesheet">
     @stack('style')
     @vite('resources/js/app.js')
     @livewireStyles
@@ -27,6 +29,7 @@
         <div class="page-wrapper">
             <x-theme::organisms.header />
             <div class="page-content">
+                <div class="alert alert-danger">Dalam Pengembangan</div>
                 <div>@yield('content')</div>
             </div>
             <x-theme::organisms.footer />

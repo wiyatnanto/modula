@@ -60,8 +60,8 @@
 </nav>
 <nav class="settings-sidebar">
     <div class="sidebar-body">
-        <a href="#" class="settings-sidebar-toggler">
-            <i data-feather="settings"></i>
+        <a href="#" class="settings-sidebar-toggler text-muted">
+            <x-crud::atoms.icon icon="tools" />
         </a>
         <h6 class="text-muted mb-2">Sidebar:</h6>
         <div class="mb-3 pb-3 border-bottom">

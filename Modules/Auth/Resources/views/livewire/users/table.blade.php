@@ -54,13 +54,13 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th>
+                        <th width="50">
                             <x-crud::atoms.checkbox wire:model="selectAll" />
                         </th>
-                        <th wire:click.prevent="sortBy('id')">ID
+                        {{-- <th wire:click.prevent="sortBy('id')">ID
                             <x-crud::molecules.sorticon name="id" sortField="{{ $sortField }}"
                                 sortAsc="{{ $sortAsc }}" />
-                        </th>
+                        </th> --}}
                         <th wire:click.prevent="sortBy('name')">Name
                             <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
                                 sortAsc="{{ $sortAsc }}" />
@@ -81,7 +81,7 @@
                                 <x-crud::atoms.checkbox name="userIds[]" wire:model="selected"
                                     value="{{ $user->id }}" />
                             </td>
-                            <td>{{ $user->id }}</td>
+                            {{-- <td>{{ $user->id }}</td> --}}
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>

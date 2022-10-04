@@ -6,4 +6,6 @@
     <p>
         This view is loaded from module: {!! config('theme.name') !!}
     </p>
+
+    
 @endsection

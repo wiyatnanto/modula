@@ -4,7 +4,7 @@
         <x-slot name="header">
             <div class="d-flex justify-content-end align-items-center">
                 <div class="me-auto">
-                    <h5 class="card-title mb-0">Daftar Produk</h5>
+                    <h5 class="card-title mb-0">{{ __('store::messages.product_list') }}</h5>
                 </div>
                 <div class="me-2">
                     <x-crud::molecules.dropdown label="Atur Sekaligus" color="light">
@@ -65,7 +65,7 @@
                                     $sortLabel = [
                                         'name' => ['label' => 'Nama:', 'asc' => 'A - Z', 'desc' => 'Z - A'],
                                         'price' => ['label' => 'Harga', 'asc' => 'Terendah', 'desc' => 'Tertinggi'],
-                                        'quantity' => ['label' => 'Stok', 'asc' => 'Terbanyak', 'desc' => 'Tersedikit'],
+                                        'quantity' => ['label' => 'Stok', 'desc' => 'Terbanyak', 'asc' => 'Tersedikit'],
                                     ];
                                     ?>
                                     @if (isset($sortLabel[$sortField]))
@@ -120,23 +120,25 @@
                             </th>
                             @if (!count($selected))
                                 <th scope="col" class="align-middle tx-bold" wire:click.prevent="sortBy('name')">
-                                    Produk
+                                    {{ __('store::messages.product') }}
                                     <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
                                         sortAsc="{{ $sortAsc }}" />
                                 </th>
-                                <th scope="col" class="align-middle tx-bold">Statistik</th>
-                                <th scope="col" class="align-middle tx-bold">Merek</th>
+                                <th scope="col" class="align-middle tx-bold">{{ __('store::messages.statistic') }}
+                                </th>
+                                <th scope="col" class="align-middle tx-bold">{{ __('store::messages.brand') }}</th>
                                 <th scope="col" class="align-middle tx-bold" wire:click.prevent="sortBy('price')">
-                                    Harga
+                                    {{ __('store::messages.price') }}
                                     <x-crud::molecules.sorticon name="price" sortField="{{ $sortField }}"
                                         sortAsc="{{ $sortAsc }}" />
                                 </th>
                                 <th scope="col" class="align-middle tx-bold" wire:click.prevent="sortBy('quantity')">
-                                    Stok
+                                    {{ __('store::messages.stock') }}
                                     <x-crud::molecules.sorticon name="quantity" sortField="{{ $sortField }}"
                                         sortAsc="{{ $sortAsc }}" />
                                 </th>
-                                <th scope="col" class="align-middle tx-bold" width="30">Aktif</th>
+                                <th scope="col" class="align-middle tx-bold" width="30">
+                                    {{ __('crud::messages.active') }}</th>
                                 <th scope="col" class="align-middle tx-bold" width="50"></th>
                             @else
                                 <th scope="col" class="align-middle tx-bold p-0" colspan="7">
@@ -206,7 +208,7 @@
                                             <span data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Produk dilihat berdasakarkan Google Analytics"><i
                                                     class="far fa-eye text-muted"></i>
-                                                {{ count($product->attributeValues) }}
+                                                {{ count($product->variantValues) }}
                                             </span>
                                         </div>
                                         <div data-bs-toggle="tooltip" data-bs-placement="top"
@@ -250,10 +252,10 @@
                                         checked="{{ $product->status }}" />
                                 </td>
                                 <td class="align-middle">
-                                    <x-crud::molecules.dropdown label="Action">
+                                    <x-crud::molecules.dropdown label="{{ __('crud::messages.action') }}">
                                         @can('roles.update')
                                             <a class="dropdown-item"
-                                                href="{{ url('store/products/edit-product/' . $product->id) }}">Edit</a>
+                                                href="{{ url('store/products/edit-product/' . $product->id) }}">{{ __('crud::messages.edit') }}</a>
                                         @endcan
                                         @can('roles.delete')
                                             <div x-data>
@@ -283,7 +285,7 @@
                                                                     }
                                                                 }     
                                                             });
-                                                        }">Delete</button>
+                                                        }">{{ __('crud::messages.delete') }}</button>
                                             </div>
                                         @endcan
                                     </x-crud::molecules.dropdown>

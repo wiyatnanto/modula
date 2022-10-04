@@ -16,9 +16,9 @@ class CreateStoreProductFilesTable extends Migration
         Schema::create('store_product_files', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('product_id');
-            $table->enum('file_category', ['varian']);
-            $table->string('file')->nullable();
             $table->foreign('product_id')->references('id')->on('store_products')->onDelete('cascade');
+            $table->string('category');
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

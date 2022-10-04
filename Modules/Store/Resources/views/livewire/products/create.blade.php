@@ -63,6 +63,313 @@
         </div>
     </x-crud::molecules.card>
     <x-crud::molecules.card class="mt-3">
+        <p class="mb-2">
+            <strong>Nama Produk</strong>
+            <span class="badge bg-light text-dark">optional</span>
+        </p>
+        <p class="mb-3">Format gambar .jpg .jpeg .png dan ukuran minimum 300 x 300px (Untuk gambar optimal gunakan
+            ukuran minimum 700
+            x 700 px).</p>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    {{ json_encode($image_config_json) }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <x-crud::atoms.input wire:model="image_config_json.frame_width" placeholder="Lebar Frame (cm)" />
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="frames" wire:ignore>
+                    <div class="frame frame-right dragTarget">
+                        <div class="line"></div>
+                        <div wire:ignore style="position: relative;" x-data="{}" x-init="() => {
+                            let moveable_right = new Moveable(document.body, {
+                                target: $($refs.gright),
+                                container: document.body,
+                                className: 'moveable-gright',
+                                draggable: true,
+                                resizable: true,
+                                scalable: true,
+                                rotatable: false,
+                                warpable: true,
+                                pinchable: true,
+                                origin: true,
+                                keepRatio: true,
+                                edge: false,
+                                throttleDrag: 0,
+                                throttleResize: 0,
+                                throttleScale: 0,
+                                throttleRotate: 0
+                            });
+                        
+                            moveable_right.dragTarget = document.querySelector('.dragTarget');
+                        
+                            moveable_right.on('dragStart', ({ target, clientX, clientY }) => {
+                                console.log('onDragStart', target);
+                            }).on('drag', ({
+                                target,
+                                transform,
+                                left,
+                                top,
+                                right,
+                                bottom,
+                                beforeDelta,
+                                beforeDist,
+                                delta,
+                                dist,
+                                clientX,
+                                clientY,
+                            }) => {
+                                $($refs.gright)[0].style.left = `${left}px`;
+                                $($refs.gright)[0].style.top = `${top}px`;
+                                @this.set('image_config_json.image_right.position.left', left)
+                                @this.set('image_config_json.image_right.position.top', top)
+                            }).on('dragEnd', ({ target, isDrag, clientX, clientY }) => {
+                                console.log('onDragEnd', target, isDrag);
+                            });
+                        
+                            moveable_right.on('resizeStart', ({ target, clientX, clientY }) => {
+                                console.log('onResizeStart', target);
+                            }).on('resize', ({ target, width, height, dist, delta, clientX, clientY }) => {
+                                delta[0] && ($($refs.gright)[0].style.width = `${width}px`);
+                                delta[1] && ($($refs.gright)[0].style.height = `${height}px`);
+                                @this.set('image_config_json.image_right.size.width', width)
+                                @this.set('image_config_json.image_right.size.height', height)
+                            }).on('resizeEnd', ({ target, isDrag, clientX, clientY }) => {
+                                console.log('onResizeEnd', target, isDrag);
+                            });
+                        
+                            $($refs.gright).click(
+                                function(e) {
+                                    $('.moveable-gright').find('.moveable-direction').show();
+                                }
+                            );
+                        
+                            $($refs.gright).on('mousedown touchstart', function() {
+                                $('.moveable-gright').find('.moveable-direction').hide();
+                            }).bind('mouseup touchend', function() {
+                                $('.moveable-gright').find('.moveable-direction').show();
+                            });
+                        }">
+                            <img class="glasses-right" x-ref="gright" src="{{ url('storage/store/glasses/right.png') }}"
+                                style="width: 250px;" />
+                        </div>
+                    </div>
+                    <div class="frame frame-front">
+                        <div class="line"></div>
+                        <div style="position: relative;" x-data="{}" x-init="() => {
+                            let frameWidth = $('.frame-front').outerWidth();
+                            let prevLeft = document.getElementById('preview').offsetLeft
+                            let prevTop = document.getElementById('preview').offsetTop
+                        
+                            let moveable_front = new Moveable(document.body, {
+                                target: $($refs.gfront),
+                                container: document.body,
+                                className: 'moveable-gfront',
+                                draggable: true,
+                                resizable: true,
+                                scalable: true,
+                                rotatable: false,
+                                warpable: true,
+                                pinchable: true,
+                                origin: true,
+                                keepRatio: true,
+                                edge: false,
+                                throttleDrag: 0,
+                                throttleResize: 0,
+                                throttleScale: 0,
+                                throttleRotate: 0,
+                            });
+                        
+                            moveable_front.on('dragStart', ({ target, clientX, clientY }) => {
+                                console.log('onDragStart', target);
+                            }).on('drag', ({
+                                target,
+                                transform,
+                                left,
+                                top,
+                                right,
+                                bottom,
+                                beforeDelta,
+                                beforeDist,
+                                delta,
+                                dist,
+                                clientX,
+                                clientY,
+                            }) => {
+                                $($refs.gfront)[0].style.left = `${left}px`;
+                                $($refs.gfront)[0].style.top = `${top}px`;
+                                let margin = (250 - parseFloat($($refs.gfront)[0].style.width)) / 2
+                                $('.glasses-preview')[0].style.left = `${left}px`;
+                                $('.glasses-preview')[0].style.top = `${top + 65}px`;
+                                @this.set('image_config_json.image_front.position.left', left)
+                                @this.set('image_config_json.image_front.position.top', top)
+                            }).on('dragEnd', ({ target, isDrag, clientX, clientY }) => {
+                                console.log('onDragEnd', target, isDrag);
+                            });
+                        
+                            moveable_front.on('resizeStart', ({ target, clientX, clientY }) => {
+                                console.log('onResizeStart', target);
+                            }).on('resize', ({ target, width, height, dist, delta, clientX, clientY }) => {
+                                delta[0] && ($($refs.gfront)[0].style.width = `${width}px`);
+                                delta[1] && ($($refs.gfront)[0].style.height = `${height}px`);
+                                $('.glasses-preview')[0].style.width = `${width}px`;
+                                $('.glasses-preview')[0].style.height = `${height}px`;
+                                @this.set('image_config_json.image_front.size.width', width)
+                                @this.set('image_config_json.image_front.size.height', height)
+                            }).on('resizeEnd', ({ target, isDrag, clientX, clientY }) => {
+                                console.log('onResizeEnd', target, isDrag);
+                            });
+                        
+                            $($refs.gfront).click(
+                                function() {
+                                    $('.moveable-gfront').find('.moveable-direction').show();
+                                }
+                            );
+                        
+                            $($refs.gfront).on('mousedown touchstart', function() {
+                                $('.moveable-gfront').find('.moveable-direction').hide();
+                            }).bind('mouseup touchend', function() {
+                                $('.moveable-gfront').find('.moveable-direction').show();
+                            });
+                        
+                            $(document).click(function(e) {
+                                if (!$(e.target).is('.glasses-right')) {
+                                    $('.moveable-gright').find('.moveable-direction').hide();
+                                }
+                                if (!$(e.target).is('.glasses-front')) {
+                                    $('.moveable-gfront').find('.moveable-direction').hide();
+                                }
+                                if (!$(e.target).is('.glasses-left')) {
+                                    $('.moveable-gleft').find('.moveable-direction').hide();
+                                }
+                            });
+                        }">
+                            <img class="glasses-front" x-ref="gfront" src="{{ url('storage/store/glasses/front.png') }}"
+                                style="width: 250px;" />
+                        </div>
+                    </div>
+                    <div class="frame frame-left">
+                        <div class="line"></div>
+                        <div style="position: relative;" x-data="{}" x-init="() => {
+                            let moveable_left = new Moveable(document.body, {
+                                target: $($refs.gleft),
+                                container: document.body,
+                                className: 'moveable-gleft',
+                                draggable: true,
+                                resizable: true,
+                                scalable: true,
+                                rotatable: false,
+                                warpable: true,
+                                pinchable: true,
+                                origin: true,
+                                keepRatio: true,
+                                edge: false,
+                                throttleDrag: 0,
+                                throttleResize: 0,
+                                throttleScale: 0,
+                                throttleRotate: 0,
+                            });
+                        
+                            moveable_left.on('dragStart', ({ target, clientX, clientY }) => {
+                                console.log('onDragStart', target);
+                            }).on('drag', ({
+                                target,
+                                transform,
+                                left,
+                                top,
+                                right,
+                                bottom,
+                                beforeDelta,
+                                beforeDist,
+                                delta,
+                                dist,
+                                clientX,
+                                clientY,
+                            }) => {
+                                $($refs.gleft)[0].style.left = `${left}px`;
+                                $($refs.gleft)[0].style.top = `${top}px`;
+                                @this.set('image_config_json.image_left.position.left', left)
+                                @this.set('image_config_json.image_left.position.top', top)
+                            }).on('dragEnd', ({ target, isDrag, clientX, clientY }) => {
+                                console.log('onDragEnd', target, isDrag);
+                            });
+                        
+                            moveable_left.on('resizeStart', ({ target, clientX, clientY }) => {
+                                console.log('onResizeStart', target);
+                            }).on('resize', ({ target, width, height, dist, delta, clientX, clientY }) => {
+                                delta[0] && ($($refs.gleft)[0].style.width = `${width}px`);
+                                delta[1] && ($($refs.gleft)[0].style.height = `${height}px`);
+                                @this.set('image_config_json.image_left.size.width', width)
+                                @this.set('image_config_json.image_left.size.height', height)
+                            }).on('resizeEnd', ({ target, isDrag, clientX, clientY }) => {
+                                console.log('onResizeEnd', target, isDrag);
+                            });
+                        
+                            $($refs.gleft).click(
+                                function(e) {
+                                    $('.moveable-gleft').find('.moveable-direction').show();
+                                }
+                            );
+                        
+                            $($refs.gleft).on('mousedown touchstart', function() {
+                                $('.moveable-gleft').find('.moveable-direction').hide();
+                            }).bind('mouseup touchend', function() {
+                                $('.moveable-gleft').find('.moveable-direction').show();
+                            });
+                        }">
+                            <img class="glasses-left" x-ref="gleft" src="{{ url('storage/store/glasses/left.png') }}"
+                                style="width: 250px;" />
+                        </div>
+                    </div>
+                    <div class="frame frame-preview ms-2 rounded" id="preview"
+                        style="background-image: url('{{ url('storage/store/glasses/person.png') }}'); background-position: center; background-size: cover; object-fit: cover;">
+                        <div class="line-preview"></div>
+                        <div style="position: relative;" x-data="{}" x-init="() => {
+                            let frameWidth = $('.frame-preview').outerWidth();
+                            let prevLeft = document.getElementById('preview').offsetLeft
+                            let prevTop = document.getElementById('preview').offsetTop
+                        
+                            $($refs.gpreview)[0].style.width = `${frameWidth}px`;
+                            $($refs.gpreview)[0].style.maxWidth = `${frameWidth}px`;
+                        
+                            let moveable = new Moveable(document.body, {
+                                target: $($refs.gpreview),
+                                container: document.body,
+                                className: 'moveable-gpreview',
+                                draggable: false,
+                                resizable: false,
+                                scalable: false,
+                                rotatable: false,
+                                warpable: false,
+                                pinchable: false,
+                                origin: false,
+                                keepRatio: false,
+                                edge: false,
+                                throttleDrag: 0,
+                                throttleResize: 0,
+                                throttleScale: 0,
+                                throttleRotate: 0,
+                            });
+                        }">
+                            <img class="glasses-preview" x-ref="gpreview"
+                                src="{{ url('storage/store/glasses/front.png') }}"
+                                style="width: 250px; scale: 0.62;transform-origin: top center;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <x-crud::atoms.button size="xs">Vidio Tutorial</x-crud::atoms.button>
+                </div>
+            </div>
+
+        </div>
+    </x-crud::molecules.card>
+    <x-crud::molecules.card class="mt-3">
         <h5 class="mb-4">Informasi Produk</h5>
         <div class="row mb-3">
             <div class="col-md-4">
@@ -188,7 +495,7 @@
             </div>
             <div class="col-md-8">
                 <div class="mt-2">
-                    <x-crud::atoms.froala-editor wire:model='"description' />
+                    <x-crud::atoms.froala-editor wire:model="description" />
                     @error('description')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -257,11 +564,10 @@
                 </div>
                 <div class="col-md-12">
                     <table>
-                        @if (count($productAttributes) > 0)
-                            @foreach ($productAttributes as $key => $attributex)
+                        @if (count($variants) > 0)
+                            @foreach ($variants as $key => $attributex)
                                 <tr>
                                     <td width="300" class="pe-3">
-                                        {{-- {{ json_encode($productAttributes) }} --}}
                                         <label>Tipe Varian {{ $key + 1 }}</label>
                                         <div wire:ignore class="mb-3" x-data x-init="() => {
                                             let select = $($refs.select)
@@ -275,9 +581,9 @@
                                             })
                                         }">
                                             <select x-ref="select" class="form-select">
-                                                @foreach ($attributeOptions as $attribute)
+                                                @foreach ($variantOptions as $variant)
                                                     <option></option>
-                                                    <option value="{{ $attribute->name }}">{{ $attribute->name }}
+                                                    <option value="{{ $variant->name }}">{{ $variant->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -288,7 +594,7 @@
                                         <label>Pilihan Varian {{ $key + 1 }}</label>
                                         <div wire:ignore class="mb-3" wire:key="value.{{ $key }}">
                                             <div x-data="{
-                                                selected: @entangle('productAttributes'),
+                                                selected: @entangle('variants'),
                                                 disabled: true
                                             }" x-init="() => {
                                                 var select = $($refs.select)
@@ -355,9 +661,9 @@
                     </table>
                 </div>
                 <div class="col-md-12">
-                    @if (count($productAttributes) < 2)
-                        @if ($productAttributes[count($productAttributes) - 1]['name'] !== null &&
-                            count($productAttributes[count($productAttributes) - 1]['values']) > 0)
+                    @if (count($variants) < 4)
+                        @if ($variants[count($variants) - 1]['name'] !== null &&
+                            count($variants[count($variants) - 1]['values']) > 0)
                             <button wire:key="addVarian" wire:click="addVarian()"
                                 class="btn btn-xs btn-primary btn-icon-text">
                                 <i class="far fa-plus btn-icon-prepend"></i> Tambah Varian
@@ -369,45 +675,52 @@
                         @endif
                     @endif
                 </div>
-                @if (count($productAttributes) > 0)
+                @if (count($variants) > 0)
                     <div class="col-md-12">
                         <div class="mt-3">
-                            <?php
-                            foreach ($productAttributes as $attribute) {
-                                if (count($attribute['values']) > 0) {
-                                    if (isset($attributesCount)) {
-                                        $attributesCount *= count($attribute['values']);
-                                    } else {
-                                        $attributesCount = count($attribute['values']);
+                            @php
+                                foreach ($variants as $variant) {
+                                    if (count($variant['values']) > 0) {
+                                        if (isset($attributesCount)) {
+                                            $attributesCount *= count($variant['values']);
+                                        } else {
+                                            $attributesCount = count($variant['values']);
+                                        }
                                     }
                                 }
-                            }
-                            ?>
+                            @endphp
+                            {{ json_encode($variants) }}
+                            <br />
+                            {{ json_encode($productVariants) }}
+                            <br />
+                            {{ json_encode($productVariants) }}
+                            <br/>
+                            {{ json_encode($productVariantSelected) }}
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            @foreach ($productAttributes as $attribute)
-                                                @if (count($attribute['values']) > 0)
-                                                    <th>{{ $attribute['name'] }}</th>
+                                            @foreach ($variants as $variant)
+                                                @if (count($variant['values']) > 0)
+                                                    <th>{{ $variant['name'] }}</th>
                                                 @endif
                                             @endforeach
                                             <th>Harga</th>
                                             <th>Stok</th>
                                             <th>SKU</th>
-                                            <th>Berat</th>
+                                            {{-- <th>Berat</th> --}}
                                             <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
+                                        {{-- @php
                                             $valuesKeys = [];
-                                            foreach ($productAttributes as $key => $value) {
+                                            foreach ($variants as $key => $value) {
                                                 $valuesCount[$value['name']] = 0;
                                             }
                                             if (isset($attributesCount)) {
                                                 for ($i = 0; $i < $attributesCount; $i++) {
-                                                    foreach ($productAttributes as $key => $value) {
+                                                    foreach ($variants as $key => $value) {
                                                         if ($valuesCount[$value['name']] === count($value['values'])) {
                                                             $valuesCount[$value['name']] = 0;
                                                         }
@@ -417,35 +730,134 @@
                                                 }
                                             }
                                         @endphp
-                                        @if (isset($attributesCount))
+                                         @if (isset($attributesCount))
                                             @if ($attributesCount > 0)
                                                 @for ($i = 0; $i < $attributesCount; $i++)
                                                     <tr>
-                                                        @foreach ($productAttributes as $key => $attribute)
-                                                            @if (count($attribute['values']) > 0)
-                                                                @if (count($attribute['values']) > 1 && $key > 0)
-                                                                    <?php
-                                                                    $collection = collect($valuesKeys[$attribute['name']]);
-                                                                    $sorted = $collection->sort();
-                                                                    $sorted->values()->all();
-                                                                    $keys = $sorted->values()->all();
-                                                                    ?>
-                                                                    <td>{{ $attribute['values'][$keys[$i]] }}
-
+                                                        @php $test = ''; @endphp
+                                                        @foreach ($variants as $key => $variant)
+                                                            @if (count($variant['values']) > 0)
+                                                                @if (count($variant['values']) > 1 && $key > 0)
+                                                                    @php
+                                                                        $collection = collect($valuesKeys[$variant['name']]);
+                                                                        $sorted = $collection->sort();
+                                                                        $sorted->values()->all();
+                                                                        $keys = $sorted->values()->all();
+                                                                        $test .= '.' . $variant['values'][$keys[$i]];
+                                                                    @endphp
+                                                                    <td>
+                                                                        {{ $variant['values'][$keys[$i]] }}
                                                                     </td>
                                                                 @else
-                                                                    <td>{{ $attribute['values'][$valuesKeys[$attribute['name']][$i]] }}
+                                                                    @php
+                                                                        $test .= '.' . $variant['values'][$valuesKeys[$variant['name']][$i]];
+                                                                    @endphp
+                                                                    <td>
+                                                                        {{ $variant['values'][$valuesKeys[$variant['name']][$i]] }}
                                                                     </td>
                                                                 @endif
                                                             @endif
                                                         @endforeach
-                                                        <td>- {{ $i }}</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                    </tr>
-                                                @endfor
-                                            @endif
+                                                        <td>
+
+                                                            {{ json_encode(collect($variants)->pluck('values')) }}
+                                        <x-crud::atoms.input
+                                            wire:model="productAttributeCombines.{{ $i }}.price" />
+                                        </td>
+                                        <td>
+                                            <x-crud::atoms.input
+                                                wire:model="productAttributeCombines.{{ $i }}.quantity" />
+                                        </td>
+                                        <td>
+                                            <x-crud::atoms.input
+                                                wire:model="productAttributeCombines.{{ $i }}.sku" />
+                                        </td>
+                                        <td>-</td>
+                                        </tr>
+                @endfor
+            @endif
+            @endif --}}
+                                        @php
+                                            // if (count($variants) > 0) {
+                                            //     $values = collect($variants)
+                                            //         ->pluck('values')
+                                            //         ->toArray();
+                                            //     $first = array_shift($values);
+                                            //     $productVariants = collect($first)
+                                            //         // ->crossJoin(...isset($values[count($values) - 1]) && count($values[count($values) - 1]) > 0 ? $values : [])
+                                            //         ->crossJoin(...$values)
+                                            //         ->toArray();
+                                            // }
+                                        @endphp
+                                        @if (count($productVariants) > 0)
+                                            @foreach ($productVariants as $key => $productVariant)
+                                                <tr>
+                                                    <td>
+                                                        <x-crud::atoms.checkbox
+                                                            wire:model="productVariantSelected.{{ implode(
+                                                                str_split(
+                                                                    implode(
+                                                                        collect($productVariant)->map(function ($name) {
+                                                                                return strtolower($name);
+                                                                            })->toArray(),
+                                                                    ),
+                                                                ),
+                                                            ) }}" />
+                                                    </td>
+                                                    @foreach ($productVariant as $variant)
+                                                        <td>{{ $variant }}</td>
+                                                    @endforeach
+                                                    <td>
+                                                        <x-crud::atoms.input
+                                                            wire:model.defer="productVariants.{{ implode(
+                                                                str_split(
+                                                                    implode(
+                                                                        collect($productVariant)->map(function ($name) {
+                                                                                return strtolower($name);
+                                                                            })->toArray(),
+                                                                    ),
+                                                                ),
+                                                            ) }}.price" />
+
+                                                    </td>
+                                                    <td>
+                                                        <x-crud::atoms.input
+                                                            wire:model.defer="productVariants.{{ implode(
+                                                                str_split(
+                                                                    implode(
+                                                                        collect($productVariant)->map(function ($name) {
+                                                                                return strtolower($name);
+                                                                            })->toArray(),
+                                                                    ),
+                                                                ),
+                                                            ) }}.quantity" />
+                                                    </td>
+                                                    <td>
+                                                        <x-crud::atoms.input
+                                                            wire:model.defer="productVariants.{{ implode(
+                                                                str_split(
+                                                                    implode(
+                                                                        collect($productVariant)->map(function ($name) {
+                                                                                return strtolower($name);
+                                                                            })->toArray(),
+                                                                    ),
+                                                                ),
+                                                            ) }}.weight" />
+                                                    </td>
+                                                    <td>
+                                                        <x-crud::atoms.switch
+                                                            wire:model.defer="productVariants.{{ implode(
+                                                                str_split(
+                                                                    implode(
+                                                                        collect($productVariant)->map(function ($name) {
+                                                                                return strtolower($name);
+                                                                            })->toArray(),
+                                                                    ),
+                                                                ),
+                                                            ) }}.status"/>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         @endif
                                     </tbody>
                                 </table>
@@ -619,6 +1031,7 @@
         <button wire:click.prevent="store()" type="button" class="btn btn-sm btn-primary">Simpan</button>
     </div>
 </div>
+</div>
 
 @push('style')
     <link rel="stylesheet" href="{{ asset('css/store.css') }}" />
@@ -673,6 +1086,87 @@
             border: 2px dashed #ee828c;
             background-color: #fff0f2;
             opacity: 1
+        }
+    </style>
+    <style>
+        .frames {
+            display: flex;
+        }
+
+        .frame {
+            border: 1px solid #8e96aa;
+            width: 250px;
+            max-width: 250px;
+            height: 250px;
+        }
+
+        .frame .glasses-right {
+            position: absolute;
+        }
+
+        .frame .glasses-front {
+            position: absolute;
+        }
+
+        .frame .glasses-left {
+            position: absolute;
+        }
+
+        .frame .glasses-preview {
+            position: absolute;
+        }
+
+        .frame-right {
+            border-radius: 8px 0px 0px 8px !important;
+            border-right: 0px;
+            background-color: #ffffff;
+            opacity: 1;
+            background-image: repeating-linear-gradient(45deg, #dddddd 25%, transparent 25%, transparent 75%, #dddddd 75%, #dddddd), repeating-linear-gradient(45deg, #dddddd 25%, #ffffff 25%, #ffffff 75%, #dddddd 75%, #dddddd);
+            background-position: 0 0, 5px 5px;
+            background-size: 10px 10px;
+        }
+
+        .frame-front {
+            background-color: #ffffff;
+            opacity: 1;
+            background-image: repeating-linear-gradient(45deg, #dddddd 25%, transparent 25%, transparent 75%, #dddddd 75%, #dddddd), repeating-linear-gradient(45deg, #dddddd 25%, #ffffff 25%, #ffffff 75%, #dddddd 75%, #dddddd);
+            background-position: 0 0, 5px 5px;
+            background-size: 10px 10px;
+        }
+
+        .frame-left {
+            border-radius: 0px 8px 8px 0px !important;
+            border-left: 0px;
+            background-color: #ffffff;
+            opacity: 1;
+            background-image: repeating-linear-gradient(45deg, #dddddd 25%, transparent 25%, transparent 75%, #dddddd 75%, #dddddd), repeating-linear-gradient(45deg, #dddddd 25%, #ffffff 25%, #ffffff 75%, #dddddd 75%, #dddddd);
+            background-position: 0 0, 5px 5px;
+            background-size: 10px 10px;
+        }
+
+        .frame-person {
+            border-radius: 8px;
+        }
+
+        .moveable-line,
+        .moveable-direction {
+            display: none;
+        }
+
+        .line {
+            height: 2px;
+            background-color: red;
+            position: relative;
+            top: 60px;
+            width: 100%;
+        }
+
+        .line-preview {
+            height: 2px;
+            background-color: red;
+            position: relative;
+            top: 110px;
+            width: 100%;
         }
     </style>
 @endpush

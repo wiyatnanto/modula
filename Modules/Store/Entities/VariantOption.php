@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Support\Str;
 
-class Attribute extends Model
+class VariantOption extends Model
 {
     use HasFactory;
 
-    protected $table = 'store_attributes';
+    protected $table = 'store_variant_options';
 
     protected $fillable = [
         'product_id', 'code', 'name', 'frontend_type', 'is_filterable', 'is_required'
@@ -28,13 +28,13 @@ class Attribute extends Model
         $this->attributes['code'] = Str::slug($value);
     }
 
-    public function values()
+    public function variantValues()
     {
-        return $this->hasMany(AttributeValue::class);
+        return $this->hasMany(VariantValue::class, 'variant_id');
     }
 
     protected static function newFactory()
     {
-        return \Modules\Store\Database\factories\AttributeFactory::new();
+        return \Modules\Store\Database\factories\AttributeOptionFactory::new();
     }
 }

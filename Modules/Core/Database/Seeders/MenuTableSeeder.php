@@ -4,7 +4,7 @@ namespace Modules\Core\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Core\Entities\Menu;
+use Modules\Core\Entities\MenuItem;
 
 class MenuTableSeeder extends Seeder
 {
@@ -17,9 +17,9 @@ class MenuTableSeeder extends Seeder
     {
         Model::unguard();
         
-        Menu::create([
+        MenuItem::create([
             'id' => 12,
-            'name' => 'main',
+            'menu_id' => 1,
             'type' => 'page',
             'url' => '/p/home-page',
             'target' => '',
@@ -33,9 +33,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-02 14:02:49',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 18,
-            'name' => 'main',
+            'menu_id' => 1,
             'type' => 'custom',
             'url' => '/produk',
             'target' => '',
@@ -49,9 +49,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-02 14:02:49',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 20,
-            'name' => 'main',
+            'menu_id' => 1,
             'type' => 'custom',
             'url' => '/produk/softlense',
             'target' => '',
@@ -65,9 +65,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-02 14:02:49',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 19,
-            'name' => 'main',
+            'menu_id' => 1,
             'type' => 'custom',
             'url' => '/produk/kaca-mata',
             'target' => '',
@@ -81,9 +81,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-02 14:02:49',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 16,
-            'name' => 'main',
+            'menu_id' => 1,
             'type' => 'category',
             'url' => '/category/contoh-kategori',
             'target' => '',
@@ -97,9 +97,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-02 14:02:53',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 13,
-            'name' => 'main',
+            'menu_id' => 1,
             'type' => 'custom',
             'url' => '/blog',
             'target' => '',
@@ -113,9 +113,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-02 14:02:53',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 17,
-            'name' => 'main',
+            'menu_id' => 1,
             'type' => 'page',
             'url' => '/p/kontak',
             'target' => '',
@@ -129,9 +129,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-02 14:02:53',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 34,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/store/brands',
             'target' => '',
@@ -145,9 +145,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 38,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/store/categories',
             'target' => '',
@@ -161,9 +161,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 39,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/store/storefronts',
             'target' => '',
@@ -177,9 +177,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 3,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'separator',
             'url' => '#',
             'target' => '',
@@ -193,9 +193,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 4,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/blog/pages',
             'target' => '',
@@ -209,9 +209,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 31,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'separator',
             'url' => '#',
             'target' => '',
@@ -225,9 +225,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-05 08:19:00',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 32,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/store/products',
             'target' => '',
@@ -241,9 +241,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-05 08:19:00',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 5,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/blog/posts',
             'target' => '',
@@ -257,9 +257,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 7,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/blog/categories',
             'target' => '',
@@ -273,9 +273,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 8,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/blog/tags',
             'target' => '',
@@ -289,9 +289,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 23,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'separator',
             'url' => '#',
             'target' => '',
@@ -305,9 +305,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 24,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/auth/users',
             'target' => '',
@@ -321,9 +321,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 25,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/auth/roles',
             'target' => '',
@@ -337,9 +337,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 26,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/auth/permissions',
             'target' => '',
@@ -353,9 +353,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 30,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/core/menu',
             'target' => '',
@@ -369,9 +369,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-12 16:19:07',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 11,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/chat',
             'target' => '',
@@ -385,9 +385,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-05 08:19:02',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 10,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/survey',
             'target' => '',
@@ -401,9 +401,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-05 08:19:02',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 21,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'custom',
             'url' => '/dashboard',
             'target' => '',
@@ -417,9 +417,9 @@ class MenuTableSeeder extends Seeder
             'updated_at' => '2022-09-05 03:59:05',
         ]);
 
-        Menu::create([
+        MenuItem::create([
             'id' => 9,
-            'name' => 'backend',
+            'menu_id' => 2,
             'type' => 'separator',
             'url' => '#',
             'target' => '',

@@ -6,7 +6,7 @@
     "Module": false,
     "Survey": false,
     "Core": true,
-    "Blog": false,
+    "Blog": true,
     "Store": true,
     "Chat": true
 }

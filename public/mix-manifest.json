@@ -1,10 +1,12 @@
 {
-    "/js/store.js": "/js/store.js?id=84f5e1cd4ab91b0fd5da17272d894e4d",
-    "/css/store.css": "/css/store.css?id=5db6a0b111a80c27ad844a043fbba7d5",
-    "/css/theme.css": "/css/theme.css?id=32ca4caea59bb7513574c24889cd4dee",
-    "/js/theme.js": "/js/theme.js?id=18ad1b1101c805982b74d045b0d5c0c2",
-    "/css/core.css": "/css/core.css?id=bf9d0eea2b4ed210739a0b318b1e5244",
+    "/js/store.js": "/js/store.js?id=3bca6ee9caa4909f51090a3aacd2ffa1",
+    "/css/store.css": "/css/store.css?id=fae2a19f80e1100d1c24781d78bfbaff",
+    "/css/theme.css": "/css/theme.css?id=88a67673595d06544931154b27c7a9d8",
+    "/js/theme.js": "/js/theme.js?id=75ca4cac21a81ae8f0beeb1597a34c02",
+    "/css/core.css": "/css/core.css?id=e93a5653bd09ced80f64ebcb30f9662a",
     "/js/core.js": "/js/core.js?id=3928148e4afbfa2f6461d38a3c60ca11",
-    "/css/theme-builder.css": "/css/theme-builder.css?id=76f1d90c9198a6d5362ad337e0fe6be2",
-    "/js/theme-builder.js": "/js/theme-builder.js?id=ac54355bb5dc8ce91549e8a6bd72202d"
+    "/css/theme-builder.css": "/css/theme-builder.css?id=797b103bfea88af37faf62699ee0c304",
+    "/js/theme-builder.js": "/js/theme-builder.js?id=f650ceee0c1ce83f06bdb839ca3a2ff1",
+    "/css/dashboard.css": "/css/dashboard.css?id=68b329da9893e34099c7d8ad5cb9c940",
+    "/js/dashboard.js": "/js/dashboard.js?id=e90fe26df553142cc70c662b99f150f5"
 }

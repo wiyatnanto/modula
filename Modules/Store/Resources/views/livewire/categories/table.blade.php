@@ -175,7 +175,7 @@
                                                             label: 'Yes',
                                                             className: 'btn-sm btn-danger',
                                                             callback: function(){
-                                                                @this.emit('deleteMenu', {{ $category['id'] }})              
+                                                                @this.emit('delete', {{ $category['id'] }})              
                                                             }
                                                         },
                                                         no:{

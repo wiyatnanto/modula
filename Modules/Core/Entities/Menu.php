@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 class Menu extends Model
 {
@@ -13,20 +14,19 @@ class Menu extends Model
 
     protected $fillable = ['*'];
 
-    protected $casts = [
-        'parent_id'  =>  'integer',
-    ];
+    protected $casts = [];
 
-    public function children()
+    public function setNameAttribute($value)
     {
-        return $this->hasMany(Menu::class, 'parent_id')->orderBy('sort_order');
+        $this->attributes['name'] = $value;
+        $this->attributes['slug'] = Str::slug($value);
     }
 
-    public function parent()
+    public function items()
     {
-        return $this->belongsTo(Menu::class, 'parent_id');
+        return $this->hasMany(MenuItem::class);
     }
-    
+
     protected static function newFactory()
     {
         return \Modules\Site\Database\factories\MenuFactory::new();

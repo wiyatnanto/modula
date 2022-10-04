@@ -25,6 +25,15 @@
     border-radius: 0px 0px 4px 4px;
 }
 
+.dd-empty {
+    border: 1px dashed #e9ecef;
+    min-height: 100px;
+    background-color: #fff;
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+    border-radius: 5px;
+}
+
 .accordion-button:not(.collapsed) {
     color: #000000;
     background-color: #f2f4f9;

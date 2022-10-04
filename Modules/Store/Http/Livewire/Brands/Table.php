@@ -58,6 +58,7 @@ class Table extends Component
 
     public function store()
     {
+
         $this->resetValidation();
         $validatedData = $this->validate([
             'name' => 'required',
@@ -77,6 +78,7 @@ class Table extends Component
                     $fileName
                 );
             }
+
             $brand->save();
             if($brand){
                 $this->emit('toast', ['success', 'Product has been created']);

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStoreAttributeValuesTable extends Migration
+class CreateStoreVariantValuesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateStoreAttributeValuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('store_attribute_values', function (Blueprint $table) {
+        Schema::create('store_variant_values', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('attribute_id');
-            $table->foreign('attribute_id')->references('id')->on('store_attributes');
+            $table->unsignedBigInteger('variant_id');
+            $table->foreign('variant_id')->references('id')->on('store_variant_options');
             $table->text('value');
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ class CreateStoreAttributeValuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('store_attribute_values');
+        Schema::dropIfExists('store_variant_values');
     }
 }

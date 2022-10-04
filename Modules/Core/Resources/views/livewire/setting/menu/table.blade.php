@@ -5,9 +5,9 @@
             <div class="d-flex align-items-center">
                 <div class="me-2">Select menu</div>
                 <div style="min-width: 200px;" class="me-2">
-                    <x-crud::atoms.select2 name="name" closeOnSelect="false" wire:model="name">
-                        @foreach ($names as $key => $name)
-                            <option value="{{ $name }}">{{ $name }}</option>
+                    <x-crud::atoms.select2 name="menu" closeOnSelect="false" wire:model="menu">
+                        @foreach ($menus as $menuSlug => $menuName)
+                            <option value="{{ $menuSlug }}">{{ $menuName }}</option>
                         @endforeach
                     </x-crud::atoms.select2>
                 </div>
@@ -16,17 +16,19 @@
                 </div>
                 <div>
                     <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" x-data="{}"
-                        x-on:click="
+                        x-on:click="() => {
                             bootbox.prompt({
                                 title: 'Enter new Menu', 
                                 closeButton: false,
                                 size: 'small',
                                 centerVertical: true,
-                                callback: function(result){ 
-                                    console.log(result); 
+                                callback: function(result){
+                                    if(result){
+                                        Livewire.emit('storeMenu', result)  
+                                    }
                                 }  
                             });
-                        ">
+                        }">
                         <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add New
                     </x-crud::atoms.button>
                 </div>
@@ -37,13 +39,50 @@
                 <div class="accordion" id="accordionExample">
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingCategories">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseproductCategories" aria-expanded="true"
+                                aria-controls="collapseproductCategories" wire:ignore.self>
+                                Product Categories
+                            </button>
+                        </h2>
+                        <div id="collapseproductCategories" class="accordion-collapse collapse"
+                            aria-labelledby="headingOne" data-bs-parent="#accordionExample" wire:ignore.self>
+                            <div class="accordion-body p-3">
+                                <div class="border rounded">
+                                    <ul class="list-group list-group-flush">
+                                        @foreach ($productCategories as $key => $category)
+                                            <li class="list-group-item">
+                                                <x-crud::atoms.checkbox wire:model="addCategories.{{ $category->id }}"
+                                                    label="{{ $category->name }}" />
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <button class="btn btn-xs btn-light">Select All</button>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-xs btn-primary"
+                                                wire:click="addItemToMenu('category')">Add
+                                                To
+                                                Menu</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingCategories">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseCategories" aria-expanded="true"
                                 aria-controls="collapseCategories" wire:ignore.self>
                                 Categories
                             </button>
                         </h2>
-                        <div id="collapseCategories" class="accordion-collapse collapse show"
+                        <div id="collapseCategories" class="accordion-collapse collapse"
                             aria-labelledby="headingOne" data-bs-parent="#accordionExample" wire:ignore.self>
                             <div class="accordion-body p-3">
                                 <div class="border rounded">
@@ -63,7 +102,7 @@
                                         </div>
                                         <div>
                                             <button class="btn btn-xs btn-primary"
-                                                wire:click="addToMenu('category')">Add
+                                                wire:click="addItemToMenu('category')">Add
                                                 To
                                                 Menu</button>
                                         </div>
@@ -99,7 +138,8 @@
                                             <button class="btn btn-xs btn-light">Select All</button>
                                         </div>
                                         <div>
-                                            <button class="btn btn-xs btn-primary" wire:click="addToMenu('page')">Add To
+                                            <button class="btn btn-xs btn-primary"
+                                                wire:click="addItemToMenu('page')">Add To
                                                 Menu</button>
                                         </div>
                                     </div>
@@ -124,7 +164,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="menu_title" class="form-label">Custom Title </label>
-                                    <x-crud::atoms.input type="text" placeholder="Title" wire:model="menu_title" />
+                                    <x-crud::atoms.input type="text" placeholder="Title"
+                                        wire:model="menu_title" />
                                     @error('menu_title')
                                         <label id="menu_title-error" class="error invalid-feedback"
                                             for="menu_title">{{ $message }}</label>
@@ -153,7 +194,7 @@
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <div>
-                                        <button class="btn btn-xs btn-primary" wire:click="addToMenu('custom')">
+                                        <button class="btn btn-xs btn-primary" wire:click="addItemToMenu('custom')">
                                             Add To Menu
                                         </button>
                                     </div>
@@ -169,7 +210,6 @@
                         $($refs.tree).nestable({
                             maxDepth: 3,
                             callback: function(l, e) {
-                                console.log($($refs.tree).nestable('serialize'))
                                 @this.emit('updateOrderTree', $($refs.tree).nestable('serialize'))
                             }
                         });
@@ -178,7 +218,7 @@
                 }">
                     <div class="dd" x-ref="tree">
                         <ol class="dd-list">
-                            @foreach ($menus->sortBy('sort_order') as $key => $menu)
+                            @foreach ($menuItems->sortBy('sort_order') as $key => $menu)
                                 @if ($menu['parent_id'] == 0)
                                     <li class="dd-item" data-id="{{ $menu['id'] }}"
                                         wire:key="{{ $menu['id'] . $key }}">
@@ -195,7 +235,8 @@
                                                 </div>
                                                 <div class="me-2">{{ $menu['type'] }} </div>
                                                 <div>
-                                                    <x-crud::atoms.switch wire:model="menus.{{ $key }}.view"
+                                                    <x-crud::atoms.switch
+                                                        wire:model="menuItems.{{ $key }}.view"
                                                         wire:click="toggleView({{ $menu['id'] }})" />
                                                 </div>
                                                 <div class="d-flex align-items-center">
@@ -218,7 +259,7 @@
                                                                     label: 'Yes',
                                                                     className: 'btn-sm btn-danger',
                                                                     callback: function(){
-                                                                        @this.emit('deleteMenu', {{ $menu['id'] }})              
+                                                                        @this.emit('deleteMenuItem', {{ $menu['id'] }})              
                                                                     }
                                                                 },
                                                                 no:{
@@ -256,7 +297,7 @@
                                                                         {{ $menu2['type'] }} </div>
                                                                     <div>
                                                                         <x-crud::atoms.switch
-                                                                            wire:model="menus.{{ $key }}.children.{{ $key2 }}.view"
+                                                                            wire:model="menuItems.{{ $key }}.children.{{ $key2 }}.view"
                                                                             wire:click="toggleView({{ $menu2['id'] }})" />
                                                                     </div>
                                                                     <div class="d-flex align-items-center">
@@ -280,7 +321,7 @@
                                                                                         label: 'Yes',
                                                                                         className: 'btn-sm btn-danger',
                                                                                         callback: function(){
-                                                                                            @this.emit('deleteMenu', {{ $menu2['id'] }})              
+                                                                                            @this.emit('deleteMenuItem', {{ $menu2['id'] }})              
                                                                                         }
                                                                                     },
                                                                                     no:{
@@ -322,7 +363,7 @@
                                                                                         </div>
                                                                                         <div>
                                                                                             <x-crud::atoms.switch
-                                                                                                wire:model="menus.{{ $key }}.children.{{ $key2 }}.children.{{ $key3 }}.view"
+                                                                                                wire:model="menuItems.{{ $key }}.children.{{ $key2 }}.children.{{ $key3 }}.view"
                                                                                                 wire:click="toggleView({{ $menu3['id'] }})" />
                                                                                         </div>
                                                                                         <div
@@ -349,7 +390,7 @@
                                                                                                             label: 'Yes',
                                                                                                             className: 'btn-sm btn-danger',
                                                                                                             callback: function(){
-                                                                                                                @this.emit('deleteMenu', {{ $menu3['id'] }})              
+                                                                                                                @this.emit('deleteMenuItem', {{ $menu3['id'] }})              
                                                                                                             }
                                                                                                         },
                                                                                                         no:{

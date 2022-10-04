@@ -11,13 +11,16 @@
                         </div>
                         <div class="col-md-8 ps-md-0">
                             <div class="auth-form-wrapper px-4 py-5">
-                                <a href="#" class="noble-ui-logo d-block mb-2">Noble<span>UI</span></a>
+                                <a href="#" class="noble-ui-logo d-block mb-2">
+                                    <img src="{{ url('modules/theme/backend/images/logo.png') }}" style="height: 45px;">
+                                </a>
                                 <h5 class="text-muted fw-normal mb-4">Welcome back! Log in to your account.</h5>
                                 <form method="POST" class="forms-sample" action="{{ route('login.post') }}">
                                     @csrf
                                     <div class="mb-3">
                                         <label for="userEmail" class="form-label">{{ __('auth::auth.email') }}</label>
-                                        <x-crud::atoms.input type="email" placeholder="Email" name="email" value="superadmin@modula.com"/>
+                                        <x-crud::atoms.input type="email" placeholder="Email" name="email"
+                                            value="superadmin@modula.com" />
                                         @error('email')
                                             <label id="password-error" class="error invalid-feedback"
                                                 for="email">{{ $message }}</label>
@@ -26,7 +29,8 @@
                                     <div class="mb-3">
                                         <label for="userPassword"
                                             class="form-label">{{ __('auth::auth.password') }}</label>
-                                        <x-crud::atoms.input type="password" placeholder="Password" name="password" value="password"/>
+                                        <x-crud::atoms.input type="password" placeholder="Password" name="password"
+                                            value="password" />
                                         @error('password')
                                             <label id="password-error" class="error invalid-feedback"
                                                 for="password">{{ $message }}</label>

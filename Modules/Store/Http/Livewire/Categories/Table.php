@@ -29,6 +29,7 @@ class Table extends Component
     public $listeners = [
         'updateOrderTree' => 'updateOrderTree',
         'delete' => 'delete',
+        'refreshComponent' => '$refresh'
     ];
 
     protected $queryString = ['view'];
@@ -101,6 +102,8 @@ class Table extends Component
                 $category->update();
             }
         }
+        $this->categoriesTrees = collect(Category::with('children')->get());
+        $this->emit('toast', ['success', 'Category has been updated']);
     }
 
     private function resetInputFields()
@@ -129,6 +132,7 @@ class Table extends Component
         if ($category) {
             $this->emit('toast', ['success', 'Category has been created']);
             $this->dispatchBrowserEvent('closeModal');
+            $this->categoriesTrees = collect(Category::with('children')->get());
         }
     }
 
@@ -164,10 +168,12 @@ class Table extends Component
 
     public function delete($id)
     {
-        $brand = Category::findOrFail($id);
-        $brand->delete();
-        $this->emit('notify', 'Kategori ' . $brand->name . ' berhasil dihapus');
+        $category = Category::findOrFail($id);
+        $category->delete();
+        $this->categoriesTrees = collect(Category::with('children')->get());
+        $this->emit('toast', ['success', 'Category has been deleted']);
     }
+
 
     public function cancel()
     {

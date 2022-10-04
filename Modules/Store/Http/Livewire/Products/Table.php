@@ -182,9 +182,8 @@ class Table extends Component
 
     public function render()
     {   
-
         $products = Product::with(['brand', 'images', 'categories',
-            'storefronts', 'attributeValues', 'attributes.values'
+            'storefronts', 'variants', 'variantValues', 'variantOptions.variantValues'
         ]);
         
         if ($this->search !== null) {

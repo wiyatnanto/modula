@@ -23,6 +23,7 @@ mix.scripts([
     __dirname + '/Resources/assets/vendor/filepond/filepond.min.js',
     __dirname + '/Resources/assets/vendor/maskMoney/jquery.maskMoney.min.js',
     __dirname + '/Resources/assets/vendor/nestable2/jquery.nestable.min.js',
+    __dirname + '/Resources/assets/vendor/moveable/moveable.min.js',
     __dirname + '/Resources/assets/js/app.js',
 ], '../../public/js/store.js').sourceMaps();
 

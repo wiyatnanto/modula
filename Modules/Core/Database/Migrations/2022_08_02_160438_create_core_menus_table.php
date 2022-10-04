@@ -14,17 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('core_menus', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name')->default(NULL);
-            $table->string('type')->default(NULL);
-            $table->string('url', 255)->default(NULL);
-            $table->string('target')->default(NULL);
-            $table->string('menu_title', 255)->default(NULL);
-            $table->integer('parent_id')->default(0);
-            $table->string('sort_order')->default(0);
-            $table->string('custom_class')->default(0);
-            $table->string('icon')->default(NULL);
-            $table->boolean('view')->default(true);
+            $table->string('slug');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

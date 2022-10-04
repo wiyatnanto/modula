@@ -17,9 +17,9 @@ class StoreDatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call([
-            // BrandSeederTableSeeder::class,
-            // CategorySeederTableSeeder::class,
-            // StoreFrontSeederTableSeeder::class
+            BrandSeederTableSeeder::class,
+            CategorySeederTableSeeder::class,
+            StoreFrontSeederTableSeeder::class,
             ProductSeederTableSeeder::class
         ]);
     }

@@ -4,47 +4,51 @@ namespace Modules\Core\Http\Livewire\Setting\Menu;
 
 use Livewire\Component;
 use Modules\Core\Entities\Menu;
+use Modules\Core\Entities\MenuItem;
 use Modules\Blog\Entities\Category;
 use Modules\Blog\Entities\Page;
+use Modules\Store\Entities\Category as ProductCategory;
 
 class Table extends Component
 {
     public $search;
-    public $name = 'main';
+    public $menu = 'main';
     public $menu_title, $target, $url, $icon, $isSeparator;
-    public $menus = [];
+    public $menuItems = [];
     public $addCategories = [];
     public $addPages = [];
 
     public $listeners = [
+        'storeMenu' => 'storeMenu',
         'updateOrderTree' => 'updateOrderTree',
-        'deleteMenu' => 'deleteMenu',
+        'deleteMenuItem' => 'deleteMenuItem',
         'refreshComponent' => '$refresh'
     ];
 
-    protected $queryString = ['name'];
+    protected $queryString = ['menu'];
 
     public function mount()
     {
-        $this->menus = collect(Menu::with('children')->where('name', $this->name)->get());
-        foreach(Category::get()->pluck('slug','id') as $id => $slug) {
-            $menu = Menu::where('type', 'category')->where('url', '/category/'.$slug)->first();
-            if($menu){
-                $this->addCategories[$id] = true;
-            }
-        }
-        foreach(Page::get()->pluck('id') as $id) {
-            $this->addPages[$id] = true;
-        }
+        $menu = Menu::where('slug', $this->menu)->first();
+        $this->menuItems = collect(MenuItem::with('children')->where('menu_id', $menu->id)->get());
+        // foreach(Category::get()->pluck('slug','id') as $id => $slug) {
+        //     $menu = MenuItem::where('type', 'category')->where('url', '/category/'.$slug)->first();
+        //     if($menu){
+        //         $this->addCategories[$id] = true;
+        //     }
+        // }
+        // foreach(Page::get()->pluck('id') as $id) {
+        //     $this->addPages[$id] = true;
+        // }
     }
 
-    public function updatedName()
+    public function updatedMenu()
     {
         $this->mount();
         $this->emit('refreshComponent');
     }
 
-    public function addToMenu($type)
+    public function addItemToMenu($type)
     {
         switch ($type) {
             case 'page':
@@ -67,9 +71,9 @@ class Table extends Component
             case 'category':
                 $categories = Category::whereIn('id', array_keys($this->addCategories))->get();
                 foreach($categories as $key => $category){
-                    $menu = Menu::where('type', $type)->where('url', '/category/'.$category->slug)->first();
-                    if(!$menu){
-                        $menu = new Menu();
+                    $menu = MenuItem::where('type', $type)->where('url', '/category/'.$category->slug)->first();
+                    // if(isset($menu)){
+                        $menu = new MenuItem();
                         $menu->name = $this->name;
                         $menu->type = $type;
                         $menu->url = '/category/'.$category->slug;
@@ -79,11 +83,11 @@ class Table extends Component
                         $menu->icon = '';
                         $menu->view = 1;
                         $menu->save();
-                    }
+                    // }
                 }
             break;
             case 'custom':
-                $menu = new Menu();
+                $menu = new MenuItem();
                 $menu->name = $this->name;
                 $menu->type = $this->isSeparator ? 'separator' : $type;
                 $menu->url = $this->isSeparator ? '#' : $this->url;
@@ -102,7 +106,7 @@ class Table extends Component
 
     public function toggleView($id)
     {
-        $menu = Menu::findOrFail($id);
+        $menu = MenuItem::findOrFail($id);
         $menu->view = $menu->view ? 0: 1;
         $menu->update();
         $this->emit('toast', ['success', 'Menu has been updated']);
@@ -110,7 +114,7 @@ class Table extends Component
 
     public function updateOrderTree($datas){
         foreach($datas as $key => $data){
-            $menu = Menu::findOrFail($data['id']);
+            $menu = MenuItem::findOrFail($data['id']);
             $menu->sort_order = $key;
             $menu->parent_id = 0;
             $menu->update();
@@ -135,20 +139,32 @@ class Table extends Component
         $this->emit('toast', ['success', 'Menu has been updated']);
     }
 
-    public function deleteMenu($id){
-        $menu = Menu::findOrFail($id);
+    public function deleteMenuItem($id){
+        $menu = MenuItem::findOrFail($id);
         if($menu){
             $menu->delete();
             $this->mount();
             $this->emit('toast', ['success', 'Menu has been updated']);
         }
     }
+
+    public function storeMenu($name)
+    {
+        $menu = new Menu();
+        $menu->name = $name;
+        $menu->save();
+        $this->menu = $menu->slug;
+        $this->emit('toast', ['success', 'Menu has been created']);
+        $this->mount();
+        $this->emit('refreshComponent');
+    }
     
     public function render()
     {
         return view('core::livewire.setting.menu.table',[
-            'names' => Menu::select('name')->groupBy('name')->get()->pluck('name'),
+            'menus' => Menu::get()->pluck('name', 'slug'),
             'categories' => Category::get(),
+            'productCategories' => ProductCategory::get(),
             'pages' => Page::get()
         ])
         ->extends('theme::backend.layouts.master');

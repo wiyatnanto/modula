@@ -1,6 +1,6 @@
 <?php
   
-use Modules\Core\Entities\Menu;
+use Modules\Core\Entities\MenuItem;
 use Modules\Core\Entities\Setting;
 use Illuminate\Support\Facades\Cache;
 
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
 if (! function_exists('getMenu')) {
     function getMenu($name)
     {
-        return Menu::with('children')->where('name', $name)->orderBy('sort_order')->get();
+        return MenuItem::with('children')->where('menu_id', 2)->orderBy('sort_order')->get();
     }
 }
 

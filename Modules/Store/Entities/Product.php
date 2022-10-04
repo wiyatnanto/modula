@@ -57,19 +57,29 @@ class Product extends Model
         return $this->belongsTo(Brand::class);
     }
 
-    public function attributes()
+    public function variantOptions()
     {
-        return $this->belongsToMany(Attribute::class, 'store_product_attributes', 'product_id', 'attribute_id');
+        return $this->belongsToMany(VariantOption::class, 'store_product_variant_options', 'product_id', 'variant_id');
     }
 
-    public function attributeValues()
+    public function variantValues()
     {
-        return $this->belongsToMany(AttributeValue::class, 'store_product_attribute_values', 'product_id', 'value_id')->withPivot('sku', 'quantity','price');
+        return $this->belongsToMany(VariantValue::class, 'store_product_variant_values', 'product_id', 'value_id');
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(Variant::class);
     }
 
     public function files()
     {
         return $this->hasOne(File::class);
+    }
+
+    public function tryon()
+    {
+        return $this->hasOne(TryOn::class);
     }
 
     protected static function newFactory()

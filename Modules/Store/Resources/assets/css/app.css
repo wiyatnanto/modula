@@ -7,9 +7,18 @@
 
 .media .product-title a,
 .media .brand-title a,
-.media .category-title a {
+.media .category-title a,
+.media .storefront-title a {
     font-weight: 500;
     color: #000000;
+}
+
+.media .product-title a:hover,
+.media .brand-title a:hover,
+.media .category-title a:hover,
+.media .storefront-title a:hover {
+    font-weight: 500;
+    color: #0d6efd !important;
 }
 
 .dd {

@@ -10,8 +10,9 @@ use Modules\Store\Entities\Category;
 use Modules\Store\Entities\StoreFront;
 use Modules\Store\Entities\Product;
 use Modules\Store\Entities\Image;
-use Modules\Store\Entities\Attribute;
-use Modules\Store\Entities\AttributeValue;
+use Modules\Store\Entities\Variant;
+use Modules\Store\Entities\VariantOption;
+use Modules\Store\Entities\VariantValue;
 use Modules\Store\Entities\File;
 
 class Create extends Component
@@ -36,60 +37,92 @@ class Create extends Component
 
     public $hasVarian = false;
     public $varianFile;
-    public $attributeOptions = [];
-    public $attributeValueOptions = [];
-    public $productAttributes = [];
+    public $variantOptions = [];
+    public $variantValues = [];
+    public $variants = [];
+    public $productVariants = [];
+    public $productVariantSelected = [];
+
+    // tryOn
+
+    public $threeD_config_json = [];
+    public $image_config_json = [];
+
     // public $values;
 
     protected $listeners = [
         'selectAttributes' => 'selectAttributes',
-        'selectAttributeValues' => 'selectAttributeValues'
+        'selectAttributeValues' => 'selectAttributeValues',
     ];
 
-    public function mount(){
-        $this->attributeOptions = Attribute::get();
-        $this->attributeValueOptions = AttributeValue::get();
+    public function mount()
+    {
+        $this->variantOptions = VariantOption::get();
+        $this->variantValues = VariantValue::get();
+    }
+
+    public function defineCombinationAttributes()
+    {
+        if (count($this->variants) > 0) {
+            $values = collect($this->variants)
+                ->pluck('values')
+                ->toArray();
+            $first = array_shift($values);
+            $this->productVariants = collect($first)
+                // ->crossJoin(...isset($values[count($values) - 1]) && count($values[count($values) - 1]) > 0 ? $values : [])
+                ->crossJoin(...$values)
+                ->toArray();
+        }
     }
 
     public function updatedHasVarian($value)
     {
-        if($value){
-            $this->productAttributes[] = ['name' => null, 'values' => []];
-        }else{
-            $this->productAttributes = [];
+        if ($value) {
+            $this->variants[] = ['name' => null, 'values' => []];
+            $this->defineCombinationAttributes();
+        } else {
+            $this->variants = [];
         }
     }
 
     public function addVarian()
     {
-        $this->productAttributes[] = ['name' => null, 'values' => []];
+        $this->variants[] = ['name' => null, 'values' => []];
+        $this->productVariants = [];
     }
 
     public function removeVarian($key)
     {
-        unset($this->productAttributes[$key]);
+        unset($this->variants[$key]);
+        $this->defineCombinationAttributes();
+        $this->productVariants = [];
     }
 
     public function selectAttributes($index, $name)
     {
         $values = [];
-        $attribute = Attribute::where('name', $name)->with('values')->first();
-        if($attribute){
-            $values = $attribute->values;
+        $variantOptions = VariantOption::where('name', $name)
+            ->with('variantValues')
+            ->first();
+        if ($variantOptions) {
+            $values = $variantOptions->variantValues;
         }
-        $this->productAttributes[$index] = ['name' => $name, 'values' => []];
+        $this->variants[$index] = ['name' => $name, 'values' => []];
 
-        $this->emit('updateAttributeValueOptions', ['index' => $index, 'options' => $values]);
+        $this->emit('updateAttributeValueOptions', [
+            'index' => $index,
+            'options' => $values,
+        ]);
     }
 
     public function selectAttributeValues($index, $value)
     {
-
         $values = [];
-        foreach($value as $item){
+        foreach ($value as $item) {
             $values[] = $item['text'];
         }
-        $this->productAttributes[$index]['values'] = $values;
+        $this->variants[$index]['values'] = $values;
+        $this->defineCombinationAttributes();
     }
 
     public function store()
@@ -109,11 +142,10 @@ class Create extends Component
             'length' => '',
             'width' => '',
             'height' => '',
-            'images.1' => 'required'
+            'images.1' => 'required',
         ]);
-
-        if($validatedData){
-            $product = new Product;
+        if ($validatedData) {
+            $product = new Product();
             $product->brand_id = $validatedData['brand'];
             $product->sku = '-';
             $product->name = $validatedData['name'];
@@ -121,69 +153,108 @@ class Create extends Component
             $product->quantity = $validatedData['quantity'];
             $product->min_order = $validatedData['minOrder'];
             $product->weight = $validatedData['weight'];
-            $product->price = str_replace('.','',$validatedData['price']).'.00';
+            $product->price =
+                str_replace('.', '', $validatedData['price']) . '.00';
             $product->status = 1;
             $product->featured = 0;
             $product->save();
             $images = [];
-            for ($i = 1; $i <= count($this->images); $i++){
-                $imageName = $this->images[$i]->store('public/files/store/products', 'local');
-                $images[] = new Image(array(
-                   'product_id' => $product->id,
-                    'image' => str_replace('public/files/store/products/','', $imageName),
+            for ($i = 1; $i <= count($this->images); $i++) {
+                $imageName = $this->images[$i]->store(
+                    'public/files/store/products',
+                    'local'
+                );
+                $images[] = new Image([
+                    'product_id' => $product->id,
+                    'image' => str_replace(
+                        'public/files/store/products/',
+                        '',
+                        $imageName
+                    ),
                     'main_image' => $i === 1 ? 1 : 0,
-                    'order_image' => $i
-                ));
+                    'order_image' => $i,
+                ]);
             }
             $product->images()->saveMany($images);
 
             $product->categories()->sync($validatedData['category']);
             $attach = [];
-            foreach(collect($validatedData['storefront'])->where('selected', false)->pluck('text') as $item) {
+            foreach (
+                collect($validatedData['storefront'])
+                    ->where('selected', false)
+                    ->pluck('text')
+                as $item
+            ) {
                 $attach[] = StoreFront::create([
                     'name' => $item,
-                    'order_menu' => 0
+                    'order_menu' => 0,
                 ])->id;
             }
-            $product->storefronts()->sync(collect($validatedData['storefront'])->where('selected', true)->pluck('id')->merge($attach));
-            if($this->hasVarian){
-                $attributes = [];
-                $attributeValues = [];
-                foreach ($this->productAttributes as $key => $attribute) {
-                    if($attribute['name'] !== null){
-                        $attribute_id = Attribute::firstOrCreate([
-                            'name' => $attribute['name'],
-                            'frontend_type' => 'select'
+            $product->storefronts()->sync(
+                collect($validatedData['storefront'])
+                    ->where('selected', true)
+                    ->pluck('id')
+                    ->merge($attach)
+            );
+            if ($this->hasVarian) {
+                $variantOptions = [];
+                $variantValues = [];
+                $variants = [];
+                foreach ($this->variants as $key => $variant) {
+                    if ($variant['name'] !== null) {
+                        $variant_id = VariantOption::firstOrCreate([
+                            'name' => $variant['name'],
+                            'frontend_type' => 'select',
                         ])->id;
-                        foreach($attribute['values'] as $value) {
-                            $value_id = AttributeValue::firstOrCreate([
-                                'attribute_id' => $attribute_id,
-                                'value' => $value
+                        foreach ($variant['values'] as $value) {
+                            $value_id = VariantValue::firstOrCreate([
+                                'variant_id' => $variant_id,
+                                'value' => $value,
                             ])->id;
-                            $attributeValues[] = array(
+                            $variantValues[] = [
                                 'value_id' => $value_id,
-                                'sku' => 'asdas',
-                                'quantity' => 0
-                            );
+                            ];
                         }
-                        $attributes[] = array(
-                            'attribute_id' => $attribute_id
-                        );
+                        $variantOptions[] = [
+                            'variant_id' => $variant_id,
+                        ];
                     }
                 }
-                $product->attributes()->sync($attributes);
-                $product->attributeValues()->sync($attributeValues);
-                if(is_object($this->varianFile)){
-                    $varianFileName = $this->varianFile->store('public/files/store/files', 'local');
-                    $varianFile = new File(array(
+
+                $product->variantOptions()->sync($variantOptions);
+                $product->variantValues()->sync($variantValues);
+                foreach ($this->productVariants as $key => $productVariant) {
+                    $variants[] = new Variant([
                         'product_id' => $product->id,
-                        'file_category' => 'varian',
-                        'file' => str_replace('public/files/store/files/','', $varianFileName)
-                    ));
-                    $product->files()->save($varianFile);
+                        'variant_values' => 'values',
+                        'unique_id' => implode(
+                            str_split(
+                                implode(
+                                    collect($productVariant)->map(function ($name) {
+                                            return strtolower($name);
+                                        })->toArray(),
+                                ),
+                            ),
+                        ),
+                        'sku' => '',
+                        'quantity' => 1,
+                        'price' => 100000,
+                        'sale_price' => 0,
+                    ]);
                 }
+                // dd($variants);
+                $product->variants()->saveMany($variants);
+                // if(is_object($this->varianFile)){
+                //     $varianFileName = $this->varianFile->store('public/files/store/files', 'local');
+                //     $varianFile = new File(array(
+                //         'product_id' => $product->id,
+                //         'file_category' => 'varian',
+                //         'file' => str_replace('public/files/store/files/','', $varianFileName)
+                //     ));
+                //     $product->files()->save($varianFile);
+                // }
             }
-            if($product){
+            if ($product) {
                 $this->emit('toast', ['success', 'Product has been created']);
                 return redirect()->to('/store/products');
             }
@@ -192,12 +263,10 @@ class Create extends Component
 
     public function render()
     {
-        // dd(Attribute::with('values')->get());
-        return view('store::livewire.products.create',[
+        return view('store::livewire.products.create', [
             'categories' => Category::get(),
             'brands' => Brand::get(),
-            'storefronts'=> StoreFront::get()
-        ])
-        ->extends('theme::backend.layouts.master');
+            'storefronts' => StoreFront::get(),
+        ])->extends('theme::backend.layouts.master');
     }
 }

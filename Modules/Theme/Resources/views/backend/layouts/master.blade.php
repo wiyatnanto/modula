@@ -29,7 +29,9 @@
         <div class="page-wrapper">
             <x-theme::organisms.header />
             <div class="page-content">
-                <div class="alert alert-danger">Dalam Pengembangan</div>
+                <div class="alert alert-danger">
+                    <x-crud::atoms.icon icon="exclamation-triangle" /> Dalam Pengembangan
+                </div>
                 <div>@yield('content')</div>
             </div>
             <x-theme::organisms.footer />

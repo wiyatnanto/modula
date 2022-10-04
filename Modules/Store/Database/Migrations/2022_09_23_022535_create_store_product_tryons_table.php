@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStoreProductAttributesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateStoreProductAttributesTable extends Migration
      */
     public function up()
     {
-        Schema::create('store_product_attributes', function (Blueprint $table) {
+        Schema::create('store_product_tryons', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('attribute_id');
-            $table->foreign('attribute_id')->references('id')->on('store_attributes');
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('store_products')->onDelete('cascade');
+            $table->enum('type', ['image', '3d']);
+            $table->json('3D_config_json');
+            $table->json('image_config_json');
+            $table->timestamps();
         });
     }
 
@@ -29,6 +31,6 @@ class CreateStoreProductAttributesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('store_product_attributes');
+        Schema::dropIfExists('store_product_tryons');
     }
-}
+};

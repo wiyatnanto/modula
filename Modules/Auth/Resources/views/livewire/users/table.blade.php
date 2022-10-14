@@ -40,13 +40,8 @@
                         </span>
                     @endif
                 </div>
-                <div class="me-2">
-                    <x-crud::atoms.input class="form-control-sm" placeholder="Search ..." wire:model.lazy="search" />
-                </div>
                 <div>
-                    <x-crud::atoms.button class="btn-icon" color="secondary" size="xs">
-                        <x-crud::atoms.icon icon="filter" />
-                    </x-crud::atoms.button>
+                    <x-crud::atoms.input class="form-control-sm" placeholder="Search ..." wire:model.lazy="search" />
                 </div>
             </div>
         </x-slot>

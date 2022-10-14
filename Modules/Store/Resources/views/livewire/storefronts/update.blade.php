@@ -14,11 +14,11 @@
                         </a>
                     </h5>
                 </div>
-                <div class="me-2">
+                {{-- <div class="me-2">
                     <x-crud::atoms.button class="btn-icon-text" size="xs" color="secondary" wire:click="update">
                         <x-crud::atoms.icon icon="long-arrow-left" /> Kembali ke Etalase
                     </x-crud::atoms.button>
-                </div>
+                </div> --}}
                 <div>
                     <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" wire:click="update">
                         Update

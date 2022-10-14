@@ -28,9 +28,15 @@ class VariantOption extends Model
         $this->attributes['code'] = Str::slug($value);
     }
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
     public function variantValues()
     {
         return $this->hasMany(VariantValue::class, 'variant_id');
+        
     }
 
     protected static function newFactory()

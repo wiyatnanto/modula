@@ -3,10 +3,10 @@
         <h5 class="modal-title">Add New Tag</h5>
     </x-slot>
     <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <x-crud::atoms.input type="text" placeholder="Title" name="title" wire:model="title" />
-        @error('title')
-            <label id="title-error" class="error invalid-feedback" for="title">{{ $message }}</label>
+        <label for="name" class="form-label">Tag Name</label>
+        <x-crud::atoms.input type="text" placeholder="Tag Name" name="name" wire:model="name" />
+        @error('name')
+            <label id="name-error" class="error invalid-feedback" for="name">{{ $message }}</label>
         @enderror
     </div>
     <x-slot name="footer">

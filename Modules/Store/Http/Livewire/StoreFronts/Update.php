@@ -115,7 +115,7 @@ class Update extends Component
 
         // all products
         $allProducts = Product::with(['brand', 'images', 'categories',
-            'storefronts', 'attributeValues', 'attributes.values'
+            'storefronts', 'variants', 'variantValues', 'variantOptions.variantValues'
         ]);
 
         if ($this->searchAllProducts !== null) {

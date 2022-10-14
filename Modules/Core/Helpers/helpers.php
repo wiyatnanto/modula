@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Cache;
 if (! function_exists('getMenu')) {
     function getMenu($name)
     {
-        return MenuItem::with('children')->where('menu_id', 2)->orderBy('sort_order')->get();
+        return MenuItem::where('view','=',true)->with('children', function($query){
+            return $query->where('view','=',true);
+        })->where('menu_id', 2)->orderBy('sort_order')->get();
     }
 }
 

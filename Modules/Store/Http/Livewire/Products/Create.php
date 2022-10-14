@@ -14,6 +14,7 @@ use Modules\Store\Entities\Variant;
 use Modules\Store\Entities\VariantOption;
 use Modules\Store\Entities\VariantValue;
 use Modules\Store\Entities\File;
+use Modules\Store\Entities\TryOn;
 
 class Create extends Component
 {
@@ -35,18 +36,20 @@ class Create extends Component
     public $brand;
     public $sku;
 
+    public $bulkSelectVariant = false;
+
     public $hasVarian = false;
     public $varianFile;
     public $variantOptions = [];
     public $variantValues = [];
     public $variants = [];
     public $productVariants = [];
-    public $productVariantSelected = [];
+    public $bulkVariantValues = [];
 
     // tryOn
-
     public $threeD_config_json = [];
     public $image_config_json = [];
+    public $imageRight, $imageFront, $imageLeft;
 
     // public $values;
 
@@ -59,6 +62,105 @@ class Create extends Component
     {
         $this->variantOptions = VariantOption::get();
         $this->variantValues = VariantValue::get();
+        $this->image_config_json = [
+            'frame_width' => null,
+            'image_right' => [
+                'image_preview' => null,
+                'image' => null,
+                'position' => [
+                    'left' => 0,
+                    'top' => 0,
+                ],
+            ],
+            'image_front' => [
+                'image_preview' => null,
+                'image' => null,
+                'position' => [
+                    'left' => 0,
+                    'top' => 0,
+                ],
+            ],
+            'image_left' => [
+                'image_preview' => null,
+                'image' => null,
+                'position' => [
+                    'left' => 0,
+                    'top' => 0,
+                ],
+            ],
+        ];
+    }
+
+    // tryon
+    public function updatedImageRight($image)
+    {
+        $this->image_config_json['image_right'][
+            'image_preview'
+        ] = $image->temporaryUrl();
+        $this->dispatchBrowserEvent('updateImageRight', $image->temporaryUrl());
+    }
+
+    public function updatedImageFront($image)
+    {
+        $this->image_config_json['image_front'][
+            'image_preview'
+        ] = $image->temporaryUrl();
+        $this->dispatchBrowserEvent('updateImageFront', $image->temporaryUrl());
+        $this->dispatchBrowserEvent(
+            'updateImagePreview',
+            $image->temporaryUrl()
+        );
+    }
+
+    public function updatedImageLeft($image)
+    {
+        $this->image_config_json['image_left'][
+            'image_preview'
+        ] = $image->temporaryUrl();
+        $this->dispatchBrowserEvent('updateImageLeft', $image->temporaryUrl());
+    }
+
+    public function updatedBulkSelectVariant()
+    {
+        $this->productVariants = collect($this->productVariants)->map(function (
+            $productVariant
+        ) {
+            if (isset($productVariant['selected'])) {
+                $productVariant['selected'] = $this->bulkSelectVariant;
+                return $productVariant;
+            } else {
+                $productVariant['selected'] = $this->bulkSelectVariant;
+                return $productVariant;
+            }
+        });
+    }
+
+    public function setBulkVariant()
+    {
+        $valid = $this->validate([
+            'bulkVariantValues.price' => 'required',
+            'bulkVariantValues.sku' => '',
+            'bulkVariantValues.quantity' => 'required',
+            'bulkVariantValues.weight' => 'required',
+        ]);
+        if ($valid) {
+            $this->productVariants = collect($this->productVariants)->map(
+                function ($productVariant) {
+                    $productVariant['price'] =
+                        $this->bulkVariantValues['price'];
+                    $productVariant['sku'] = isset(
+                        $this->bulkVariantValues['sku']
+                    )
+                        ? $this->bulkVariantValues['sku']
+                        : '';
+                    $productVariant['quantity'] =
+                        $this->bulkVariantValues['quantity'];
+                    $productVariant['weight'] =
+                        $this->bulkVariantValues['weight'];
+                    return $productVariant;
+                }
+            );
+        }
     }
 
     public function defineCombinationAttributes()
@@ -73,6 +175,25 @@ class Create extends Component
                 ->crossJoin(...$values)
                 ->toArray();
         }
+
+        $this->productVariants = collect($this->productVariants)->map(function (
+            $productVariant
+        ) {
+            return [
+                'variants' => $productVariant,
+                'unique_id' => implode(
+                    str_split(
+                        implode(
+                            collect($productVariant)
+                                ->map(function ($name) {
+                                    return strtolower($name);
+                                })
+                                ->toArray()
+                        )
+                    )
+                ),
+            ];
+        });
     }
 
     public function updatedHasVarian($value)
@@ -134,7 +255,7 @@ class Create extends Component
             'name' => 'required',
             'category' => 'required',
             'storefront' => '',
-            'description' => 'required',
+            'description' => '',
             'quantity' => 'required',
             'minOrder' => 'required',
             'price' => 'required',
@@ -221,28 +342,23 @@ class Create extends Component
                     }
                 }
 
-                $product->variantOptions()->sync($variantOptions);
-                $product->variantValues()->sync($variantValues);
                 foreach ($this->productVariants as $key => $productVariant) {
                     $variants[] = new Variant([
                         'product_id' => $product->id,
-                        'variant_values' => 'values',
-                        'unique_id' => implode(
-                            str_split(
-                                implode(
-                                    collect($productVariant)->map(function ($name) {
-                                            return strtolower($name);
-                                        })->toArray(),
-                                ),
-                            ),
+                        'variant_values' => strval(
+                            implode('-', $productVariant['variants'])
                         ),
-                        'sku' => '',
-                        'quantity' => 1,
-                        'price' => 100000,
+                        'unique_id' => $productVariant['unique_id'],
+                        'sku' => $productVariant['sku'],
+                        'quantity' => $productVariant['quantity'],
+                        'price' =>
+                            str_replace('.', '', $productVariant['price']) .
+                            '.00',
                         'sale_price' => 0,
                     ]);
                 }
-                // dd($variants);
+                $product->variantOptions()->sync($variantOptions);
+                $product->variantValues()->sync($variantValues);
                 $product->variants()->saveMany($variants);
                 // if(is_object($this->varianFile)){
                 //     $varianFileName = $this->varianFile->store('public/files/store/files', 'local');
@@ -254,6 +370,50 @@ class Create extends Component
                 //     $product->files()->save($varianFile);
                 // }
             }
+            if (is_object($this->imageRight)) {
+                $imageRight = $this->imageRight->store(
+                    'public/store/tryons',
+                    'local'
+                );
+                $this->image_config_json['image_right']['image'] = str_replace(
+                    'public/store/tryons/',
+                    '',
+                    $imageRight
+                );
+                unset($this->image_config_json['image_right']['image_preview']);
+            }
+            if (is_object($this->imageFront)) {
+                $imageFront = $this->imageFront->store(
+                    'public/store/tryons',
+                    'local'
+                );
+                $this->image_config_json['image_front']['image'] = str_replace(
+                    'public/store/tryons/',
+                    '',
+                    $imageFront
+                );
+                unset($this->image_config_json['image_front']['image_preview']);
+            }
+            if (is_object($this->imageLeft)) {
+                $imageLeft = $this->imageLeft->store(
+                    'public/store/tryons',
+                    'local'
+                );
+                $this->image_config_json['image_left']['image'] = str_replace(
+                    'public/store/tryons/',
+                    '',
+                    $imageLeft
+                );
+                unset($this->image_config_json['image_left']['image_preview']);
+            }
+            $tryOn = new TryOn([
+                'product_id' => $product->id,
+                'type' => 'image',
+                '3D_config_json' => '{}',
+                'image_config_json' => json_encode($this->image_config_json),
+            ]);
+            $product->tryon()->save($tryOn);
+
             if ($product) {
                 $this->emit('toast', ['success', 'Product has been created']);
                 return redirect()->to('/store/products');
@@ -263,8 +423,14 @@ class Create extends Component
 
     public function render()
     {
+        // dd(Category::where('parent_id', 0)->with('children.children')->get());
         return view('store::livewire.products.create', [
             'categories' => Category::get(),
+            'categoriesTrees' => collect(
+                Category::where('parent_id', 0)
+                    ->with('children.children')
+                    ->get()
+            ),
             'brands' => Brand::get(),
             'storefronts' => StoreFront::get(),
         ])->extends('theme::backend.layouts.master');

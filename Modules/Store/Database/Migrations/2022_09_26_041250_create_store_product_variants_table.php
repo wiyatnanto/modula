@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('store_products')->onDelete('cascade');
             $table->string('variant_values')->nullable();
-            $table->string('unique_id')->unique();
+            $table->string('unique_id')->nullable();
             $table->string('sku')->nullable();
             $table->unsignedInteger('quantity')->nullable();
             $table->decimal('price', 12, 2)->nullable();

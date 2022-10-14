@@ -5,6 +5,7 @@
             //heightMin: {{ $height }},
             //heightMax: {{ $height }},
             //iconsTemplate: 'font_awesome_5',
+            toolbarButtons: ['undo', 'redo' , '|', 'bold', 'italic'],
             events: {
                 initialized: function() {
                     this.events.on('contentChanged', function(e) {

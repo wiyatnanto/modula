@@ -55,11 +55,11 @@
                                 <td class="align-middle">
                                     <x-crud::molecules.dropdown label="Action">
                                         @can('brands.update')
-                                            <button class="dropdown-item" data-bs-toggle="modal"
+                                            {{-- <button class="dropdown-item" data-bs-toggle="modal"
                                                 data-bs-target="#updateBrand"
-                                                wire:click="edit({{ $storeFront->id }})">Edit</button>
+                                                wire:click="edit({{ $storeFront->id }})">Edit</button> --}}
                                             <a class="dropdown-item" type="button"
-                                                href="{{ asset('store/storefronts/' . $storeFront->id . '/' . $storeFront->slug) }}">Atur</a>
+                                                href="{{ asset('store/storefronts/' . $storeFront->id . '/' . $storeFront->slug) }}">Edit & Atur</a>
                                         @endcan
                                         @can('brands.delete')
                                             <div x-data>

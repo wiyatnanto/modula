@@ -80,7 +80,7 @@
                 </label>
             </div>
         </div>
-        <div class="theme-wrapper">
+        {{-- <div class="theme-wrapper">
             <h6 class="text-muted mb-2">Light Theme:</h6>
             <a class="theme-item active" href="../../../demo1/dashboard.html">
                 <div class="page-content">
@@ -90,6 +90,6 @@
             <a class="theme-item" href="../../../demo2/dashboard.html">
                 <img src="{{ asset('modules/theme/backend/images/screenshots/dark.jpg') }}" alt="light theme">
             </a>
-        </div>
+        </div> --}}
     </div>
 </nav>

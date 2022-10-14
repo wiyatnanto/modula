@@ -17,6 +17,11 @@ class VariantValue extends Model
         'variant_id'  =>  'integer',
     ];
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
     public function variantOption()
     {
         return $this->belongsTo(VariantOption::class);

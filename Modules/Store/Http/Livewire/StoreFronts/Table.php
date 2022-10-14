@@ -17,7 +17,7 @@ class Table extends Component
     public $search;
     public $name;
     public $filterActive = 0;
-    public $storeFront;
+    public $storeFrontId;
     public $products;
 
     public $minimize = false;
@@ -60,10 +60,10 @@ class Table extends Component
         $this->dispatchBrowserEvent('closeModal');
     }
 
-    public function edit($slug)
+    public function edit($id)
     {
-        $this->storeFront = StoreFront::with('products')->where('slug', $slug)->firstOrFail();
-        $this->products = $this->storeFronts->products;
+        // $this->storeFront = StoreFront::with('products')->find($id);
+        // $this->products = $this->storeFront->products;
     }
 
     public function delete($id)

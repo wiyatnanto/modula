@@ -122,6 +122,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="mt-3">
+                {{ $categories->links('pagination::bootstrap-5-livewire') }}
+            </div>
         @elseif($view === 'tree')
             <div x-data="{}" x-init="() => {
                 function initMenu() {
@@ -337,9 +340,6 @@
                 </div>
             </div>
         @endif
-        <div class="mt-3">
-            {{ $categories->links('pagination::bootstrap-5-livewire') }}
-        </div>
         @include('store::livewire.categories.create')
         @include('store::livewire.categories.update')
     </x-crud::molecules.card>

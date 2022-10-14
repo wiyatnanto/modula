@@ -206,14 +206,14 @@
                                     <div class="d-flex">
                                         <div class="me-2">
                                             <span data-bs-toggle="tooltip" data-bs-placement="top"
-                                                title="Produk dilihat berdasakarkan Google Analytics"><i
-                                                    class="far fa-eye text-muted"></i>
+                                                title="Produk dilihat berdasakarkan Google Analytics">
+                                                <x-crud::atoms.icon icon="shapes" class="text-muted" />
                                                 {{ count($product->variantValues) }}
                                             </span>
                                         </div>
                                         <div data-bs-toggle="tooltip" data-bs-placement="top"
                                             title="Dalam Pengembangan"><i class="fal fa-shopping-bag text-muted"></i>
-                                            15</div>
+                                            -</div>
                                     </div>
                                 </td>
                                 <td class="align-middle">
@@ -222,10 +222,12 @@
                                     </div>
                                 </td>
                                 <td class="align-middle">
-                                    <div x-data="{ selected: '' }" x-init="price = $($refs.price).maskMoney({ thousands: '.', precision: 0 });
-                                    $($refs.price).on('change.maskMoney', function() {
-                                        Livewire.emit('updatePrice', $($refs.price).attr('data-id'), $($refs.price).val());
-                                    });">
+                                    <div x-data="{ selected: '' }" x-init="() => {
+                                        $($refs.price).maskMoney({ thousands: '.', precision: 0 });
+                                        $($refs.price).on('change.maskMoney', function() {
+                                            Livewire.emit('updatePrice', $($refs.price).attr('data-id'), $($refs.price).val());
+                                        });
+                                    }">
                                         <div class="input-group mg-b-10 wd-200">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp.</span>

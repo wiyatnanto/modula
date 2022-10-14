@@ -9,9 +9,6 @@
                 @this.set('{{ $attributes->whereStartsWith('wire:model')->first() }}', dateStr)
             }
         });
-    
-        feather.replace()
-    
         $watch('date', (value) => {
             picker.setDate(new Date(value))
         });
@@ -19,7 +16,7 @@
         <div class="input-group flatpickr" x-ref="input">
             <input {{ $attributes }} type="text" class="form-control" placeholder="{{ $placeholder }}" data-input>
             <span class="input-group-text input-group-addon" data-toggle>
-                <i data-feather="calendar"></i>
+                <x-crud::atoms.icon icon="calendar" class="text-muted" />
             </span>
         </div>
     </div>

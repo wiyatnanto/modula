@@ -119,11 +119,11 @@ class Table extends Component
         $category->parent_id = 0;
         if (is_object($this->image)) {
             $fileName = $this->image->store(
-                'public/files/store/categories',
+                'public/store/categories',
                 'local'
             );
             $category->image = str_replace(
-                'public/files/store/categories/',
+                'public/store/categories/',
                 '',
                 $fileName
             );
@@ -151,11 +151,11 @@ class Table extends Component
         $category->name = $this->name;
         if (is_object($this->image)) {
             $fileName = $this->image->store(
-                'public/files/store/categories',
+                'public/store/categories',
                 'local'
             );
             $category->image = str_replace(
-                'public/files/store/categories/',
+                'public/store/categories/',
                 '',
                 $fileName
             );
@@ -183,7 +183,7 @@ class Table extends Component
 
     public function render()
     {
-        $categories = Category::with('children')->orderBy('order_menu', 'asc');
+        $categories = Category::with('children')->withCount('products')->orderBy('order_menu', 'asc');
         if ($this->filterActive) {
             $categories->where('status', $this->filterActive);
         }

@@ -18,49 +18,59 @@ class Table extends Component
 {
     use WithPagination, WithSorting, WithFileUploads;
 
-    public $userId, $userRole, $name, $email, $password, $password_confirmation, $avatar;
+    public $userId,
+        $userRole,
+        $name,
+        $email,
+        $password,
+        $password_confirmation,
+        $avatar;
     public $roles = [];
     public $rolesOptions = [];
 
-    public $sortField ='id';
+    public $sortField = "id";
     public $sortAsc = true;
-    public $search = '';
+    public $search = "";
 
     public $selectAll = false;
     public $selected = [];
 
-    protected $paginationTheme = 'bootstrap';
+    protected $paginationTheme = "bootstrap";
 
-    protected $listeners = [
-        'clear',
-        'delete',
-        'bulkDelete'
-    ];
+    protected $listeners = ["clear", "delete", "bulkDelete"];
 
     protected $messages = [
-        'name.required' => 'The Name cannot be empty.',
-        'email.required' => 'The Email Address cannot be empty.',
-        'password.required' => 'The Password cannot be empty.',
-        'password_confirmation.required' => 'The Confirm Password cannot be empty.',
-        'roles.required' => 'The Role cannot be empty.',
+        "name.required" => "The Name cannot be empty.",
+        "email.required" => "The Email Address cannot be empty.",
+        "password.required" => "The Password cannot be empty.",
+        "password_confirmation.required" =>
+            "The Confirm Password cannot be empty.",
+        "roles.required" => "The Role cannot be empty.",
     ];
 
-    public function mount() {
-        $this->rolesOptions = Role::pluck('name','name')->all();
+    public function mount()
+    {
+        $this->rolesOptions = Role::pluck("name", "name")->all();
     }
 
-    public function clear() {
+    public function clear()
+    {
         $this->reset();
         $this->resetErrorBag();
         $this->resetValidation();
     }
 
-    public function updatedSelectAll($value) {
-        if($value){
-            $this->selected = User::where('name','ILIKE', '%' . $this->search . '%')
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->pluck('id');
-        }else{
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selected = User::where(
+                "name",
+                "ILIKE",
+                "%" . $this->search . "%"
+            )
+                ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
+                ->pluck("id");
+        } else {
             $this->selected = [];
         }
     }
@@ -68,22 +78,23 @@ class Table extends Component
     public function store()
     {
         $this->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:auth_users,email',
-            'password' => 'required|confirmed',
-            'password_confirmation' => 'required',
-            'roles' => 'required'
+            "name" => "required",
+            "email" => "required|email|unique:auth_users,email",
+            "password" => "required|confirmed",
+            "password_confirmation" => "required",
+            "roles" => "required",
         ]);
-        
+
         $user = User::create([
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-            'avatar' => 'noimage.webp'
+            "name" => $this->name,
+            "email" => $this->email,
+            "password" => Hash::make($this->password),
+            "avatar" => "noimage.webp",
         ]);
         $user->assignRole($this->roles);
-        $this->emit('toast', ['success', 'User has been created']);
-        $this->dispatchBrowserEvent('closeModal');
+        $this->emit("toast", ["success", "User has been created"]);
+        $this->dispatchBrowserEvent("closeModal");
+        $this->clear();
     }
 
     public function edit($id)
@@ -92,68 +103,63 @@ class Table extends Component
         $this->userId = $id;
         $this->name = $user->name;
         $this->email = $user->email;
-        $this->rolesOptions = Role::pluck('name','name')->all();
-        $this->roles = $user->roles->pluck('name')->all();
+        $this->rolesOptions = Role::pluck("name", "name")->all();
+        $this->roles = $user->roles->pluck("name")->all();
         $this->avatar = $user->avatar;
     }
 
     public function update($id)
     {
         $this->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:auth_users,email,'.$id,
-            'password' => 'confirmed',
-            'roles' => 'required'
+            "name" => "required",
+            "email" => "required|email|unique:auth_users,email," . $id,
+            "password" => "confirmed",
+            "roles" => "required",
         ]);
-    
         $user = User::find($id);
         $user->name = $this->name;
         $user->email = $this->email;
-        if(!empty($this->password)) { 
+        if (!empty($this->password)) {
             $user->password = Hash::make($this->password);
         }
-        if (gettype($this->avatar) === 'object') {
-            $this->avatar->store('public/users/avatar');
-            $user->avatar = 'users/avatar/' . $this->avatar->hashName();
-        }else{
+        if (gettype($this->avatar) === "object") {
+            $this->avatar->store("public/users/avatar");
+            $user->avatar = "users/avatar/" . $this->avatar->hashName();
+        } else {
             $user->avatar = $this->avatar;
         }
         $user->update();
-
-        DB::table('auth_model_has_roles')
-            ->where('model_id', $id)
+        DB::table("auth_model_has_roles")
+            ->where("model_id", $id)
             ->delete();
         $user->assignRole($this->roles);
-        $this->emit('toast', ['success', 'User has been updated']);
-        $this->dispatchBrowserEvent('closeModal');
+        $this->emit("toast", ["success", "User has been updated"]);
+        $this->dispatchBrowserEvent("closeModal");
+        $this->clear();
     }
-     
+
     public function delete($id)
     {
         User::find($id)->delete();
-        $this->emit('toast', ['success', 'User has been deleted']);
-        $this->dispatchBrowserEvent('closeModal');
+        $this->emit("toast", ["success", "User has been deleted"]);
+        $this->dispatchBrowserEvent("closeModal");
+        $this->clear();
     }
 
     public function bulkDelete()
     {
-        User::whereIn('id', $this->selected)->delete();
-        $this->emit('toast', ['success', 'Users has been deleted']);
-        $this->dispatchBrowserEvent('closeModal');
+        User::whereIn("id", $this->selected)->delete();
+        $this->emit("toast", ["success", "Users has been deleted"]);
+        $this->dispatchBrowserEvent("closeModal");
+        $this->clear();
     }
 
     public function render()
     {
-       $user =  User::find(1);
-    //    dd($user->tokens()->first()->token);
-        // $user->createToken('auth_token')->plainTextToken;
-        // dd($user->createToken('auth_token')->plainTextToken);
-
-        return view('auth::livewire.users.table', [
-            'users' => User::where('name','ILIKE', '%' . $this->search . '%')
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->fastPaginate(10)
-        ])
-        ->extends('theme::backend.layouts.master');
+        return view("auth::livewire.users.table", [
+            "users" => User::where("name", "ILIKE", "%" . $this->search . "%")
+                ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
+                ->fastPaginate(10),
+        ])->extends("theme::backend.layouts.master");
     }
 }

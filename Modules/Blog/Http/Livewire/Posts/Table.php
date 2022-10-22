@@ -58,11 +58,10 @@ class Table extends Component
         $post = new Post();
         $post->title = $this->title;
         $post->content = $this->content;
-        $post->status = $this->featured_image || 'Draft';
+        $post->status = 1;
         if (gettype($this->featured_image) === 'object') {
             $this->featured_image->store('public/blog/posts');
-            $post->featured_image =
-                'blog/posts/' . $this->featured_image->hashName();
+            $post->featured_image = $this->featured_image->hashName();
         }
         $post->caption = $this->caption;
         $post->published_at = $this->published_at;
@@ -100,6 +99,12 @@ class Table extends Component
         $post = Post::find($this->postId);
         $post->title = $this->title;
         $post->content = $this->content;
+        $post->status = $this->featured_image || 'Draft';
+        if (gettype($this->featured_image) === 'object') {
+            $this->featured_image->store('public/blog/posts');
+            $post->featured_image = $this->featured_image->hashName();
+        }
+        $post->caption = $this->caption;
         $post->published_at = $this->published_at;
         $post->update();
         $newTags =[];
@@ -109,7 +114,7 @@ class Table extends Component
             ]);
             $newTags[] = $lastTag->id;
         }
-        $post->Tags()->sync($newTags);
+        $post->tags()->sync($newTags);
         $this->emit('toast', ['success', 'Posts has been updated']);
         $this->dispatchBrowserEvent('closeModal');
     }
@@ -117,7 +122,7 @@ class Table extends Component
     public function delete($id)
     {
         $post = Post::find($id)->first();
-        $post->Tags()->delete();
+        $post->tags()->delete();
         $post->delete();
 
         $this->emit('toast', ['success', 'Posts has been deleted']);

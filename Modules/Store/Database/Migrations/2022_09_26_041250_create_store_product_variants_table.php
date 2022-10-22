@@ -21,8 +21,10 @@ return new class extends Migration
             $table->string('unique_id')->nullable();
             $table->string('sku')->nullable();
             $table->unsignedInteger('quantity')->nullable();
+            $table->unsignedInteger('width')->nullable();
             $table->decimal('price', 12, 2)->nullable();
             $table->decimal('sale_price', 12, 2)->nullable();
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

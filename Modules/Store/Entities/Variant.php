@@ -11,7 +11,7 @@ class Variant extends Model
 
     protected $table = 'store_product_variants';
 
-    protected $fillable = ['variant_values','unique_id','sku','quantity', 'price','sale_price'];
+    protected $fillable = ['variant_values','unique_id','sku','quantity', 'weight', 'price', 'sale_price', 'status'];
     
     protected $casts = [
         'product_id'    =>  'integer',

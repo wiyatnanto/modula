@@ -76,7 +76,7 @@ class Table extends Component
 
     public function render()
     {
-        $storeFronts = StoreFront::with('last_product.images')->orderBy('order_menu', 'asc');
+        $storeFronts = StoreFront::with('products.images')->orderBy('order_menu', 'asc');
         if($this->filterActive){
             $storeFronts->where('status', $this->filterActive);
         }

@@ -69,11 +69,11 @@ class Table extends Component
             $brand->name = $this->name;
             if (is_object($this->image)) {
                 $fileName = $this->image->store(
-                    'public/files/store/brands',
+                    'public/store/brands',
                     'local'
                 );
                 $brand->image = str_replace(
-                    'public/files/store/brands/',
+                    'public/store/brands/',
                     '',
                     $fileName
                 );
@@ -102,11 +102,11 @@ class Table extends Component
         $brand->name = $this->name;
         if (is_object($this->image)) {
             $fileName = $this->image->store(
-                'public/files/store/brands',
+                'public/store/brands',
                 'local'
             );
             $brand->image = str_replace(
-                'public/files/store/brands/',
+                'public/store/brands/',
                 '',
                 $fileName
             );
@@ -136,10 +136,8 @@ class Table extends Component
 
     public function render()
     {
-        $brands = Brand::with('products')->where('status', $this->filterActive);
-
+        $brands = Brand::withCount('products')->where('status', $this->filterActive);
         if ($this->search !== null) {
-            // $brands->where('name', 'like', '%' . $this->search . '%');
             $brands->where('name', 'ILIKE', '%' . $this->search . '%');
         }
         return view('store::livewire.brands.table', [

@@ -4,44 +4,16 @@
         <x-slot name="header">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="me-auto">
-                    <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" data-bs-toggle="modal"
-                        data-bs-target="#createUser">
-                        <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add User
-                    </x-crud::atoms.button>
-                    @if (count($selected) > 0)
-                        <span x-data
-                            x-on:click="
-                            bootbox.dialog({
-                                closeButton: false,
-                                size: 'small',
-                                centerVertical: true,
-                                message: `
-                                    Are you sure delete this items?
-                                `,
-                                buttons: {
-                                    ok:{
-                                        label: 'Yes',
-                                        className: 'btn-sm btn-danger',
-                                        callback: function(){
-                                            @this.emit('bulkDelete')              
-                                        }
-                                    },
-                                    no:{
-                                        label: 'Cancel',
-                                        className: 'btn-sm btn-secondary',
-                                        callback: function(){}
-                                    }
-                                }     
-                            });
-                        ">
-                            <x-crud::atoms.button size="sm" color="danger">
-                                Delete
-                            </x-crud::atoms.button>
-                        </span>
-                    @endif
+                    <h5 class="card-title mb-0">User List</h5>
+                </div>
+                <div class="me-2">
+                    <x-crud::atoms.input class="form-control-sm" placeholder="Search user ..." wire:model="search" />
                 </div>
                 <div>
-                    <x-crud::atoms.input class="form-control-sm" placeholder="Search ..." wire:model.lazy="search" />
+                    <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" data-bs-toggle="modal"
+                        data-bs-target="#createUser">
+                        <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add New User
+                    </x-crud::atoms.button>
                 </div>
             </div>
         </x-slot>
@@ -52,21 +24,51 @@
                         <th width="50">
                             <x-crud::atoms.checkbox wire:model="selectAll" />
                         </th>
-                        {{-- <th wire:click.prevent="sortBy('id')">ID
-                            <x-crud::molecules.sorticon name="id" sortField="{{ $sortField }}"
-                                sortAsc="{{ $sortAsc }}" />
-                        </th> --}}
-                        <th wire:click.prevent="sortBy('name')">Name
-                            <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
-                                sortAsc="{{ $sortAsc }}" />
-                        </th>
-                        <th wire:click.prevent="sortBy('email')">Email
-                            <x-crud::molecules.sorticon name="email" sortField="{{ $sortField }}"
-                                sortAsc="{{ $sortAsc }}" />
-                        </th>
-                        <th wire:click.prevent="sortBy('role')" width="200">Roles</th>
-                        <th>Last Login</th>
-                        <th>Action</th>
+                        @if (!count($selected))
+                            <th wire:click.prevent="sortBy('name')">Name
+                                <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
+                                    sortAsc="{{ $sortAsc }}" />
+                            </th>
+                            <th wire:click.prevent="sortBy('email')">Email
+                                <x-crud::molecules.sorticon name="email" sortField="{{ $sortField }}"
+                                    sortAsc="{{ $sortAsc }}" />
+                            </th>
+                            <th wire:click.prevent="sortBy('role')" width="200">Role</th>
+                            <th>Last Login</th>
+                            <th class="text-end">Action</th>
+                        @else
+                            <th colspan="5">
+                                <span x-data
+                                    x-on:click="
+                                    bootbox.dialog({
+                                        closeButton: false,
+                                        size: 'small',
+                                        centerVertical: true,
+                                        message: `
+                                            Are you sure delete this items?
+                                        `,
+                                        buttons: {
+                                            ok:{
+                                                label: 'Yes',
+                                                className: 'btn-sm btn-danger',
+                                                callback: function(){
+                                                    @this.emit('bulkDelete')              
+                                                }
+                                            },
+                                            no:{
+                                                label: 'Cancel',
+                                                className: 'btn-sm btn-secondary',
+                                                callback: function(){}
+                                            }
+                                        }     
+                                    });
+                                ">
+                                    <x-crud::atoms.button class="btn-icon-text" size="xs" color="danger">
+                                        <x-crud::atoms.icon class="btn-icon-prepend" icon="trash" /> Bulk Delete
+                                    </x-crud::atoms.button>
+                                </span>
+                            </th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -76,7 +78,6 @@
                                 <x-crud::atoms.checkbox name="userIds[]" wire:model="selected"
                                     value="{{ $user->id }}" />
                             </td>
-                            {{-- <td>{{ $user->id }}</td> --}}
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
@@ -91,9 +92,8 @@
                                 @endif
                             </td>
                             <td>{{ $user->updated_at }}</td>
-                            <td>
+                            <td class="text-end">
                                 <x-crud::molecules.dropdown label="Action">
-                                    <a class="dropdown-item" href="">Show</a>
                                     @can('users.update')
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateUser"
                                             wire:click="edit({{ $user->id }})">Edit</button>

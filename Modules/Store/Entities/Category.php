@@ -41,7 +41,12 @@ class Category extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'store_product_categories', 'category_id', 'product_id');
+        return $this->belongsToMany(Product::class, 'store_product_categories', 'category_id', 'product_id')->orderBy('created_at', 'desc');
+    }
+
+    public function lastProduct()
+    {
+        return $this->products();
     }
     
     protected static function newFactory()

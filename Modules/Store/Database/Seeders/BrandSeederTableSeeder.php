@@ -21,7 +21,7 @@ class BrandSeederTableSeeder extends Seeder
             [
                 'name'=>'Ray Ban',
                 'slug'=>'ray-ban',
-                'image'=>'nbRCvklliF4TekadjQO0SdYDXO8okt60wdAlNXuh.jpg',
+                'image'=>'example.png',
                 'status'=>1,
                 'created_at'=>'2021-12-07 05:41:41',
                 'updated_at'=>'2021-12-15 23:33:01'

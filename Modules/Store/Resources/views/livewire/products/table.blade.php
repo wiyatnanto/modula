@@ -60,15 +60,15 @@
                         </div>
                         <div class="me-2">
                             @if ($sortField !== 'id')
-                                <span class="badge bg-light text-black me-1">
-                                    <?php
+                                @php
                                     $sortLabel = [
                                         'name' => ['label' => 'Nama:', 'asc' => 'A - Z', 'desc' => 'Z - A'],
                                         'price' => ['label' => 'Harga', 'asc' => 'Terendah', 'desc' => 'Tertinggi'],
                                         'quantity' => ['label' => 'Stok', 'desc' => 'Terbanyak', 'asc' => 'Tersedikit'],
                                     ];
-                                    ?>
-                                    @if (isset($sortLabel[$sortField]))
+                                @endphp
+                                @if (isset($sortLabel[$sortField]))
+                                    <span class="badge bg-light text-black me-1">
                                         {{ $sortLabel[$sortField]['label'] }}
                                         {{ $sortLabel[$sortField][$sortAsc ? 'asc' : 'desc'] }}
                                         <button class="btn btn-xs btn-link p-0" wire:click="removeSort()"
@@ -76,8 +76,8 @@
                                             <x-crud::atoms.icon icon="times" class="text-muted"
                                                 style="font-size: .65rem;" />
                                         </button>
-                                    @endif
-                                </span>
+                                    </span>
+                                @endif
                             @endif
                             @if (count($categoriesFilter) > 0)
                                 @foreach ($categoriesFilterLabel as $key => $category)
@@ -188,7 +188,7 @@
                                     <div class="media d-flex align-items-center">
                                         @foreach ($product->images as $key_image => $image)
                                             @if (!$key_image)
-                                                <img src="{{ asset('storage/files/store/products/' . $image->image) }}"
+                                                <img src="{{ asset('storage/' . $image->image) }}"
                                                     class="rounded me-2" alt="">
                                             @endif
                                         @endforeach

@@ -20,7 +20,7 @@ class StoreDatabaseSeeder extends Seeder
             BrandSeederTableSeeder::class,
             CategorySeederTableSeeder::class,
             StoreFrontSeederTableSeeder::class,
-            // ProductSeederTableSeeder::class
+            ProductSeederTableSeeder::class
         ]);
     }
 }

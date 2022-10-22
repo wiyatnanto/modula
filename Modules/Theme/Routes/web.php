@@ -1,5 +1,8 @@
 <?php
 
+use Modules\Theme\Http\Livewire\Settings\Setting;
+use Modules\Theme\Http\Livewire\Sliders\Table as SlidersTable;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +14,7 @@
 |
 */
 
-Route::prefix('theme')->group(function() {
-    Route::get('/', 'ThemeController@index');
+Route::prefix("theme")->group(function () {
+    Route::get("/setting", Setting::class)->name("theme.setting");
+    Route::get("/sliders", SlidersTable::class)->name("theme.slider");
 });

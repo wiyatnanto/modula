@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use Modules\Core\Http\Controllers\API\MenuController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/core', function (Request $request) {
+Route::middleware("auth:api")->get("/core", function (Request $request) {
     return $request->user();
 });
+
+Route::prefix("core")
+    ->middleware("auth:api")
+    ->group(function () {
+        Route::resource("menus", MenuController::class);
+    });

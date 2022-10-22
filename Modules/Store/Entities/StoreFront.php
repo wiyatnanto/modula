@@ -28,14 +28,9 @@ class StoreFront extends Model
         return $this->belongsToMany(Product::class, 'store_product_storefronts', 'storefront_id', 'product_id');
     }
 
-    public function product_storefronts()
+    public function productsWithLimit($limit)
     {
-        return $this->hasMany('store_product_storefronts');
-    }
-
-    public function last_product()
-    {
-        return $this->belongsToMany(Product::class, 'store_product_storefronts', 'storefront_id', 'product_id');
+        return $this->hasMany('store_product_storefronts')->take($limit);
     }
 
     protected static function newFactory()

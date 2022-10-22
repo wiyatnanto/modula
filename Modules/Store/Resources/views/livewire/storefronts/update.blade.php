@@ -60,7 +60,7 @@
                                 <td class="align-middle">
                                     <div class="media d-flex align-items-center">
                                         @if (count($product->images) > 0)
-                                            <img src="{{ asset('storage/files/store/products/' . $product->images->first()?->image) }}"
+                                            <img src="{{ asset('storage/store/products/' . $product->images->first()?->image) }}"
                                                 class="rounded me-2" alt="">
                                         @endif
                                         <div class="media-body">
@@ -162,7 +162,7 @@
                                     <div class="media d-flex align-items-center">
                                         @foreach ($product->images as $key_image => $image)
                                             @if (!$key_image)
-                                                <img src="{{ asset('storage/files/store/products/' . $image->image) }}"
+                                                <img src="{{ asset('storage/store/products/' . $image->image) }}"
                                                     class="rounded me-2" alt="">
                                             @endif
                                         @endforeach

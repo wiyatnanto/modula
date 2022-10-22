@@ -11,6 +11,13 @@
                         @endforeach
                     </x-crud::atoms.select2>
                 </div>
+                <div style="min-width: 200px;" class="me-2">
+                    <x-crud::atoms.select2 name="lang" closeOnSelect="false" wire:model="lang">
+                        @foreach ($languages as $code => $languageName)
+                            <option value="{{ $code }}">{{ $languageName }}</option>
+                        @endforeach
+                    </x-crud::atoms.select2>
+                </div>
                 <div class="me-2">
                     or
                 </div>
@@ -36,7 +43,7 @@
         </x-slot>
         <div class="row">
             <div class="col-md-4">
-                <div class="accordion" id="accordionExample">
+                <div class="accordion" id="addMenuItem">
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingCategories">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -46,7 +53,7 @@
                             </button>
                         </h2>
                         <div id="collapseproductCategories" class="accordion-collapse collapse"
-                            aria-labelledby="headingOne" data-bs-parent="#accordionExample" wire:ignore.self>
+                            aria-labelledby="headingOne" data-bs-parent="#addMenuItem" wire:ignore.self>
                             <div class="accordion-body p-3">
                                 <div class="border rounded">
                                     <ul class="list-group list-group-flush">
@@ -82,8 +89,8 @@
                                 Categories
                             </button>
                         </h2>
-                        <div id="collapseCategories" class="accordion-collapse collapse"
-                            aria-labelledby="headingOne" data-bs-parent="#accordionExample" wire:ignore.self>
+                        <div id="collapseCategories" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                            data-bs-parent="#addMenuItem" wire:ignore.self>
                             <div class="accordion-body p-3">
                                 <div class="border rounded">
                                     <ul class="list-group list-group-flush">
@@ -120,7 +127,7 @@
                             </button>
                         </h2>
                         <div id="collapsePages" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                            data-bs-parent="#accordionExample" wire:ignore.self>
+                            data-bs-parent="#addMenuItem" wire:ignore.self>
                             <div class="accordion-body p-3">
                                 <div class="border rounded">
                                     <ul class="list-group list-group-flush">
@@ -156,12 +163,9 @@
                             </button>
                         </h2>
                         <div id="collapseCustom" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                            data-bs-parent="#accordionExample" wire:ignore.self>
+                            data-bs-parent="#addMenuItem" wire:ignore.self>
                             <div class="accordion-body">
-                                <div class="mb-3">
-                                    <label for="url" class="form-label">Separator </label>
-                                    <x-crud::atoms.switch wire:model="isSeparator" />
-                                </div>
+
                                 <div class="mb-3">
                                     <label for="menu_title" class="form-label">Custom Title </label>
                                     <x-crud::atoms.input type="text" placeholder="Title"
@@ -185,12 +189,10 @@
                                     </div>
                                 @endif
                                 <div class="mb-3">
-                                    <label for="url" class="form-label">Open New Tab </label>
-                                    <x-crud::atoms.switch wire:model="target" />
-                                    @error('url')
-                                        <label id="url-error" class="error invalid-feedback"
-                                            for="url">{{ $message }}</label>
-                                    @enderror
+                                    <x-crud::atoms.checkbox wire:model="isSeparator" label="Separator" />
+                                </div>
+                                <div class="mb-3">
+                                    <x-crud::atoms.checkbox wire:model="target" label="Open New Tab" />
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <div>

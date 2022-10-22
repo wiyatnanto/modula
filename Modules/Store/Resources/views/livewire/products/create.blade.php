@@ -829,7 +829,8 @@
                                         <label>Pilihan Varian {{ $key + 1 }}</label>
                                         <div wire:ignore class="mb-3" wire:key="value.{{ $key }}">
                                             <div x-data="{
-                                                selected: @entangle('variants'),
+                                                variants: @entangle('variants'),
+                                                variantOptions: @entangle('variantOptions'),
                                                 disabled: true
                                             }" x-init="() => {
                                                 var select = $($refs.select)
@@ -840,13 +841,14 @@
                                                         placeholder: 'Value'
                                                     });
                                                 }
+                                            
                                                 initSelect2()
                                             
                                                 select.on('change', function(e) {
                                                     Livewire.emit('selectAttributeValues', {{ $key }}, $($refs.select).select2('data'))
                                                 });
                                             
-                                                $watch('selected', (value) => {
+                                                $watch('variants', (value) => {
                                                     disabled = value[0].name !== null ? false : true
                                                 });
                                             
@@ -854,9 +856,7 @@
                                                     if ({{ $key }} === params.index) {
                                                         select.empty().select2({
                                                             tags: true,
-                                                            data: params.options.map(function(item) {
-                                                                return { id: item.value, text: item.value }
-                                                            })
+                                                            data: params.options
                                                         }).trigger('change');
                                                     }
                                                 })
@@ -864,11 +864,6 @@
                                                 <select x-ref="select" class="wd-100p" multiple="multiple"
                                                     id="option-{{ $key }}" data-placeholder="Varian"
                                                     x-bind:disabled="disabled">
-                                                    {{-- @if ($attributeValueOptions)
-                                                        @foreach ($attributeValueOptions as $valueOption)
-                                                            <option>{{ $valueOption->value }}</option>
-                                                        @endforeach
-                                                    @endif --}}
                                                 </select>
                                             </div>
                                         </div>

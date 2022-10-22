@@ -83,7 +83,6 @@ class AuthController extends Controller
             
         return redirect('dashboard')->with('message', 'You have Successfully loggedin with Google account');
     }
-
     public function postLogin(Request $request)
     {
         
@@ -98,8 +97,21 @@ class AuthController extends Controller
                         ->withInput()
                         ->with('error','Email and password field is required');
         }
-
         $credentials = $request->only('email', 'password');
+        if(request()->ajax()){
+            if (Auth::attempt($credentials)) {
+                $user = Auth::user();
+                $success['token'] =  $user->createToken('ROG')->plainTextToken; 
+                $success['name'] =  $user->name;
+                $response = [
+                    'success' => true,
+                    'data'    => $success,
+                    'message' => 'User login successfully.',
+                ];
+                return response()->json($response);
+            }
+        }
+           
         if (Auth::attempt($credentials)) {
             return redirect('dashboard')->with('success', 'You have Successfully loggedin');
         }

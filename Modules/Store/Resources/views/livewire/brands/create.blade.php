@@ -48,7 +48,7 @@
                 if (value !== null) {
                     if (!value.includes('livewire-file:') && value !== null) {
                         file.files = [{
-                            source: 'http://wisner-hiyutec.lab/storage/files/store/brands/' + value,
+                            source: '/storage/store/brands/' + value,
                             options: {
                                 type: 'local'
                             }

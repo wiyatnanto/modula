@@ -1,6 +1,6 @@
 <x-crud::organisms.modal preventSubmit="store()" submitLabel="Create" id="createUser" title="Crate User">
     <x-slot name="header">
-        <h5 class="modal-title">Create User</h5>
+        <h5 class="modal-title">New User</h5>
     </x-slot>
     <div class="mb-3">
         <label for="avatar" class="form-label">Avatar</label>
@@ -10,8 +10,8 @@
         @enderror
     </div>
     <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
-        <x-crud::atoms.input type="text" placeholder="Name" name="name" wire:model="name" />
+        <label for="name" class="form-label">Full Name</label>
+        <x-crud::atoms.input type="text" placeholder="Full Name" name="name" wire:model="name" />
         @error('name')
             <label id="name-error" class="error invalid-feedback" for="name">{{ $message }}</label>
         @enderror

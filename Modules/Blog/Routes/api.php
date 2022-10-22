@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 
+use Modules\Blog\Http\Controllers\API\PostController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,4 +17,8 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/blog', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('blog')->middleware('auth:api')->group( function () {
+    Route::resource('posts', PostController::class);
 });

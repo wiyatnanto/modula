@@ -5,7 +5,7 @@
     'tag' => false,
 ])
 <div
-    {{ $attributes->merge(['class' => $errors->has($attributes->whereStartsWith('wire:model')->first()) ? 'is-invalid' : '']) }}>
+    {{ $attributes->merge(['class' => $errors->has($attributes->whereStartsWith('wire:model')->first()) ? 'is-invalid' : null]) }}>
     <div wire:ignore>
         <div x-data="{ selected: @entangle($attributes->whereStartsWith('wire:model')->first()) }" x-init="() => {
             let select = $($refs.select)
@@ -15,13 +15,7 @@
                     placeholder: 'Select here',
                     closeOnSelect: true,
                     dropdownClass: 'select2-on-modal',
-                    tags: '{{ $tag }}',
-        
-                    //minimumResultsForSearch: -1,
-                    //ajax: {
-                    //    url: 'http://modula.com.test/api/survey/options',
-                    //    dataType: 'json'
-                    //}
+                    tags: '{{ $tag }}'
                 });
                 select.on('select2:open', function(e) {
                     $('.select2-container').css('z-index', 99999);

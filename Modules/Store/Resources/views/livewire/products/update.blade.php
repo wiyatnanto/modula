@@ -61,7 +61,7 @@
                                             });
                                         }
                                         file.files = [{
-                                            source: '/storage/files/store/products/' + images,
+                                            source: '/storage/' + images,
                                             options: {
                                                 type: 'local'
                                             }
@@ -72,7 +72,7 @@
                                         if (value !== null) {
                                             if (!value.includes('livewire-file:') && value !== null) {
                                                 file.files = [{
-                                                    source: '/storage/files/store/products/' + value,
+                                                    source: '/storage/store/products/' + value,
                                                     options: {
                                                         type: 'local'
                                                     }
@@ -687,7 +687,6 @@
                         ]
                     }" x-init="() => {
                         var aaaa = @js($categoriesTrees);
-                        console.log(aaaa)
                         aaaa.forEach(function(item) {
                             item.label = item.name
                             item.value = item.id
@@ -707,7 +706,6 @@
                                 })
                             }
                         })
-                        console.log('asdaasdasd', aaaa)
                         languages.forEach(function(item) {
                             item.label = item.name
                             item.value = item.indexcode
@@ -727,12 +725,11 @@
                                 }
                             })
                         })
-                        console.log(test)
                         select = $($refs.selectbox).zdCascader({
                             data: aaaa,
                             container: '#test',
                             onChange: function(value, label, datas) {
-                                console.log(value, label, datas);
+                                //console.log(value, label, datas);
                             }
                         });
                     }">
@@ -836,83 +833,104 @@
                 </div>
             </div>
             @if ($hasVarian)
-                {{ json_encode($variants) }}
                 <div class="col-md-12">
+                    {{-- {{ json_encode($variants) }}
+                    <br />
+                    {{ json_encode($variantOptions) }} --}}
                     <table>
                         @if (count($variants) > 0)
                             @foreach ($variants as $key => $variant)
                                 <tr>
                                     <td width="300" class="pe-3">
                                         <label>Tipe Varian {{ $key + 1 }} {{ $variant['name'] }}</label>
-                                        <div wire:ignore class="mb-3" x-data x-init="() => {
-                                            let select = $($refs.select)
-                                            select.select2({
-                                                tags: true,
-                                                maximumSelectionLength: 2,
-                                                placeholder: 'Pilih Varian'
-                                            });
-                                            select.on('select2:select', function(e) {
-                                                Livewire.emit('selectAttributes', {{ $key }}, e.target.value)
-                                            })
-                                            select.val('{{ $variant['name'] }}').trigger('change');
-                                        }">
+                                        <div wire:ignore class="mb-3" x-data="{
+                                            variants: @entangle('variants'),
+                                            variantOptions: @entangle('variantOptions'),
+                                            disabled: true,
+                                        }"
+                                            x-init="() => {
+                                                let select = $($refs.select)
+                                            
+                                                function initSelect2() {
+                                                    select.select2({
+                                                        tags: true,
+                                                        placeholder: 'Tipe Varian'
+                                                    });
+                                                }
+                                                initSelect2();
+                                            
+                                                select.val(variants[{{ $key }}].name).trigger('change');
+                                                select.on('select2:select', function(e) {
+                                                    console.log('asdasd')
+                                                    Livewire.emit('selectAttributes', {{ $key }}, e.target.value)
+                                                })
+                                            }">
                                             <select x-ref="select" class="form-select">
-                                                @foreach ($variantOptions as $variant)
+                                                @foreach ($variantOptions as $option)
                                                     <option></option>
-                                                    <option value="{{ $variant->name }}">{{ $variant->name }}
+                                                    <option value="{{ $option['type'] }}">{{ $option['type'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </td>
                                     <td width="600">
-                                        <label>Pilihan Varianx {{ $key + 1 }}</label>
-                                        <div wire:ignore class="mb-3" wire:key="value.{{ $key }}">
-                                            <div x-data="{
-                                                selected: @entangle('variants'),
-                                                disabled: true,
-                                            }" x-init="() => {
-                                                var select = $($refs.select)
-                                            
-                                                function initSelect2() {
-                                                    select.select2({
-                                                        tags: true,
-                                                        placeholder: 'Value'
-                                                    });
-                                                }
-                                                initSelect2()
-                                            
-                                                select.on('change', function(e) {
-                                                    console.log($($refs.select).select2('data'))
-                                                    Livewire.emit('selectAttributeValues', {{ $key }}, $($refs.select).select2('data'))
-                                                });
-                                            
-                                                $watch('selected', (value) => {
-                                                    disabled = value[0].name !== null ? false : true
-                                                });
-                                                select.val(selected[{{ $key }}].values).trigger('change');
-                                            
-                                                Livewire.on('updateAttributeValueOptions', params => {
-                                                    if ({{ $key }} === params.index) {
-                                                        select.empty().select2({
+                                        <label>Pilihan Varian {{ $key + 1 }} {{ $variant['name'] }}</label>
+                                        @if ($variantOptions)
+                                            <div class="mb-3">
+                                                <div wire:ignore x-data="{
+                                                    variants: @entangle('variants'),
+                                                    variantOptions: @entangle('variantOptions'),
+                                                    disabled: true,
+                                                }" x-init="() => {
+                                                    var select = $($refs.select)
+                                                
+                                                    function initSelect2() {
+                                                        select.select2({
                                                             tags: true,
-                                                            data: params.options.map(function(item) {
-                                                                return { id: item.value, text: item.value }
-                                                            })
-                                                        }).trigger('change');
+                                                            placeholder: 'Value',
+                                                        });
                                                     }
-                                                });
-                                            
-                                            }">
-                                                <select x-ref="select" class="wd-100p" multiple="multiple"
-                                                    id="option-{{ $key }}" data-placeholder="Varian"
-                                                    x-bind:disabled="disabled">
-                                                    @foreach ($variantOptions[$key]->variantValues as $value)
-                                                        <option value="{{ $value->value }}">{{ $value->value }}</option>
-                                                    @endforeach
-                                                </select>
+                                                    initSelect2()
+                                                
+                                                    console.log(variants.find(variant => variant.name === variants[{{ $key }}].name).values)
+                                                
+                                                    select.val(variants.find(variant => variant.name === variants[{{ $key }}].name).values).trigger('change');
+                                                
+                                                    disabled = variants[0].name !== null ? false : true
+                                                
+                                                    select.on('change', function(e) {
+                                                        console.log('asdasd')
+                                                        Livewire.emit('selectAttributeValues', {{ $key }}, $($refs.select).select2('data'))
+                                                    });
+                                                
+                                                    $watch('variants', (value) => {
+                                                        disabled = value[0].name !== null ? false : true
+                                                    });
+                                                
+                                                    Livewire.on('updateAttributeValueOptions', params => {
+                                                        if ({{ $key }} === params.index) {
+                                                            select.empty().select2({
+                                                                tags: true,
+                                                                data: params.options
+                                                            }).trigger('change');
+                                                        }
+                                                    })
+                                                }">
+                                                    <select x-ref="select" class="form-select wd-100p"
+                                                        multiple="multiple" id="option-{{ $key }}"
+                                                        data-placeholder="Varian" x-bind:disabled="disabled">
+                                                        @if (isset($variant['name']))
+                                                            @foreach (collect($variantOptions)->where('type', $variant['name'])->first()['variants'] as $option)
+                                                                <option value="{{ $option }}">
+                                                                    {{ $option }}
+                                                                </option>
+                                                            @endforeach
+                                                        @endif
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     </td>
                                     @if ($key !== 0)
                                         <td class="10%">
@@ -975,8 +993,7 @@
                                                 ) . ' varian produk terpilih'
                                             : 'Pilih beberapa varian' }}" />
                                 </div>
-                                <div class="border border-1 rounded-3 p-3">
-                                    {{ json_encode($productVariants) }}
+                                <div class="border border-1 rounded-3 p-3 pt-1">
                                     <div class="table-responsive">
                                         <table class="table">
                                             <thead>
@@ -1063,10 +1080,9 @@
                                                                     <div class="input-group-prepend">
                                                                         <span class="input-group-text">Rp.</span>
                                                                     </div>
-                                                                    <input type="text" x-ref="price"
-                                                                        class="form-control @error('price') is-invalid @enderror"
+                                                                    <x-crud::atoms.input x-ref='price'
                                                                         wire:model="productVariants.{{ $key }}.price"
-                                                                        placeholder="Harga">
+                                                                        placeholder="Harga" />
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -1078,13 +1094,13 @@
                                                         <td class="align-middle">
                                                             <x-crud::atoms.input type="number"
                                                                 wire:model="productVariants.{{ $key }}.quantity"
-                                                                placeholder="Stock" />
+                                                                placeholder="Stok" />
                                                         </td>
                                                         <td class="align-middle">
                                                             <div class="input-group">
                                                                 <x-crud::atoms.input
                                                                     wire:model="productVariants.{{ $key }}.weight"
-                                                                    placeholder="Weight" />
+                                                                    placeholder="Berat" />
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text">g</span>
                                                                 </div>
@@ -1285,9 +1301,9 @@
     </x-crud::molecules.card>
     <div class="d-flex justify-content-end mt-3">
         <a href="{{ url('store/products') }}" type="button" class="btn btn-sm btn-light me-2">Batal</a>
-        <button wire:click.prevent="update" type="button" class="btn btn-sm btn-primary">Simpan</button>
+        <button wire:click.prevent="update(false)" type="button" class="btn btn-sm btn-primary me-2">Simpan</button>
+        <button wire:click.prevent="update" type="button" class="btn btn-sm btn-primary">Simpan dan Tutup</button>
     </div>
-</div>
 </div>
 
 @push('style')

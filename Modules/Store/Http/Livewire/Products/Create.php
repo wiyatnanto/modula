@@ -5,6 +5,7 @@ namespace Modules\Store\Http\Livewire\Products;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManagerStatic;
 use Modules\Store\Entities\Brand;
 use Modules\Store\Entities\Category;
 use Modules\Store\Entities\StoreFront;
@@ -29,10 +30,10 @@ class Create extends Component
     public $price;
     public $minOrder = 1;
     public $weightType;
-    public $weight = '10';
-    public $length = '10';
-    public $width = '10';
-    public $height = '10';
+    public $weight = "10";
+    public $length = "10";
+    public $width = "10";
+    public $height = "10";
     public $brand;
     public $sku;
 
@@ -54,8 +55,8 @@ class Create extends Component
     // public $values;
 
     protected $listeners = [
-        'selectAttributes' => 'selectAttributes',
-        'selectAttributeValues' => 'selectAttributeValues',
+        "selectAttributes" => "selectAttributes",
+        "selectAttributeValues" => "selectAttributeValues",
     ];
 
     public function mount()
@@ -63,29 +64,29 @@ class Create extends Component
         $this->variantOptions = VariantOption::get();
         $this->variantValues = VariantValue::get();
         $this->image_config_json = [
-            'frame_width' => null,
-            'image_right' => [
-                'image_preview' => null,
-                'image' => null,
-                'position' => [
-                    'left' => 0,
-                    'top' => 0,
+            "frame_width" => null,
+            "image_right" => [
+                "image_preview" => null,
+                "image" => null,
+                "position" => [
+                    "left" => 0,
+                    "top" => 0,
                 ],
             ],
-            'image_front' => [
-                'image_preview' => null,
-                'image' => null,
-                'position' => [
-                    'left' => 0,
-                    'top' => 0,
+            "image_front" => [
+                "image_preview" => null,
+                "image" => null,
+                "position" => [
+                    "left" => 0,
+                    "top" => 0,
                 ],
             ],
-            'image_left' => [
-                'image_preview' => null,
-                'image' => null,
-                'position' => [
-                    'left' => 0,
-                    'top' => 0,
+            "image_left" => [
+                "image_preview" => null,
+                "image" => null,
+                "position" => [
+                    "left" => 0,
+                    "top" => 0,
                 ],
             ],
         ];
@@ -94,30 +95,30 @@ class Create extends Component
     // tryon
     public function updatedImageRight($image)
     {
-        $this->image_config_json['image_right'][
-            'image_preview'
+        $this->image_config_json["image_right"][
+            "image_preview"
         ] = $image->temporaryUrl();
-        $this->dispatchBrowserEvent('updateImageRight', $image->temporaryUrl());
+        $this->dispatchBrowserEvent("updateImageRight", $image->temporaryUrl());
     }
 
     public function updatedImageFront($image)
     {
-        $this->image_config_json['image_front'][
-            'image_preview'
+        $this->image_config_json["image_front"][
+            "image_preview"
         ] = $image->temporaryUrl();
-        $this->dispatchBrowserEvent('updateImageFront', $image->temporaryUrl());
+        $this->dispatchBrowserEvent("updateImageFront", $image->temporaryUrl());
         $this->dispatchBrowserEvent(
-            'updateImagePreview',
+            "updateImagePreview",
             $image->temporaryUrl()
         );
     }
 
     public function updatedImageLeft($image)
     {
-        $this->image_config_json['image_left'][
-            'image_preview'
+        $this->image_config_json["image_left"][
+            "image_preview"
         ] = $image->temporaryUrl();
-        $this->dispatchBrowserEvent('updateImageLeft', $image->temporaryUrl());
+        $this->dispatchBrowserEvent("updateImageLeft", $image->temporaryUrl());
     }
 
     public function updatedBulkSelectVariant()
@@ -125,11 +126,11 @@ class Create extends Component
         $this->productVariants = collect($this->productVariants)->map(function (
             $productVariant
         ) {
-            if (isset($productVariant['selected'])) {
-                $productVariant['selected'] = $this->bulkSelectVariant;
+            if (isset($productVariant["selected"])) {
+                $productVariant["selected"] = $this->bulkSelectVariant;
                 return $productVariant;
             } else {
-                $productVariant['selected'] = $this->bulkSelectVariant;
+                $productVariant["selected"] = $this->bulkSelectVariant;
                 return $productVariant;
             }
         });
@@ -138,25 +139,25 @@ class Create extends Component
     public function setBulkVariant()
     {
         $valid = $this->validate([
-            'bulkVariantValues.price' => 'required',
-            'bulkVariantValues.sku' => '',
-            'bulkVariantValues.quantity' => 'required',
-            'bulkVariantValues.weight' => 'required',
+            "bulkVariantValues.price" => "required",
+            "bulkVariantValues.sku" => "",
+            "bulkVariantValues.quantity" => "required",
+            "bulkVariantValues.weight" => "required",
         ]);
         if ($valid) {
             $this->productVariants = collect($this->productVariants)->map(
                 function ($productVariant) {
-                    $productVariant['price'] =
-                        $this->bulkVariantValues['price'];
-                    $productVariant['sku'] = isset(
-                        $this->bulkVariantValues['sku']
+                    $productVariant["price"] =
+                        $this->bulkVariantValues["price"];
+                    $productVariant["sku"] = isset(
+                        $this->bulkVariantValues["sku"]
                     )
-                        ? $this->bulkVariantValues['sku']
-                        : '';
-                    $productVariant['quantity'] =
-                        $this->bulkVariantValues['quantity'];
-                    $productVariant['weight'] =
-                        $this->bulkVariantValues['weight'];
+                        ? $this->bulkVariantValues["sku"]
+                        : "";
+                    $productVariant["quantity"] =
+                        $this->bulkVariantValues["quantity"];
+                    $productVariant["weight"] =
+                        $this->bulkVariantValues["weight"];
                     return $productVariant;
                 }
             );
@@ -167,7 +168,7 @@ class Create extends Component
     {
         if (count($this->variants) > 0) {
             $values = collect($this->variants)
-                ->pluck('values')
+                ->pluck("values")
                 ->toArray();
             $first = array_shift($values);
             $this->productVariants = collect($first)
@@ -180,8 +181,8 @@ class Create extends Component
             $productVariant
         ) {
             return [
-                'variants' => $productVariant,
-                'unique_id' => implode(
+                "variants" => $productVariant,
+                "unique_id" => implode(
                     str_split(
                         implode(
                             collect($productVariant)
@@ -199,7 +200,7 @@ class Create extends Component
     public function updatedHasVarian($value)
     {
         if ($value) {
-            $this->variants[] = ['name' => null, 'values' => []];
+            $this->variants[] = ["name" => null, "values" => []];
             $this->defineCombinationAttributes();
         } else {
             $this->variants = [];
@@ -208,7 +209,7 @@ class Create extends Component
 
     public function addVarian()
     {
-        $this->variants[] = ['name' => null, 'values' => []];
+        $this->variants[] = ["name" => null, "values" => []];
         $this->productVariants = [];
     }
 
@@ -221,18 +222,17 @@ class Create extends Component
 
     public function selectAttributes($index, $name)
     {
-        $values = [];
-        $variantOptions = VariantOption::where('name', $name)
-            ->with('variantValues')
+        $options = [];
+        $variantOption = VariantOption::where("name", $name)
+            ->with("variantValues")
             ->first();
-        if ($variantOptions) {
-            $values = $variantOptions->variantValues;
+        if ($variantOption) {
+            $options = $variantOption->variantValues->pluck("value")->toArray();
         }
-        $this->variants[$index] = ['name' => $name, 'values' => []];
-
-        $this->emit('updateAttributeValueOptions', [
-            'index' => $index,
-            'options' => $values,
+        $this->variants[$index] = ["name" => $name, "values" => []];
+        $this->emit("updateAttributeValueOptions", [
+            "index" => $index,
+            "options" => $options,
         ]);
     }
 
@@ -240,9 +240,9 @@ class Create extends Component
     {
         $values = [];
         foreach ($value as $item) {
-            $values[] = $item['text'];
+            $values[] = $item["text"];
         }
-        $this->variants[$index]['values'] = $values;
+        $this->variants[$index]["values"] = $values;
         $this->defineCombinationAttributes();
     }
 
@@ -250,71 +250,69 @@ class Create extends Component
     {
         $this->resetValidation();
         $validatedData = $this->validate([
-            'brand' => 'required',
-            'sku' => '',
-            'name' => 'required',
-            'category' => 'required',
-            'storefront' => '',
-            'description' => '',
-            'quantity' => 'required',
-            'minOrder' => 'required',
-            'price' => 'required',
-            'weight' => '',
-            'length' => '',
-            'width' => '',
-            'height' => '',
-            'images.1' => 'required',
+            "brand" => "required",
+            "sku" => "",
+            "name" => "required",
+            "category" => "required",
+            "storefront" => "",
+            "description" => "",
+            "quantity" => "required",
+            "minOrder" => "required",
+            "price" => "required",
+            "weight" => "",
+            "length" => "",
+            "width" => "",
+            "height" => "",
+            "images.1" => "required",
         ]);
         if ($validatedData) {
             $product = new Product();
-            $product->brand_id = $validatedData['brand'];
-            $product->sku = '-';
-            $product->name = $validatedData['name'];
-            $product->description = $validatedData['description'];
-            $product->quantity = $validatedData['quantity'];
-            $product->min_order = $validatedData['minOrder'];
-            $product->weight = $validatedData['weight'];
+            $product->brand_id = $validatedData["brand"];
+            $product->sku = "-";
+            $product->name = $validatedData["name"];
+            $product->description = $validatedData["description"];
+            $product->quantity = $validatedData["quantity"];
+            $product->min_order = $validatedData["minOrder"];
+            $product->weight = $validatedData["weight"];
             $product->price =
-                str_replace('.', '', $validatedData['price']) . '.00';
+                str_replace(".", "", $validatedData["price"]) . ".00";
             $product->status = 1;
             $product->featured = 0;
             $product->save();
             $images = [];
             for ($i = 1; $i <= count($this->images); $i++) {
-                $imageName = $this->images[$i]->store(
-                    'public/files/store/products',
-                    'local'
-                );
+                $imageName = $this->images[$i]->hashName();
+                $this->images[$i]->store("public/store/products", "local");
                 $images[] = new Image([
-                    'product_id' => $product->id,
-                    'image' => str_replace(
-                        'public/files/store/products/',
-                        '',
-                        $imageName
-                    ),
-                    'main_image' => $i === 1 ? 1 : 0,
-                    'order_image' => $i,
+                    "product_id" => $product->id,
+                    "image" => "store/products/" . $imageName,
+                    "main_image" => $i === 1 ? 1 : 0,
+                    "order_image" => $i,
                 ]);
+                $imageThumb = ImageManagerStatic::make(
+                    "storage/store/products/" . $imageName
+                )->resize(250, 250);
+                $imageThumb->save("storage/store/products/thumbs" . $imageName);
             }
             $product->images()->saveMany($images);
 
-            $product->categories()->sync($validatedData['category']);
+            $product->categories()->sync($validatedData["category"]);
             $attach = [];
             foreach (
-                collect($validatedData['storefront'])
-                    ->where('selected', false)
-                    ->pluck('text')
+                collect($validatedData["storefront"])
+                    ->where("selected", false)
+                    ->pluck("text")
                 as $item
             ) {
                 $attach[] = StoreFront::create([
-                    'name' => $item,
-                    'order_menu' => 0,
+                    "name" => $item,
+                    "order_menu" => 0,
                 ])->id;
             }
             $product->storefronts()->sync(
-                collect($validatedData['storefront'])
-                    ->where('selected', true)
-                    ->pluck('id')
+                collect($validatedData["storefront"])
+                    ->where("selected", true)
+                    ->pluck("id")
                     ->merge($attach)
             );
             if ($this->hasVarian) {
@@ -322,101 +320,92 @@ class Create extends Component
                 $variantValues = [];
                 $variants = [];
                 foreach ($this->variants as $key => $variant) {
-                    if ($variant['name'] !== null) {
+                    if ($variant["name"] !== null) {
                         $variant_id = VariantOption::firstOrCreate([
-                            'name' => $variant['name'],
-                            'frontend_type' => 'select',
+                            "name" => $variant["name"],
+                            "frontend_type" => "select",
                         ])->id;
-                        foreach ($variant['values'] as $value) {
+                        foreach ($variant["values"] as $value) {
                             $value_id = VariantValue::firstOrCreate([
-                                'variant_id' => $variant_id,
-                                'value' => $value,
+                                "variant_id" => $variant_id,
+                                "value" => $value,
                             ])->id;
                             $variantValues[] = [
-                                'value_id' => $value_id,
+                                "value_id" => $value_id,
                             ];
                         }
                         $variantOptions[] = [
-                            'variant_id' => $variant_id,
+                            "variant_id" => $variant_id,
                         ];
                     }
                 }
 
                 foreach ($this->productVariants as $key => $productVariant) {
                     $variants[] = new Variant([
-                        'product_id' => $product->id,
-                        'variant_values' => strval(
-                            implode('-', $productVariant['variants'])
+                        "product_id" => $product->id,
+                        "variant_values" => strval(
+                            implode("-", $productVariant["variants"])
                         ),
-                        'unique_id' => $productVariant['unique_id'],
-                        'sku' => $productVariant['sku'],
-                        'quantity' => $productVariant['quantity'],
-                        'price' =>
-                            str_replace('.', '', $productVariant['price']) .
-                            '.00',
-                        'sale_price' => 0,
+                        "unique_id" => $productVariant["unique_id"],
+                        "sku" => $productVariant["sku"],
+                        "quantity" => $productVariant["quantity"],
+                        "price" =>
+                            str_replace(".", "", $productVariant["price"]) .
+                            ".00",
+                        "sale_price" => 0,
                     ]);
                 }
                 $product->variantOptions()->sync($variantOptions);
                 $product->variantValues()->sync($variantValues);
                 $product->variants()->saveMany($variants);
-                // if(is_object($this->varianFile)){
-                //     $varianFileName = $this->varianFile->store('public/files/store/files', 'local');
-                //     $varianFile = new File(array(
-                //         'product_id' => $product->id,
-                //         'file_category' => 'varian',
-                //         'file' => str_replace('public/files/store/files/','', $varianFileName)
-                //     ));
-                //     $product->files()->save($varianFile);
-                // }
             }
             if (is_object($this->imageRight)) {
                 $imageRight = $this->imageRight->store(
-                    'public/store/tryons',
-                    'local'
+                    "public/store/tryons",
+                    "local"
                 );
-                $this->image_config_json['image_right']['image'] = str_replace(
-                    'public/store/tryons/',
-                    '',
+                $this->image_config_json["image_right"]["image"] = str_replace(
+                    "public/store/tryons/",
+                    "",
                     $imageRight
                 );
-                unset($this->image_config_json['image_right']['image_preview']);
+                unset($this->image_config_json["image_right"]["image_preview"]);
             }
             if (is_object($this->imageFront)) {
                 $imageFront = $this->imageFront->store(
-                    'public/store/tryons',
-                    'local'
+                    "public/store/tryons",
+                    "local"
                 );
-                $this->image_config_json['image_front']['image'] = str_replace(
-                    'public/store/tryons/',
-                    '',
+                $this->image_config_json["image_front"]["image"] = str_replace(
+                    "public/store/tryons/",
+                    "",
                     $imageFront
                 );
-                unset($this->image_config_json['image_front']['image_preview']);
+                unset($this->image_config_json["image_front"]["image_preview"]);
             }
             if (is_object($this->imageLeft)) {
                 $imageLeft = $this->imageLeft->store(
-                    'public/store/tryons',
-                    'local'
+                    "public/store/tryons",
+                    "local"
                 );
-                $this->image_config_json['image_left']['image'] = str_replace(
-                    'public/store/tryons/',
-                    '',
+                $this->image_config_json["image_left"]["image"] = str_replace(
+                    "public/store/tryons/",
+                    "",
                     $imageLeft
                 );
-                unset($this->image_config_json['image_left']['image_preview']);
+                unset($this->image_config_json["image_left"]["image_preview"]);
             }
             $tryOn = new TryOn([
-                'product_id' => $product->id,
-                'type' => 'image',
-                '3D_config_json' => '{}',
-                'image_config_json' => json_encode($this->image_config_json),
+                "product_id" => $product->id,
+                "type" => "image",
+                "3D_config_json" => "{}",
+                "image_config_json" => json_encode($this->image_config_json),
             ]);
             $product->tryon()->save($tryOn);
 
             if ($product) {
-                $this->emit('toast', ['success', 'Product has been created']);
-                return redirect()->to('/store/products');
+                $this->emit("toast", ["success", "Product has been created"]);
+                return redirect()->to("/store/products");
             }
         }
     }
@@ -424,15 +413,15 @@ class Create extends Component
     public function render()
     {
         // dd(Category::where('parent_id', 0)->with('children.children')->get());
-        return view('store::livewire.products.create', [
-            'categories' => Category::get(),
-            'categoriesTrees' => collect(
-                Category::where('parent_id', 0)
-                    ->with('children.children')
+        return view("store::livewire.products.create", [
+            "categories" => Category::get(),
+            "categoriesTrees" => collect(
+                Category::where("parent_id", 0)
+                    ->with("children.children")
                     ->get()
             ),
-            'brands' => Brand::get(),
-            'storefronts' => StoreFront::get(),
-        ])->extends('theme::backend.layouts.master');
+            "brands" => Brand::get(),
+            "storefronts" => StoreFront::get(),
+        ])->extends("theme::backend.layouts.master");
     }
 }

@@ -21,23 +21,22 @@ class Post extends Model
         $this->attributes['slug'] = Str::slug($value);
     }
 
-    public function Categories()
+    public function category()
     {
         return $this->morphToMany(Category::class,'post', 'blog_post_has_categories');
     }
 
-    public function Tags()
+    public function tags()
     {
         return $this->morphToMany(Tag::class,'post','blog_post_has_tags');
     }
 
-    public function User()
+    public function user()
     {
         return $this->belongsTo(User::class,'user_id');
     }
 
-    //attribute
-    public function getMinContentAttribute()
+    public function minContent()
     {
         return mb_strimwidth($this->content,0,200,"...");
     }

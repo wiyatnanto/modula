@@ -38,7 +38,7 @@
                             <tr wire:sortable.item="{{ $storeFront->id }}" wire:key="task-{{ $storeFront->id }}">
                                 <td class="align-middle">
                                     <div class="media d-flex align-items-center">
-                                        <img src="{{ count($storeFront->products) > 0 ? asset('storage/files/store/products/' . $storeFront->products->first()->images->first()->image) : asset('modules/core/images/placeholder.png') }}"
+                                        <img src="{{ count($storeFront->products) > 0 ? asset('storage/' . $storeFront->products->first()->images->first()->image) : asset('modules/core/images/placeholder.png') }}"
                                             class="rounded me-2" alt="">
                                         <div class="media-body">
                                             <p class="product-title">

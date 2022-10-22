@@ -38,8 +38,8 @@
                             <tr wire:sortable.item="{{ $brand->id }}" wire:key="task-{{ $brand->id }}">
                                 <td class="align-middle">
                                     <div class="media d-flex align-items-center">
-                                        <img src="{{ asset('storage/files/store/brands/' . $brand->image) }}"
-                                            class="rounded me-2" alt="">
+                                        <img src="{{ asset('storage/' . $brand->image) }}" class="rounded me-2"
+                                            alt="">
                                         <div class="media-body">
                                             <p class="product-title">
                                                 <a href="#" data-bs-toggle="modal" data-bs-target="#updateBrand"
@@ -47,7 +47,7 @@
                                                     {{ $brand->name }}
                                                 </a>
                                             </p>
-                                            <p>{{ count($brand->products) }} Produk</p>
+                                            <p>{{ $brand->products_count }} Produk</p>
                                         </div>
                                     </div>
                                 </td>

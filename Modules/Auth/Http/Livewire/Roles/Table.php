@@ -18,40 +18,44 @@ class Table extends Component
     public $permissions = [];
     public $permissionsOptions = [];
 
-    public $search = '';
+    public $search = "";
 
     public $selectAll = false;
     public $selected = [];
 
-    protected $paginationTheme = 'bootstrap';
+    protected $paginationTheme = "bootstrap";
 
-    protected $listeners = [
-        'clear',
-        'delete',
-        'bulkDelete'
-    ];
+    protected $listeners = ["clear", "delete", "bulkDelete"];
 
     protected $messages = [
-        'name.required' => 'The Name cannot be empty.',
-        'permissions.required' => 'The Permissions cannot be empty.',
+        "name.required" => "The Name cannot be empty.",
+        "permissions.required" => "The Permissions cannot be empty.",
     ];
 
-    public function mount() {
-        $this->permissionsOptions = Permission::get()->pluck('name','id');
+    public function mount()
+    {
+        $this->permissionsOptions = Permission::get()->pluck("name", "id");
     }
 
-    public function clear() {
+    public function clear()
+    {
         $this->reset();
         $this->resetErrorBag();
         $this->resetValidation();
     }
 
-    public function updatedSelectAll($value) {
-        if($value){
-            $this->selected = User::where('name','like', '%' . $this->search . '%')
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->pluck('id');
-        }else{
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selected = Role::where(
+                "name",
+                "ILIKE",
+                "%" . $this->search . "%"
+            )
+                ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
+                ->paginate(10)
+                ->pluck("id");
+        } else {
             $this->selected = [];
         }
     }
@@ -59,15 +63,14 @@ class Table extends Component
     public function store()
     {
         $this->validate([
-            'name' => 'required'
+            "name" => "required",
+            "permissions" => "required",
         ]);
-        
-        $role = Role::create(['name' => $this->name]);
+        $role = Role::create(["name" => $this->name]);
         $role->syncPermissions($this->permissions);
-
-        $this->emit('toast', ['success', 'Role has been created']);
-
-        $this->dispatchBrowserEvent('closeModal');
+        $this->emit("toast", ["success", "Role has been created"]);
+        $this->dispatchBrowserEvent("closeModal");
+        $this->clear();
     }
 
     public function edit($id)
@@ -75,47 +78,53 @@ class Table extends Component
         $role = Role::find($id);
         $this->roleId = $id;
         $this->name = $role->name;
-        $this->permissions = array_values(DB::table('auth_role_has_permissions')
-            ->where('auth_role_has_permissions.role_id', $id)
-            ->pluck('auth_role_has_permissions.permission_id', 'auth_role_has_permissions.permission_id')
-            ->all());
+        $this->permissions = array_values(
+            DB::table("auth_role_has_permissions")
+                ->where("auth_role_has_permissions.role_id", $id)
+                ->pluck(
+                    "auth_role_has_permissions.permission_id",
+                    "auth_role_has_permissions.permission_id"
+                )
+                ->all()
+        );
     }
 
     public function update($id)
     {
         $this->validate([
-            'name' => 'required'
+            "name" => "required",
         ]);
-    
         $role = Role::find($id);
         $role->name = $this->name;
         $role->update();
         $role->syncPermissions($this->permissions);
-        $this->emit('toast', ['success', 'Role has been updated']);
-        $this->dispatchBrowserEvent('closeModal');
+        $this->emit("toast", ["success", "Role has been updated"]);
+        $this->dispatchBrowserEvent("closeModal");
+        $this->clear();
     }
-     
+
     public function delete($id)
     {
         Role::find($id)->delete();
-        $this->emit('toast', ['success', 'Role has been deleted']);
-        $this->dispatchBrowserEvent('closeModal');
+        $this->emit("toast", ["success", "Role has been deleted"]);
+        $this->dispatchBrowserEvent("closeModal");
+        $this->clear();
     }
 
     public function bulkDelete()
     {
-        Role::whereIn('id', $this->selected)->delete();
-        $this->emit('toast', ['success', 'Roles has been deleted']);
-        $this->dispatchBrowserEvent('closeModal');
+        Role::whereIn("id", $this->selected)->delete();
+        $this->emit("toast", ["success", "Roles has been deleted"]);
+        $this->dispatchBrowserEvent("closeModal");
+        $this->clear();
     }
 
     public function render()
     {
-        return view('auth::livewire.roles.table', [
-            'roles' => Role::where('name','ILIKE', '%' . $this->search . '%')
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->paginate(10)
-        ])
-        ->extends('theme::backend.layouts.master');
+        return view("auth::livewire.roles.table", [
+            "roles" => Role::where("name", "ILIKE", "%" . $this->search . "%")
+                ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
+                ->paginate(10),
+        ])->extends("theme::backend.layouts.master");
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Modules\Theme\Http\Controllers\API\SliderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/theme', function (Request $request) {
+Route::middleware("auth:api")->get("/theme", function (Request $request) {
     return $request->user();
 });
+
+Route::prefix("theme")
+    ->middleware("auth:api")
+    ->group(function () {
+        Route::resource("sliders", SliderController::class);
+    });

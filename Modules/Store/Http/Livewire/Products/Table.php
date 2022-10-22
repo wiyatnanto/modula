@@ -17,7 +17,6 @@ class Table extends Component
 
     public $categoriesFilter = [];
     public $storefrontsFilter = [];
-    public $sortByFilter;
     public $search;
 
     public $selected = [];
@@ -38,9 +37,15 @@ class Table extends Component
 
     protected $paginationTheme = 'bootstrap';
 
-    public function hydrate()
+    // public function hydrate()
+    // {
+    //     $this->dispatchBrowserEvent('hydrateEvent');
+    // }
+
+    public function mount()
     {
-        $this->dispatchBrowserEvent('hydrateEvent');
+        $this->sortByFilter = 'created_at';
+        $this->sortAsc = false;
     }
 
     public function updatingSearch()
@@ -56,7 +61,6 @@ class Table extends Component
             ]);
             
             if ($this->search !== null) {
-                // $products->where('name', 'like', '%' . $this->search . '%');
                 $products->where('name', 'ILIKE', '%' . $this->search . '%');
             }
             if(count($this->categoriesFilter) > 0){
@@ -74,7 +78,7 @@ class Table extends Component
             }else{
                 $products->orderBy('created_at', 'desc');
             }
-            foreach($products->get() as $item){
+            foreach($products->fastPaginate(10) as $item){
                 $this->selected[$item->id] = true;
             }
         }else{
@@ -143,6 +147,7 @@ class Table extends Component
     {
         $this->categoriesFilter = [];
         $this->storefrontsFilter = [];
+        $this->price_desc = 'id';
         $this->dispatchBrowserEvent('unselect2category', $this->categoriesFilter);
         $this->dispatchBrowserEvent('unselect2storefront', $this->storefrontsFilter);
         $this->dispatchBrowserEvent('unselect2sort');
@@ -187,7 +192,6 @@ class Table extends Component
         ]);
         
         if ($this->search !== null) {
-            // $products->where('name', 'like', '%' . $this->search . '%');
             $products->where('name', 'ILIKE', '%' . $this->search . '%');
         }
         if(count($this->categoriesFilter) > 0){

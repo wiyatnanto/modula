@@ -61,3 +61,15 @@
     font-weight: 500;
     letter-spacing: 0.5px;
 }
+
+.img-cover {
+    object-fit: cover !important;
+}
+
+.img-contain {
+    object-fit: contain !important;
+}
+
+.img-fill {
+    object-fit: fill !important;
+}

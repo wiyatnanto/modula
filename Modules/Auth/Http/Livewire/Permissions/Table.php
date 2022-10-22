@@ -13,38 +13,34 @@ class Table extends Component
     use WithPagination, WithSorting;
 
     public $permissionId, $name;
-
-    public $search = '';
-
+    public $search = "";
     public $selectAll = false;
     public $selected = [];
 
-    protected $paginationTheme = 'bootstrap';
-
-    protected $listeners = [
-        'clear',
-        'delete',
-        'bulkDelete'
-    ];
-
+    protected $paginationTheme = "bootstrap";
+    protected $listeners = ["clear", "delete", "bulkDelete"];
     protected $messages = [
-        'name.required' => 'The Name cannot be empty.',
+        "name.required" => "The Name cannot be empty.",
     ];
 
-    public function mount() {}
-
-    public function clear() {
+    public function clear()
+    {
         $this->reset();
         $this->resetErrorBag();
         $this->resetValidation();
     }
 
-    public function updatedSelectAll($value) {
-        if($value){
-            $this->selected = User::where('name','ILIKE', '%' . $this->search . '%')
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->pluck('id');
-        }else{
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selected = User::where(
+                "name",
+                "ILIKE",
+                "%" . $this->search . "%"
+            )
+                ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
+                ->pluck("id");
+        } else {
             $this->selected = [];
         }
     }
@@ -52,12 +48,11 @@ class Table extends Component
     public function store()
     {
         $this->validate([
-            'name' => 'required'
+            "name" => "required",
         ]);
-        
-        Permission::create(['name' => $this->name]);
-        $this->emit('toast', ['success', 'Permission has been created']);
-        $this->dispatchBrowserEvent('closeModal');
+        Permission::create(["name" => $this->name]);
+        $this->emit("toast", ["success", "Permission has been created"]);
+        $this->dispatchBrowserEvent("closeModal");
     }
 
     public function edit($id)
@@ -70,38 +65,39 @@ class Table extends Component
     public function update($id)
     {
         $this->validate([
-            'name' => 'required'
+            "name" => "required",
         ]);
-    
         $permission = Permission::find($id);
         $permission->name = $this->name;
         $permission->update();
-        $this->emit('toast', ['success', 'Permission has been updated']);
-
-        $this->dispatchBrowserEvent('closeModal');
+        $this->emit("toast", ["success", "Permission has been updated"]);
+        $this->dispatchBrowserEvent("closeModal");
     }
-     
+
     public function delete($id)
     {
         Permission::find($id)->delete();
-        $this->emit('toast', ['success', 'Permission has been deleted']);
-        $this->dispatchBrowserEvent('closeModal');
+        $this->emit("toast", ["success", "Permission has been deleted"]);
+        $this->dispatchBrowserEvent("closeModal");
     }
 
     public function bulkDelete()
     {
-        Permission::whereIn('id', $this->selected)->delete();
-        $this->emit('toast', ['success', 'Permissions has been deleted']);
-        $this->dispatchBrowserEvent('closeModal');
+        Permission::whereIn("id", $this->selected)->delete();
+        $this->emit("toast", ["success", "Permissions has been deleted"]);
+        $this->dispatchBrowserEvent("closeModal");
     }
 
     public function render()
     {
-        return view('auth::livewire.permissions.table', [
-            'permissions' => Permission::where('name','ILIKE', '%' . $this->search . '%')
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->fastPaginate(10)
-        ])
-        ->extends('theme::backend.layouts.master');
+        return view("auth::livewire.permissions.table", [
+            "permissions" => Permission::where(
+                "name",
+                "ILIKE",
+                "%" . $this->search . "%"
+            )
+                ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
+                ->fastPaginate(10),
+        ])->extends("theme::backend.layouts.master");
     }
 }

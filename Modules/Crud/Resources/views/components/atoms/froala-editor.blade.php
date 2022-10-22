@@ -1,11 +1,8 @@
-@props(['height' => '200'])
+@props(['height' => '200', 'imageUploadURL' => '/storage/blog/posts/'])
 <div wire:ignore>
     <div x-data="{ content: @entangle($attributes->whereStartsWith('wire:model')->first()) }" x-init="() => {
         const editor = new FroalaEditor($refs.editor, {
-            //heightMin: {{ $height }},
-            //heightMax: {{ $height }},
-            //iconsTemplate: 'font_awesome_5',
-            toolbarButtons: ['undo', 'redo' , '|', 'bold', 'italic'],
+            toolbarButtons: ['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', '|', 'emoticons', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'help', 'html', '|', 'undo', 'redo', 'trackChanges', 'markdown'],
             events: {
                 initialized: function() {
                     this.events.on('contentChanged', function(e) {
@@ -38,6 +35,10 @@
             .fr-modal .fr-command.fr-btn i,
             .fr-modal .fr-command.fr-btn svg {
                 width: 20px !important;
+            }
+
+            .fr-popup {
+                z-index: 999999 !important;
             }
         </style>
     @endpush

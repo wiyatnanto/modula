@@ -17,12 +17,15 @@ class CreateStoreProductsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('brand_id');
             $table->foreign('brand_id')->references('id')->on('store_brands')->onDelete('cascade');
-            $table->string('sku');
+            $table->string('sku')->nullable();
             $table->string('name');
             $table->string('slug');
             $table->text('description')->nullable();
             $table->unsignedInteger('quantity')->nullable();
             $table->unsignedInteger('weight')->nullable();
+            $table->unsignedInteger('length')->nullable();
+            $table->unsignedInteger('width')->nullable();
+            $table->unsignedInteger('height')->nullable();
             $table->unsignedInteger('min_order')->nullable();
             $table->decimal('price', 12, 2)->nullable();
             $table->decimal('sale_price', 12, 2)->nullable();

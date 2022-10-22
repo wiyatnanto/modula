@@ -55,7 +55,7 @@
                                                         {{ $category->name }}
                                                     </a>
                                                 </p>
-                                                <p>{{ count($category->products) }} Produk</p>
+                                                <p>{{ $category->products_count }} Produk</p>
                                             </div>
                                         </div>
                                     </td>

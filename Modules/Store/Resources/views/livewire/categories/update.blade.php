@@ -48,7 +48,7 @@
                 if (value !== null) {
                     if (!value.includes('livewire-file:') && value !== null) {
                         file.files = [{
-                            source: '/storage/files/store/categories/' + value,
+                            source: '/storage/store/categories/' + value,
                             options: {
                                 type: 'local'
                             }

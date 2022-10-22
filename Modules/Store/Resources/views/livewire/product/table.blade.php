@@ -255,7 +255,7 @@
                                     <div class="media d-block d-sm-flex">
                                         @foreach ($product->images as $key_image => $image)
                                             @if (!$key_image)
-                                                <img src="{{ asset('storage/files/store/products/' . $image->image) }}"
+                                                <img src="{{ asset('storage/store/products/' . $image->image) }}"
                                                     class="wd-50 ht-50 mg-r-15 rounded" alt="">
                                             @endif
                                         @endforeach

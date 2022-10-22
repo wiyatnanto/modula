@@ -17,7 +17,7 @@ class ProductSeederTableSeeder extends Seeder
     {
         Model::unguard();
         // $this->call("OthersTableSeeder");
-        for ($i=1; $i < 2000; $i++) { 
+        for ($i=1; $i < 10000; $i++) { 
             DB::table('store_products')->insert( [
                 'brand_id'=>1,
                 'sku'=>'-',
@@ -34,6 +34,12 @@ class ProductSeederTableSeeder extends Seeder
                 'created_at'=>'2022-09-16 12:40:57',
                 'updated_at'=>'2022-09-16 12:40:57',
                 'deleted_at'=>NULL
+            ]);
+            DB::table('store_product_images')->insert( [
+                'product_id' => $i,
+                'image' => 'example.png',
+                'main_image' =>  0,
+                'order_image' => 0
             ]);
        }
     }

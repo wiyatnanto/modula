@@ -6,7 +6,7 @@
                 <div class="me-auto">
                     <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" data-bs-toggle="modal"
                         data-bs-target="#createPermission">
-                        <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add Permission
+                        <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add New Permission
                     </x-crud::atoms.button>
                     @if (count($selected) > 0)
                         <span x-data
@@ -34,19 +34,15 @@
                                 }     
                             });
                         ">
-                            <x-crud::atoms.button size="sm" color="danger">
-                                Delete
+                            <x-crud::atoms.button class="btn-icon-text" size="xs" color="danger">
+                                <x-crud::atoms.icon class="btn-icon-prepend" icon="trash" /> Bulk Delete
                             </x-crud::atoms.button>
                         </span>
                     @endif
                 </div>
-                <div class="me-2">
-                    <x-crud::atoms.input class="form-control-sm" placeholder="Search ..." wire:model.lazy="search" />
-                </div>
                 <div>
-                    <x-crud::atoms.button class="btn-icon" color="secondary" size="xs">
-                        <x-crud::atoms.icon icon="filter" />
-                    </x-crud::atoms.button>
+                    <x-crud::atoms.input class="form-control-sm" placeholder="Search permission ..."
+                        wire:model="search" />
                 </div>
             </div>
         </x-slot>
@@ -57,10 +53,6 @@
                         <th width="50">
                             <x-crud::atoms.checkbox wire:model="selectAll" />
                         </th>
-                        {{-- <th wire:click.prevent="sortBy('id')">ID
-                            <x-crud::molecules.sorticon name="id" sortField="{{ $sortField }}"
-                                sortAsc="{{ $sortAsc }}" />
-                        </th> --}}
                         <th wire:click.prevent="sortBy('name')">Name
                             <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
                                 sortAsc="{{ $sortAsc }}" />
@@ -75,7 +67,6 @@
                                 <x-crud::atoms.checkbox name="selected[]" wire:model="selected"
                                     value="{{ $permission->id }}" />
                             </td>
-                            {{-- <td>{{ $permission->id }}</td> --}}
                             <td>{{ $permission->name }}</td>
                             <td>
                                 <x-crud::molecules.dropdown label="Action">

@@ -64,7 +64,7 @@
                                                         });         
                                                     }
                                                     file.files = [{
-                                                        source: '/storage/files/store/products/' + images,
+                                                        source: '/storage/store/products/' + images,
                                                         options:{
                                                             type: 'local'
                                                         }
@@ -75,7 +75,7 @@
                                                     if(value !== null){
                                                         if(!value.includes('livewire-file:') && value !== null){
                                                             file.files = [{
-                                                                source: '/storage/files/store/products/' + value,
+                                                                source: '/storage/store/products/' + value,
                                                                 options:{
                                                                     type: 'local'
                                                                 }
@@ -268,7 +268,7 @@
                                                 });         
                                             }
                                             file.files = [{
-                                                source: '/storage/files/store/files/' + varianFile,
+                                                source: '/storage/store/files/' + varianFile,
                                                 options:{
                                                     type: 'local'
                                                 }
@@ -279,7 +279,7 @@
                                                 if(!value.includes('livewire-file:') && value !== null){
                                                     alert('a')
                                                     file.files = [{
-                                                        source: 'http://localhost/storage/files/store/files/' + value,
+                                                        source: 'http://localhost/storage/store/files/' + value,
                                                         options:{
                                                             type: 'local'
                                                         }

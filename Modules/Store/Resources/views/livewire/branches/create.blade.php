@@ -1,27 +1,23 @@
 <x-crud::organisms.modal size="lg" id="createBranch">
     <x-slot name="header">
-        <h5 class="modal-title">Add New Branch</h5>
+        <h5 class="modal-title">{{ __('crud::messages.add') }} {{ __('store::messages.branch') }}</h5>
     </x-slot>
-    <x-crud::molecules.form-control name="name" label="Name">
-        <x-crud::atoms.input wire:model="name" />
+    <x-crud::molecules.form-control name="name" label="{{ __('store::messages.branch_name') }}">
+        <x-crud::atoms.input wire:model="name" placeholder="{{ __('store::messages.branch_name') }}" />
     </x-crud::molecules.form-control>
-    <x-crud::molecules.form-control name="address" label="Address">
-        <x-crud::atoms.froala-editor wire:model="address" />
+    <x-crud::molecules.form-control name="address" label="{{ __('store::messages.branch_address') }}">
+        <x-crud::atoms.froala-editor wire:model="address" placeholder="{{ __('store::messages.branch_address') }}" />
     </x-crud::molecules.form-control>
-    <x-crud::molecules.form-control name="coordinate.lat" label="Latitude">
+    <x-crud::molecules.form-control name="coordinate.lat" label="{{ __('store::messages.branch_location_lat') }}">
         <x-crud::atoms.input wire:model="coordinate.lat" />
     </x-crud::molecules.form-control>
-    <x-crud::molecules.form-control name="coordinate.long" label="Longitude">
-        <x-crud::atoms.input wire:model="coordinate.long" />
+    <x-crud::molecules.form-control name="coordinate.lng" label="{{ __('store::messages.branch_location_lng') }}">
+        <x-crud::atoms.input wire:model="coordinate.lng" />
     </x-crud::molecules.form-control>
-    <x-crud::molecules.form-control name="image" label="Image">
+    <x-crud::molecules.form-control name="image" label="{{ __('store::messages.branch_image') }}">
         <div wire:ignore x-data="{ image: @entangle('image') }" x-init="() => {
             FilePond.registerPlugin(
-                FilePondPluginImagePreview,
-                FilePondPluginImageCrop,
-                FilePondPluginImageResize,
-                FilePondPluginImageTransform,
-                FilePondPluginImageEdit
+                FilePondPluginImagePreview
             );
             const file = FilePond.create($refs.input);
             file.setOptions({
@@ -57,7 +53,7 @@
                 if (value !== null) {
                     if (!value.includes('livewire-file:') && value !== null) {
                         file.files = [{
-                            source: '/storage/store/branches/' + value,
+                            source: '/storage/' + value,
                             options: {
                                 type: 'local'
                             }
@@ -73,7 +69,8 @@
     </x-crud::molecules.form-control>
     <x-slot name="footer">
         <x-crud::atoms.button size="sm" color="secondary" data-bs-dismiss="modal" aria-label="btn-close"
-            text="Cancel" />
-        <x-crud::atoms.button size="sm" color="primary" text="Create" wire:click.prevent="store" />
+            text="{{ __('crud::messages.cancel') }}" />
+        <x-crud::atoms.button size="sm" color="primary" text="{{ __('crud::messages.add') }}"
+            wire:click.prevent="store" />
     </x-slot>
 </x-crud::organisms.modal>

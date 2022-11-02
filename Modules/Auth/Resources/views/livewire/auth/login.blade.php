@@ -5,20 +5,19 @@
                 <div class="card">
                     <div class="row">
                         <div class="col-md-4 pe-md-0">
-                            <div class="auth-side-wrapper">
-
-                            </div>
+                            <div class="auth-side-wrapper"></div>
                         </div>
                         <div class="col-md-8 ps-md-0">
                             <div class="auth-form-wrapper px-4 py-5">
                                 <a href="#" class="noble-ui-logo d-block mb-2">
                                     <img src="{{ url('modules/theme/backend/images/logo.png') }}" style="height: 45px;">
                                 </a>
-                                <h5 class="text-muted fw-normal mb-4">Welcome back! Log in to your account.</h5>
+                                <h5 class="text-muted fw-normal mb-4">{{ __('auth::messages.welcome_back') }}</h5>
                                 <form method="POST" class="forms-sample" action="{{ route('login.post') }}">
                                     @csrf
                                     <div class="mb-3">
-                                        <label for="userEmail" class="form-label">{{ __('auth::auth.email') }}</label>
+                                        <label for="userEmail"
+                                            class="form-label">{{ __('auth::messages.email') }}</label>
                                         <x-crud::atoms.input type="email" placeholder="Email" name="email"
                                             value="superadmin@modula.com" />
                                         @error('email')
@@ -28,7 +27,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="userPassword"
-                                            class="form-label">{{ __('auth::auth.password') }}</label>
+                                            class="form-label">{{ __('auth::messages.password') }}</label>
                                         <x-crud::atoms.input type="password" placeholder="Password" name="password"
                                             value="password" />
                                         @error('password')
@@ -39,22 +38,20 @@
                                     <div class="form-check mb-3">
                                         <input type="checkbox" class="form-check-input" id="authCheck">
                                         <label class="form-check-label" for="authCheck">
-                                            {{ __('auth::auth.remember') }}
+                                            {{ __('auth::messages.remember') }}
                                         </label>
                                     </div>
                                     <div>
                                         <button type="submit"
-                                            class="btn btn-primary me-2 mb-2 mb-md-0 text-white">{{ __('auth::auth.login') }}</button>
-                                        <button type="button"
-                                            class="btn btn-outline-default btn-icon-text mb-2 mb-md-0">
+                                            class="btn btn-primary me-2 mb-2 mb-md-0 text-white">{{ __('auth::messages.login') }}</button>
+                                        <button type="button" class="btn btn-white btn-icon-text mb-2 mb-md-0">
                                             <img src="https://img.icons8.com/color/16/000000/google-logo.png"
                                                 class="me-2">
-                                            {{-- <i class="btn-icon-prepend" data-feather="twitter"></i> --}}
-                                            {{ __('auth::auth.loginwith') }}
+                                            {{ __('auth::messages.loginwith') }}
                                         </button>
                                     </div>
-                                    <a href="register.html"
-                                        class="d-block mt-3 text-muted">{{ __('auth::auth.register') }}</a>
+                                    {{-- <a href="#" class="d-block mt-3 text-muted">{{ __('auth::messages.register')
+                                        }}</a> --}}
                                 </form>
                             </div>
                         </div>

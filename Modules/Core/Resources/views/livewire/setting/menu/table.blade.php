@@ -43,7 +43,50 @@
         </x-slot>
         <div class="row">
             <div class="col-md-4">
-                <div class="accordion" id="addMenuItem">
+                <div class="card shadow-none">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="menu_title" class="form-label">Custom Title </label>
+                            <x-crud::atoms.input type="text" placeholder="Title" wire:model="menu_title" />
+                            @error('menu_title')
+                                <label id="menu_title-error" class="error invalid-feedback"
+                                    for="menu_title">{{ $message }}</label>
+                            @enderror
+                        </div>
+                        @if (!$isSeparator)
+                            <div class="mb-3">
+                                <label for="url" class="form-label">Custom Url </label>
+                                <x-crud::atoms.input type="text" placeholder="Url" wire:model="url" />
+                            </div>
+                            <div class="mb-3">
+                                <div class="mb-3">
+                                    <label for="icon" class="form-label">Icon </label>
+                                    <x-crud::atoms.input type="text" placeholder="far fa-icons" wire:model="icon" />
+                                </div>
+                            </div>
+                        @endif
+                        <div class="mb-3">
+                            <x-crud::atoms.checkbox wire:model="isSeparator" label="Separator" />
+                        </div>
+                        <div class="mb-3">
+                            <x-crud::atoms.checkbox wire:model="target" label="Open New Tab" />
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <div>
+                                @if ($updateMode)
+                                    <button class="btn btn-xs btn-primary" wire:click="updateMenu">
+                                        Update Menu
+                                    </button>
+                                @else
+                                    <button class="btn btn-xs btn-primary" wire:click="addItemToMenu('custom')">
+                                        Add To Menu
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{-- <div class="accordion" id="addMenuItem">
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingCategories">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -153,19 +196,18 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> 
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingCustom">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseCustom" aria-expanded="false" aria-controls="collapseCustom"
                                 wire:ignore.self>
-                                Custom Link
+                                Add Menu Item
                             </button>
                         </h2>
-                        <div id="collapseCustom" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                        <div id="collapseCustom" class="accordion-collapse" aria-labelledby="headingThree"
                             data-bs-parent="#addMenuItem" wire:ignore.self>
                             <div class="accordion-body">
-
                                 <div class="mb-3">
                                     <label for="menu_title" class="form-label">Custom Title </label>
                                     <x-crud::atoms.input type="text" placeholder="Title"
@@ -205,6 +247,7 @@
                         </div>
                     </div>
                 </div>
+                 --}}
             </div>
             <div class="col-md-8">
                 <div x-data="{}" x-init="() => {
@@ -238,12 +281,13 @@
                                                 <div class="me-2">{{ $menu['type'] }} </div>
                                                 <div>
                                                     <x-crud::atoms.switch
-                                                        wire:model="menuItems.{{ $key }}.view"
+                                                        wire:model="menuItems.{{ $key }}.status"
                                                         wire:click="toggleView({{ $menu['id'] }})" />
                                                 </div>
                                                 <div class="d-flex align-items-center">
                                                     <div>
-                                                        <a type="button" class="mx-2 text-secondary">
+                                                        <a type="button" class="mx-2 text-secondary"
+                                                            wire:click="editMenuItem({{ $menu['id'] }})">
                                                             <x-crud::atoms.icon icon="edit" />
                                                         </a>
                                                     </div>
@@ -254,7 +298,7 @@
                                                             size: 'small',
                                                             centerVertical: true,
                                                             message: `
-                                                                Are you sure delete this items?
+                                                                Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
                                                             `,
                                                             buttons: {
                                                                 ok:{
@@ -299,7 +343,7 @@
                                                                         {{ $menu2['type'] }} </div>
                                                                     <div>
                                                                         <x-crud::atoms.switch
-                                                                            wire:model="menuItems.{{ $key }}.children.{{ $key2 }}.view"
+                                                                            wire:model="menuItems.{{ $key }}.children.{{ $key2 }}.status"
                                                                             wire:click="toggleView({{ $menu2['id'] }})" />
                                                                     </div>
                                                                     <div class="d-flex align-items-center">
@@ -316,7 +360,7 @@
                                                                                 size: 'small',
                                                                                 centerVertical: true,
                                                                                 message: `
-                                                                                    Are you sure delete this items?
+                                                                                    Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
                                                                                 `,
                                                                                 buttons: {
                                                                                     ok:{
@@ -365,7 +409,7 @@
                                                                                         </div>
                                                                                         <div>
                                                                                             <x-crud::atoms.switch
-                                                                                                wire:model="menuItems.{{ $key }}.children.{{ $key2 }}.children.{{ $key3 }}.view"
+                                                                                                wire:model="menuItems.{{ $key }}.children.{{ $key2 }}.children.{{ $key3 }}.status"
                                                                                                 wire:click="toggleView({{ $menu3['id'] }})" />
                                                                                         </div>
                                                                                         <div
@@ -385,7 +429,7 @@
                                                                                                     size: 'small',
                                                                                                     centerVertical: true,
                                                                                                     message: `
-                                                                                                        Are you sure delete this items?
+                                                                                                        Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
                                                                                                     `,
                                                                                                     buttons: {
                                                                                                         ok:{

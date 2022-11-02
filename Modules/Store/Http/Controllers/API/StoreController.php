@@ -10,6 +10,14 @@ use Modules\Store\Entities\Product;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 
+// class FiltersSalePrice implements Filter
+// {
+//     public function __invoke(Builder $query, string $property)
+//     {
+//         $query->where("sale_price", "!=", null);
+//     }
+// }
+
 class StoreController extends Controller
 {
     /**
@@ -29,13 +37,15 @@ class StoreController extends Controller
                 "variantOptions.variantValues",
             ])
             ->allowedFilters([
+                AllowedFilter::exact("status"),
                 AllowedFilter::exact("categories.slug"),
                 AllowedFilter::exact("brand.slug"),
                 AllowedFilter::exact("storefronts.slug"),
                 "categories.name",
                 "name",
+                AllowedFilter::exact("sale_price")->ignore(!null),
             ])
-            ->fastPaginate(request()->query('per_page'))
+            ->fastPaginate(request()->query("per_page"))
             ->appends(request()->query());
 
         return response()->json($products);

@@ -1,18 +1,23 @@
 <div>
-    <x-crud::molecules.breadcrumb :items="['Dashboard' => '/dashboard', 'Store' => '/store/products', 'Branches' => '/store/branches']" />
+    <x-crud::molecules.breadcrumb :items="[
+        __('store::messages.dashboard') => '/dashboard',
+        __('store::messages.branches') => '/store/branches',
+    ]" />
     <x-crud::molecules.card>
         <x-slot name="header">
             <div class="d-flex justify-content-end align-items-center">
                 <div class="me-auto">
-                    <h5 class="card-title mb-0">Branches</h5>
+                    <h5 class="card-title mb-0">{{ __('store::messages.branches') }}</h5>
                 </div>
                 <div class="me-3">
-                    <x-crud::atoms.input size="sm" wire:model="search" placeholder="Search Branch" />
+                    <x-crud::atoms.input size="sm" wire:model="search"
+                        placeholder="{{ __('crud::messages.search') }} {{ __('store::messages.branch') }}" />
                 </div>
                 <div>
                     <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" data-bs-toggle="modal"
                         data-bs-target="#createBranch">
-                        <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add Branch
+                        <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" />{{ __('crud::messages.add') }}
+                        {{ __('store::messages.branch') }}
                     </x-crud::atoms.button>
                 </div>
             </div>
@@ -22,16 +27,16 @@
                 <thead>
                     @if ($branches)
                         <tr>
-                            <th scope="col" class="tx-bold" wire:click.prevent="sortBy('name')">
-                                Cabang
+                            <th scope="col" class="align-middle tx-bold" wire:click.prevent="sortBy('name')">
+                                {{ __('store::messages.branch') }}
                                 <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
                                     sortAsc="{{ $sortAsc }}" />
                             </th>
-                            <th scope="col" class="tx-bold">
-                                Lokasi
+                            <th scope="col" class="align-middle tx-bold text-center" width="70">
+                                {{ __('store::messages.branch_location') }}
                             </th>
-                            <th scope="col" class="tx-bold" width="30">Aktif</th>
-                            <th scope="col" class="tx-bold" width="50"></th>
+                            <th scope="col" class="align-middle tx-bold" width="40">{{ __('crud::messages.active') }}</th>
+                            <th scope="col" class="align-middle tx-bold" width="50">{{ __('crud::messages.action') }}</th>
                         </tr>
                     @endif
                 </thead>
@@ -41,7 +46,7 @@
                             <tr wire:sortable.item="{{ $branch->id }}" wire:key="task-{{ $branch->id }}">
                                 <td class="align-middle">
                                     <div class="media d-flex align-items-center">
-                                        <img src="{{ asset('storage/store/branches/' . $branch->images[0]->image) }}"
+                                        <img src="{{ asset('storage/' . $branch->images[0]->image) }}"
                                             class="rounded img-cover me-2" alt="Gambar {{ $branch->name }}">
                                         <div class="media-body">
                                             <p class="product-title">
@@ -50,14 +55,14 @@
                                                     {{ $branch->name }}
                                                 </a>
                                             </p>
-                                            <p>Produk</p>
+                                            <p>{{ __('store::messages.product') }}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="align-middle">
-                                    <a href="{{ 'https://google.com/maps/' . json_decode($branch->coordinate, true)['lat'] . '/' . json_decode($branch->coordinate, true)['long'] }}"
-                                        target="_blank" class="btn btn-xs btn-primary btn-icon-text">
-                                        <x-crud::atoms.icon icon="map-marker-alt btn-icon-prepend" /> Lokasi
+                                <td class="align-middle text-center">
+                                    <a href="{{ 'https://google.com/maps/' . json_decode($branch->coordinate, true)['lat'] . '/' . json_decode($branch->coordinate, true)['lng'] }}"
+                                        target="_blank" class="btn btn-xs btn-link btn-icon text-dark">
+                                        <x-crud::atoms.icon icon="map-marker-alt btn-icon-prepend" />
                                     </a>
                                 </td>
                                 <td class="align-middle">
@@ -65,11 +70,11 @@
                                         checked="{{ $branch->status }}" />
                                 </td>
                                 <td class="align-middle">
-                                    <x-crud::molecules.dropdown label="Action">
+                                    <x-crud::molecules.dropdown label="{{ __('crud::messages.action') }}">
                                         @can('brands.update')
                                             <button class="dropdown-item" data-bs-toggle="modal"
                                                 data-bs-target="#updateBrand"
-                                                wire:click="edit({{ $branch->id }})">Edit</button>
+                                                wire:click="edit({{ $branch->id }})">{{ __('crud::messages.edit') }}</button>
                                         @endcan
                                         @can('brands.delete')
                                             <div x-data>
@@ -80,7 +85,7 @@
                                                                 size: 'small',
                                                                 centerVertical: true,
                                                                 message: `
-                                                                    Are you sure delete this items?
+                                                                    Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
                                                                 `,
                                                                 buttons: {
                                                                     ok:{
@@ -99,26 +104,13 @@
                                                                     }
                                                                 }     
                                                             });
-                                                        }">Delete</button>
+                                                        }">{{ __('crud::messages.delete') }}</button>
                                             </div>
                                         @endcan
                                     </x-crud::molecules.dropdown>
                                 </td>
                             </tr>
                         @endforeach
-                    @else
-                        <tr>
-                            <td colspan="4">
-                                <div class="ht-100p d-flex flex-column align-items-center justify-content-center">
-                                    <div class="wd-100p wd-sm-300 wd-lg-300 mg-b-15">
-                                        <img src="https://assets.tokopedia.net/assets-tokopedia-lite/v2/icarus/kratos/dadc0fe1.jpg"
-                                            class="img-fluid" alt="">
-                                        <h5 class="text-center tx-16 tx-medium">Oops, produk yang kamu
-                                            cari tidak ditemukan</h5>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
                     @endif
                 </tbody>
             </table>

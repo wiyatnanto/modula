@@ -1,18 +1,24 @@
 <div>
-    <x-crud::molecules.breadcrumb :items="['Dashboard' => '/dashboard', 'Store' => '/store/products', 'Store Fronts' => '/store/storefronts']" />
+    <x-crud::molecules.breadcrumb :items="[
+        __('store::messages.dashboard') => '/dashboard',
+        __('store::messages.products') => '/store/products',
+        __('store::messages.storefronts') => '/store/storefronts',
+    ]" />
     <x-crud::molecules.card>
         <x-slot name="header">
             <div class="d-flex justify-content-end align-items-center">
                 <div class="me-auto">
-                    <h5 class="card-title mb-0">Store Fronts</h5>
+                    <h5 class="card-title mb-0">{{ __('store::messages.storefronts') }}</h5>
                 </div>
                 <div class="me-3">
-                    <x-crud::atoms.input size="sm" wire:model="search" placeholder="Search Brand" />
+                    <x-crud::atoms.input size="sm" wire:model="search"
+                        placeholder="{{ __('crud::messages.search') }} {{ __('store::messages.storefront') }}" />
                 </div>
                 <div>
                     <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" data-bs-toggle="modal"
                         data-bs-target="#createStoreFront">
-                        <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add Store Front
+                        <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" />
+                        {{ __('crud::messages.add') }} {{ __('store::messages.storefront') }}
                     </x-crud::atoms.button>
                 </div>
             </div>
@@ -22,13 +28,16 @@
                 <thead>
                     @if ($storeFronts)
                         <tr>
-                            <th scope="col" class="align-middle tx-bold" wire:click.prevent="sortBy('name')">
-                                Produk
+                            <th class="align-middle tx-bold" wire:click.prevent="sortBy('name')">
+                                {{ __('store::messages.storefront') }}
                                 <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
                                     sortAsc="{{ $sortAsc }}" />
                             </th>
-                            <th scope="col" class="align-middle tx-bold" width="30">Aktif</th>
-                            <th scope="col" class="align-middle tx-bold" width="50"></th>
+                            <th class="align-middle tx-bold" width="40">
+                                {{ __('crud::messages.active') }}</th>
+                            <th class="align-middle tx-bold" width="50">
+                                {{ __('crud::messages.action') }}
+                            </th>
                         </tr>
                     @endif
                 </thead>
@@ -42,9 +51,13 @@
                                             class="rounded me-2" alt="">
                                         <div class="media-body">
                                             <p class="product-title">
-                                                {{ $storeFront->name }}
+                                                <a
+                                                    href="{{ asset('store/storefronts/' . $storeFront->id . '/' . $storeFront->slug) }}">
+                                                    {{ $storeFront->name }}
+                                                </a>
                                             </p>
-                                            <p>{{ count($storeFront->products) }} Produk</p>
+                                            <p>{{ count($storeFront->products) }} {{ __('store::messages.product') }}
+                                            </p>
                                         </div>
                                     </div>
                                 </td>
@@ -53,62 +66,42 @@
                                         checked="{{ $storeFront->status }}" />
                                 </td>
                                 <td class="align-middle">
-                                    <x-crud::molecules.dropdown label="Action">
+                                    <x-crud::molecules.dropdown label="{{ __('crud::messages.action') }}">
                                         @can('brands.update')
-                                            {{-- <button class="dropdown-item" data-bs-toggle="modal"
-                                                data-bs-target="#updateBrand"
-                                                wire:click="edit({{ $storeFront->id }})">Edit</button> --}}
                                             <a class="dropdown-item" type="button"
-                                                href="{{ asset('store/storefronts/' . $storeFront->id . '/' . $storeFront->slug) }}">Edit & Atur</a>
+                                                href="{{ asset('store/storefronts/' . $storeFront->id . '/' . $storeFront->slug) }}">{{ __('crud::messages.update') }}</a>
                                         @endcan
                                         @can('brands.delete')
                                             <div x-data>
                                                 <button class="dropdown-item action-delete"
                                                     x-on:click="() => {
-                                                            bootbox.dialog({
-                                                                closeButton: false,
-                                                                size: 'small',
-                                                                centerVertical: true,
-                                                                message: `
-                                                                    Are you sure delete this items?
-                                                                `,
-                                                                buttons: {
-                                                                    ok:{
-                                                                        label: 'Yes',
-                                                                        className: 'btn-sm btn-danger',
-                                                                        callback: function(){
-                                                                            @this.emit('delete', {{ $storeFront->id }})              
-                                                                        }
-                                                                    },
-                                                                    no:{
-                                                                        label: 'Cancel',
-                                                                        className: 'btn-sm btn-secondary',
-                                                                        callback: function(){
-                                                                                            
-                                                                        }
+                                                        bootbox.dialog({
+                                                            closeButton: false,
+                                                            size: 'small',
+                                                            centerVertical: true,
+                                                            title: `{{ __('crud::messages.confirm_delete_title') }}`,
+                                                            message: `{{ __('crud::messages.confirm_delete_body') }}`,
+                                                            buttons: {
+                                                                no:{
+                                                                    label: '{{ __('crud::messages.cancel') }}',
+                                                                    className: 'btn-sm btn-secondary'
+                                                                },
+                                                                ok:{
+                                                                    label: '{{ __('crud::messages.confirm_delete_yes') }}',
+                                                                    className: 'btn-sm btn-danger',
+                                                                    callback: function(){
+                                                                        @this.emit('delete', {{ $storeFront->id }})                
                                                                     }
-                                                                }     
-                                                            });
-                                                        }">Delete</button>
+                                                                }
+                                                            }     
+                                                        });
+                                                    }">{{ __('crud::messages.delete') }}</button>
                                             </div>
                                         @endcan
                                     </x-crud::molecules.dropdown>
                                 </td>
                             </tr>
                         @endforeach
-                    @else
-                        <tr>
-                            <td colspan="4">
-                                <div class="ht-100p d-flex flex-column align-items-center justify-content-center">
-                                    <div class="wd-100p wd-sm-300 wd-lg-300 mg-b-15">
-                                        <img src="https://assets.tokopedia.net/assets-tokopedia-lite/v2/icarus/kratos/dadc0fe1.jpg"
-                                            class="img-fluid" alt="">
-                                        <h5 class="text-center tx-16 tx-medium">Oops, produk yang kamu
-                                            cari tidak ditemukan</h5>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
                     @endif
                 </tbody>
             </table>

@@ -31,13 +31,13 @@
         <div class="d-none flex-sm-fill d-sm-flex align-items-sm-center justify-content-sm-between">
             <div>
                 <p class="small text-muted">
-                    {!! __('Showing') !!}
+                    {!! __('crud::messages.showing') !!}
                     <span class="fw-semibold">{{ $paginator->firstItem() }}</span>
-                    {!! __('to') !!}
+                    {!! __('crud::messages.to') !!}
                     <span class="fw-semibold">{{ $paginator->lastItem() }}</span>
-                    {!! __('of') !!}
+                    {!! __('crud::messages.of') !!}
                     <span class="fw-semibold">{{ $paginator->total() }}</span>
-                    {!! __('products') !!}
+                    {!! __('crud::messages.items') !!}
                 </p>
             </div>
 
@@ -46,12 +46,16 @@
                     {{-- Previous Page Link --}}
                     @if ($paginator->onFirstPage())
                         <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
-                            <span class="page-link" aria-hidden="true"><x-crud::atoms.icon icon="angle-left" /></span>
+                            <span class="page-link" aria-hidden="true">
+                                <x-crud::atoms.icon icon="angle-left" />
+                            </span>
                         </li>
                     @else
                         <li class="page-item">
                             <button class="page-link" wire:click="previousPage" rel="prev"
-                                aria-label="@lang('pagination.previous')"><x-crud::atoms.icon icon="angle-left" /></button>
+                                aria-label="@lang('pagination.previous')">
+                                <x-crud::atoms.icon icon="angle-left" />
+                            </button>
                             {{-- <a class="page-link" href="{{ $paginator->previousPageUrl() }}" rel="prev" aria-label="@lang('pagination.previous')">&lsaquo;</a> --}}
                         </li>
                     @endif
@@ -89,7 +93,9 @@
                         </li>
                     @else
                         <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.next')">
-                            <span class="page-link" aria-hidden="true"><x-crud::atoms.icon icon="angle-right" /></span>
+                            <span class="page-link" aria-hidden="true">
+                                <x-crud::atoms.icon icon="angle-right" />
+                            </span>
                         </li>
                     @endif
                 </ul>

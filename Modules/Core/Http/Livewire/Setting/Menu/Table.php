@@ -14,13 +14,13 @@ class Table extends Component
 {
     public $search;
     public $menu = "frontend";
-    public $lang = "id";
     public $menuId;
-    public $langId;
-    public $menu_title, $target, $url, $icon, $isSeparator;
+    public $lang = "id";
+    public $menu_title, $target, $url, $url_as, $icon, $isSeparator;
     public $menuItems = [];
     public $addCategories = [];
     public $addPages = [];
+    public $updateMode = false;
 
     public $listeners = [
         "storeMenu" => "storeMenu",
@@ -34,13 +34,11 @@ class Table extends Component
     public function mount()
     {
         $menu = Menu::where("slug", $this->menu)->first();
-        $language = Language::where("code", $this->lang)->first();
         $this->menuId = $menu->id;
-        $this->langId = $language->id;
         $this->menuItems = collect(
             MenuItem::with("children")
                 ->where("menu_id", $menu->id)
-                ->where("lang_id", $language->id)
+                ->where("lang", $this->lang)
                 ->get()
         );
     }
@@ -64,71 +62,28 @@ class Table extends Component
         $this->emit("refreshComponent");
     }
 
-    public function addItemToMenu($type)
+    public function addItemToMenu()
     {
-        switch ($type) {
-            case "page":
-                foreach ($this->addPages as $key => $page) {
-                    if ($page) {
-                        $page = Page::find($page)->first();
-                        $menu = new Menu();
-                        $menu->menu_id = $this->menuId;
-                        $menu->type = $type;
-                        $menu->url = "/p/" . Page::findOrFail($key)->slug;
-                        $menu->target = "";
-                        $menu->menu_title = Page::findOrFail($key)->title;
-                        $menu->custom_class = "";
-                        $menu->icon = "";
-                        $menu->view = 1;
-                        $menu->save();
-                    }
-                }
-                break;
-            case "category":
-                $categories = Category::whereIn(
-                    "id",
-                    array_keys($this->addCategories)
-                )->get();
-                foreach ($categories as $key => $category) {
-                    $menu = MenuItem::where("type", $type)
-                        ->where("url", "/category/" . $category->slug)
-                        ->first();
-                    $menu = new MenuItem();
-                    $menu->menu_id = $this->menuId;
-                    $menu->type = $type;
-                    $menu->url = "/category/" . $category->slug;
-                    $menu->target = $this->target ? "_blank" : "";
-                    $menu->menu_title = $category->name;
-                    $menu->custom_class = "";
-                    $menu->icon = "";
-                    $menu->view = 1;
-                    $menu->save();
-                }
-                break;
-            case "custom":
-                $menu = new MenuItem();
-                $menu->menu_id = $this->menuId;
-                $menu->lang_id = $this->langId;
-                $menu->type = $this->isSeparator ? "separator" : $type;
-                $menu->url = $this->isSeparator ? "#" : $this->url;
-                $menu->target = $this->target ? "_blank" : "";
-                $menu->menu_title = $this->menu_title;
-                $menu->custom_class = null;
-                $menu->icon = null;
-                $menu->view = false;
-                $menu->save();
-                break;
-            default:
+        $menu = new MenuItem();
+        $menu->menu_id = $this->menuId;
+        $menu->menu_title = $this->menu_title;
+        $menu->target = $this->target;
+        $menu->url = $this->url;
+        $menu->url_as = $this->url_as;
+        $menu->icon = $this->icon;
+        $menu->type = $this->isSeparator ? "separator" : "custom";
+        if ($menu->save()) {
+            $this->emit("toast", ["success", "Menu has been updated"]);
+            $this->mount();
         }
-        $this->clear();
-        $this->mount();
-        $this->emit("toast", ["success", "Menu has been updated"]);
+        // $this->clear();
+        // $this->mount();
     }
 
     public function toggleView($id)
     {
         $menu = MenuItem::findOrFail($id);
-        $menu->view = $menu->view ? 0 : 1;
+        $menu->status = $menu->status ? 0 : 1;
         $menu->update();
         $this->emit("toast", ["success", "Menu has been updated"]);
     }
@@ -161,6 +116,19 @@ class Table extends Component
         $this->emit("toast", ["success", "Menu has been updated"]);
     }
 
+    public function editMenuItem($id)
+    {
+        $menu = MenuItem::findOrFail($id);
+        $this->menuId = $menu->id;
+        $this->menu_title = $menu->menu_title;
+        $this->target = $menu->target;
+        $this->url = $menu->url;
+        $this->url_as = $menu->usl_as;
+        $this->icon = $menu->icon;
+        $this->isSeparator = $menu->type === "separator" ? 1 : 0;
+        $this->updateMode = true;
+    }
+
     public function deleteMenuItem($id)
     {
         $menu = MenuItem::findOrFail($id);
@@ -180,6 +148,23 @@ class Table extends Component
         $this->emit("toast", ["success", "Menu has been created"]);
         $this->mount();
         $this->emit("refreshComponent");
+        $this->updateMode = false;
+    }
+
+    public function updateMenu()
+    {
+        $menu = MenuItem::findOrFail($this->menuId);
+        $menu->menu_title = $this->menu_title;
+        $menu->target = $this->target;
+        $menu->url = $this->url;
+        $menu->url_as = $this->url_as;
+        $menu->icon = $this->icon;
+        $menu->type = $this->isSeparator ? "separator" : "custom";
+        $menu->update();
+        $this->emit("toast", ["success", "Menu has been updated"]);
+        $this->mount();
+        $this->emit("refreshComponent");
+        $this->updateMode = false;
     }
 
     public function render()

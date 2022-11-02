@@ -24,7 +24,7 @@ class MenuController extends Controller
             ->allowedIncludes(["menu", "language"])
             ->allowedFilters([
                 AllowedFilter::exact("menu.slug"),
-                AllowedFilter::exact("language.code"),
+                AllowedFilter::exact("lang"),
             ]);
 
         return response()->json($menus->get());

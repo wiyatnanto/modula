@@ -1,7 +1,8 @@
 <nav class="sidebar" x-data x-init="() => {
     if ($('.sidebar .sidebar-body').length) {
         const sidebarBodyScroll = new PerfectScrollbar('.sidebar-body', {
-            scrollYMarginOffset: 100
+            //scrollYMarginOffset: 100,
+            wheelSpeed: 1
         })
     }
     $('.sidebar .sidebar-body').hover(

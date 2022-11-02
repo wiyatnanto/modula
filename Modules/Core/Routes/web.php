@@ -11,9 +11,12 @@
 |
 */
 use Modules\Core\Http\Livewire\Setting\Menu\Table as TableMenu;
+use Modules\Core\Http\Livewire\Setting\Config;
+
 
 Route::prefix('core')->group(function() {
     Route::group(['middleware' => ['auth']], function() {
         Route::get('/menu', TableMenu::class);
+        Route::get('/config', Config::class);
     });
 });

@@ -28,6 +28,7 @@ class Create extends Component
     public $description;
     public $quantity = 1;
     public $price;
+    public $sale_price;
     public $minOrder = 1;
     public $weightType;
     public $weight = "10";
@@ -57,6 +58,8 @@ class Create extends Component
     protected $listeners = [
         "selectAttributes" => "selectAttributes",
         "selectAttributeValues" => "selectAttributeValues",
+        "removeVarian" => "removeVarian",
+        "addVarian" => "addVarian",
     ];
 
     public function mount()
@@ -139,10 +142,10 @@ class Create extends Component
     public function setBulkVariant()
     {
         $valid = $this->validate([
-            "bulkVariantValues.price" => "required",
+            "bulkVariantValues.price" => "",
             "bulkVariantValues.sku" => "",
-            "bulkVariantValues.quantity" => "required",
-            "bulkVariantValues.weight" => "required",
+            "bulkVariantValues.quantity" => "",
+            "bulkVariantValues.weight" => "",
         ]);
         if ($valid) {
             $this->productVariants = collect($this->productVariants)->map(
@@ -256,9 +259,10 @@ class Create extends Component
             "category" => "required",
             "storefront" => "",
             "description" => "",
-            "quantity" => "required",
-            "minOrder" => "required",
-            "price" => "required",
+            "quantity" => "",
+            "minOrder" => "",
+            "price" => "",
+            "sale_price" => "",
             "weight" => "",
             "length" => "",
             "width" => "",
@@ -270,12 +274,20 @@ class Create extends Component
             $product->brand_id = $validatedData["brand"];
             $product->sku = "-";
             $product->name = $validatedData["name"];
-            $product->description = $validatedData["description"];
-            $product->quantity = $validatedData["quantity"];
-            $product->min_order = $validatedData["minOrder"];
-            $product->weight = $validatedData["weight"];
-            $product->price =
-                str_replace(".", "", $validatedData["price"]) . ".00";
+            if ($this->hasVarian) {
+                $product->price = null;
+                $product->sale_price = null;
+            } else {
+                $product->description = $validatedData["description"];
+                $product->quantity = $validatedData["quantity"];
+                $product->min_order = $validatedData["minOrder"];
+                $product->weight = $validatedData["weight"];
+                $product->price =
+                    str_replace(".", "", $validatedData["price"]) . ".00";
+                $product->sale_price = $validatedData["sale_price"]
+                    ? str_replace(".", "", $validatedData["sale_price"]) . ".00"
+                    : $validatedData["sale_price"];
+            }
             $product->status = 1;
             $product->featured = 0;
             $product->save();

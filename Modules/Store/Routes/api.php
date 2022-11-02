@@ -6,6 +6,8 @@ use Modules\Store\Http\Controllers\API\BrandController;
 use Modules\Store\Http\Controllers\API\StoreFrontController;
 use Modules\Store\Http\Controllers\API\CategoryController;
 use Modules\Store\Http\Controllers\API\BranchController;
+use Modules\Store\Http\Controllers\API\PromoBannerController;
+
 
 
 /*
@@ -29,4 +31,6 @@ Route::prefix('store')->middleware('auth:api')->group( function () {
     Route::resource('storefronts', StoreFrontController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('branches', BranchController::class);
+    Route::resource('promobanners', PromoBannerController::class);
+
 });

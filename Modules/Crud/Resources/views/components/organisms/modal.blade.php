@@ -29,7 +29,12 @@
             window.addEventListener('closeModal', event => {
                 $('#{{ $id }}').modal('hide');
             });
-            $('#{{ $id }}').on('show.bs.modal', function(e) {})
+            $('#{{ $id }}').on('show.bs.modal', function(e) {
+
+            })
+            $('#{{ $id }}').on('hide.bs.modal', function(e) {
+
+            })
         });
     </script>
 @endpush

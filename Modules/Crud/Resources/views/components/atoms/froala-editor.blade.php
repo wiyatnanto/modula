@@ -1,8 +1,9 @@
 @props(['height' => '200', 'imageUploadURL' => '/storage/blog/posts/'])
 <div wire:ignore>
     <div x-data="{ content: @entangle($attributes->whereStartsWith('wire:model')->first()) }" x-init="() => {
+        //['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', '|', 'emoticons', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'help', 'html', '|', 'undo', 'redo', 'trackChanges', 'markdown']
         const editor = new FroalaEditor($refs.editor, {
-            toolbarButtons: ['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', '|', 'emoticons', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'help', 'html', '|', 'undo', 'redo', 'trackChanges', 'markdown'],
+            toolbarButtons: ['undo', 'redo','fullscreen', 'bold', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'clearFormatting'],
             events: {
                 initialized: function() {
                     this.events.on('contentChanged', function(e) {
@@ -39,6 +40,10 @@
 
             .fr-popup {
                 z-index: 999999 !important;
+            }
+
+            .fr-qi-helper a.fr-btn.fr-floating-btn svg {
+                margin-top: -15px;
             }
         </style>
     @endpush

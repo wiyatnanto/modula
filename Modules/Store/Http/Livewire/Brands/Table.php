@@ -14,8 +14,9 @@ class Table extends Component
 {
     use WithFileUploads, WithPagination, WithSorting;
 
+    protected $paginationTheme = "bootstrap";
+
     public $search;
-    public $filterActive = 1;
 
     public $brandId;
     public $name;
@@ -24,23 +25,16 @@ class Table extends Component
     public $updateMode = false;
     public $minimize = false;
 
-    public $listeners = [
-        'delete' => 'delete',
-    ];
+    public $listeners = ["clear", "delete"];
+    public $currentUrl;
 
-    public function hydrate()
-    {
-        $this->dispatchBrowserEvent('hydrateEvent');
-    }
+    protected $queryString = ["page"];
 
-    public function toggleSidebar()
+    public function clear()
     {
-        $this->minimize = $this->minimize ? false : true;
-    }
-
-    public function toggleFilterActive()
-    {
-        $this->filterActive = $this->filterActive ? 0 : 1;
+        $this->reset();
+        $this->resetErrorBag();
+        $this->resetValidation();
     }
 
     public function toggleActive($id)
@@ -48,41 +42,38 @@ class Table extends Component
         $brand = Brand::findOrFail($id);
         $brand->status = $brand->status ? 0 : 1;
         $brand->update();
-    }
-
-    private function resetInputFields()
-    {
-        $this->name = null;
-        $this->image = null;
+        $this->emit("toast", [
+            "success",
+            __("crud::messages.message_updated", [
+                "item" => __("store::messages.brand"),
+            ]),
+        ]);
     }
 
     public function store()
     {
-
         $this->resetValidation();
         $validatedData = $this->validate([
-            'name' => 'required',
-            'image' => 'required'
+            "name" => "required",
+            "image" => "required",
         ]);
         if ($validatedData) {
             $brand = new brand();
             $brand->name = $this->name;
             if (is_object($this->image)) {
-                $fileName = $this->image->store(
-                    'public/store/brands',
-                    'local'
-                );
-                $brand->image = str_replace(
-                    'public/store/brands/',
-                    '',
-                    $fileName
-                );
+                $imageName = $this->image->hashName();
+                $this->image->store("public/store/brands", "local");
+                $brand->image = "store/brands/" . $imageName;
             }
-
-            $brand->save();
-            if($brand){
-                $this->emit('toast', ['success', 'Product has been created']);
-                $this->dispatchBrowserEvent('closeModal');
+            if ($brand->save()) {
+                $this->dispatchBrowserEvent("closeModal");
+                $this->clear();
+                $this->emit("toast", [
+                    "success",
+                    __("crud::messages.message_created", [
+                        "item" => __("store::messages.brand"),
+                    ]),
+                ]);
             }
         }
     }
@@ -101,48 +92,47 @@ class Table extends Component
         $brand = Brand::find($this->brandId);
         $brand->name = $this->name;
         if (is_object($this->image)) {
-            $fileName = $this->image->store(
-                'public/store/brands',
-                'local'
-            );
-            $brand->image = str_replace(
-                'public/store/brands/',
-                '',
-                $fileName
-            );
+            $imageName = $this->image->hashName();
+            $this->image->store("public/store/brands", "local");
+            $brand->image = "store/brands/" . $imageName;
         }
-        if($brand->update()){
-            $this->updateMode = false;
-            $this->resetInputFields();
-            $this->emit('toast', ['success', 'Brand has been updated']);
-            $this->dispatchBrowserEvent('closeModal');
+        if ($brand->update()) {
+            $this->dispatchBrowserEvent("closeModal");
+            $this->clear();
+            $this->emit("toast", [
+                "success",
+                __("crud::messages.message_updated", [
+                    "item" => __("store::messages.brand"),
+                ]),
+            ]);
         }
     }
 
     public function delete($id)
     {
         $brand = Brand::findOrFail($id);
-        if($brand->delete()){
-            $this->emit('toast', ['success', 'Brand has been deleted']);
-            $this->dispatchBrowserEvent('closeModal');
+        if ($brand->delete()) {
+            $this->dispatchBrowserEvent("closeModal");
+            $this->clear();
+            $this->emit("toast", [
+                "success",
+                __("crud::messages.message_deleted", [
+                    "item" => __("store::messages.brand"),
+                ]),
+            ]);
         }
-    }
-
-    public function cancel()
-    {
-        $this->updateMode = false;
-        $this->resetInputFields();
     }
 
     public function render()
     {
-        $brands = Brand::withCount('products')->where('status', $this->filterActive);
+        $brands = Brand::withCount("products");
         if ($this->search !== null) {
-            $brands->where('name', 'ILIKE', '%' . $this->search . '%');
+            $brands->where("name", "ILIKE", "%" . $this->search . "%");
         }
-        return view('store::livewire.brands.table', [
-            'brands' => $brands->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')->fastPaginate(10),
-        ])
-        ->extends('theme::backend.layouts.master');
+        return view("store::livewire.brands.table", [
+            "brands" => $brands
+                ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
+                ->fastPaginate(10),
+        ])->extends("theme::backend.layouts.master");
     }
 }

@@ -6,7 +6,7 @@
     <div class="navbar-content">
         <x-theme::molecules.search />
         <ul class="navbar-nav">
-            <li class="nav-item dropdown">
+            {{-- <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="appsDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <x-crud::atoms.icon icon="stream" />
@@ -50,8 +50,8 @@
                         <a href="javascript:;">View all</a>
                     </div>
                 </div>
-            </li>
-            <li class="nav-item dropdown">
+            </li> --}}
+            {{-- <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <x-crud::atoms.icon icon="comments-alt" />
@@ -132,8 +132,8 @@
                         <a href="javascript:;">View all</a>
                     </div>
                 </div>
-            </li>
-            <li class="nav-item dropdown">
+            </li> --}}
+            {{-- <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <x-crud::atoms.icon icon="bell" />
@@ -203,7 +203,7 @@
                         <a href="javascript:;">View all</a>
                     </div>
                 </div>
-            </li>
+            </li> --}}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -213,8 +213,8 @@
                 <div class="dropdown-menu p-0" aria-labelledby="profileDropdown">
                     <div class="d-flex flex-column align-items-center border-bottom px-5 py-3">
                         <div class="mb-3">
-                            <img class="wd-80 ht-80 rounded-circle"
-                                src="{{ url('storage/' . auth()->user()->avatar) }}" alt="">
+                            <img class="wd-80 ht-80 rounded-circle" src="{{ url('storage/' . auth()->user()->avatar) }}"
+                                alt="">
                         </div>
                         <div class="text-center">
                             <p class="tx-16 fw-bolder">{{ auth()->user()->name }}</p>
@@ -222,9 +222,8 @@
                         </div>
                     </div>
                     <ul class="list-unstyled p-1">
-                        <li class="dropdown-item py-2">
+                        {{-- <li class="dropdown-item py-2">
                             <a href="../../pages/general/profile.html" class="text-body ms-0">
-                                <i class="me-2 icon-md" data-feather="user"></i>
                                 <span>{{ __('auth::auth.profile') }}</span>
                             </a>
                         </li>
@@ -239,10 +238,9 @@
                                 <i class="me-2 icon-md" data-feather="repeat"></i>
                                 <span>{{ __('auth::auth.switchuser') }}</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <a href="{{ url('auth/logout') }}" class="text-body ms-0">
                             <li class="dropdown-item py-2">
-                                <i class="far fa-sign-out me-2 icon-md"></i>
                                 <span>{{ __('auth::auth.logout') }}</span>
                             </li>
                         </a>

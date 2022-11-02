@@ -18,7 +18,7 @@
                                         size: 'small',
                                         centerVertical: true,
                                         message: `
-                                            Are you sure delete this items?
+                                            Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
                                         `,
                                         buttons: {
                                             ok:{
@@ -74,15 +74,25 @@
                         <tbody>
                             @foreach ($sliderItems as $key => $slide)
                                 <tr>
-                                    <td>
+                                    <td class="align-middle">
                                         <x-crud::atoms.checkbox wire:model="selected" value="{{ $slide->id }}" />
                                     </td>
-                                    <td>{{ $slide->slider->name }}</td>
-                                    <td>{{ $slide->title }}</td>
-                                    <td>
-                                        {{ $slide->image }}
+                                    <td class="align-middle">
+                                        <p class="slider-title">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#updateSlide"
+                                                wire:click="edit({{ $slide->id }})">{{ $slide->title }}</a>
+                                        </p>
                                     </td>
-                                    <td class="text-end">
+                                    <td class="align-middle">
+                                        {{ $slide->slider->name }}
+                                    </td>
+                                    <td>
+                                        <div class="media d-flex">
+                                            <img src="{{ asset('storage/' . $slide->image) }}" class="rounded me-2"
+                                                alt="Gambar Slider">
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-end">
                                         <x-crud::molecules.dropdown label="Action">
                                             @can('roles.update')
                                                 <button class="dropdown-item" data-bs-toggle="modal"
@@ -98,7 +108,7 @@
                                                                 size: 'small',
                                                                 centerVertical: true,
                                                                 message: `
-                                                                    Are you sure delete this items?
+                                                                    Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
                                                                 `,
                                                                 buttons: {
                                                                     ok:{

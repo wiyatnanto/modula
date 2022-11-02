@@ -16,45 +16,29 @@ class Table extends Component
 
     public $search;
     public $filterActive = 0;
-    public $view = 'list';
+    public $view = "tree";
 
+    public $categoriesTrees = [];
     public $categoryId;
     public $name;
     public $image;
 
-    public $categoriesTrees = [];
     public $updateMode = false;
     public $minimize = false;
 
     public $listeners = [
-        'updateOrderTree' => 'updateOrderTree',
-        'delete' => 'delete',
-        'refreshComponent' => '$refresh'
+        "updateOrderTree" => "updateOrderTree",
+        "delete" => "delete",
+        "refreshComponent" => '$refresh',
     ];
 
-    protected $queryString = ['view'];
+    protected $queryString = ["view"];
 
-    public function hydrate()
+    public function clear()
     {
-        $this->dispatchBrowserEvent('hydrateEvent');
-    }
-
-    public function mount()
-    {
-        $this->categoriesTrees = collect(Category::with('children')->get());
-    }
-
-    public function toggleView($id)
-    {
-        $category = Category::findOrFail($id);
-        $category->status = $category->status ? 0: 1;
-        $category->update();
-        $this->emit('toast', ['success', 'Category has been updated']);
-    }
-
-    public function toggleFilterActive()
-    {
-        $this->filterActive = $this->filterActive ? 0 : 1;
+        $this->reset();
+        $this->resetErrorBag();
+        $this->resetValidation();
     }
 
     public function toggleActive($id)
@@ -62,13 +46,19 @@ class Table extends Component
         $category = Category::findOrFail($id);
         $category->status = $category->status ? 0 : 1;
         $category->update();
+        $this->emit("toast", [
+            "success",
+            __("crud::messages.message_updated", [
+                "item" => __("store::messages.category"),
+            ]),
+        ]);
     }
 
     public function updateOrder($list)
     {
         foreach ($list as $key => $val) {
-            $category = Category::findOrFail($val['value']);
-            $category->order_menu = $val['order'];
+            $category = Category::findOrFail($val["value"]);
+            $category->order_menu = $val["order"];
             $category->update();
         }
     }
@@ -76,63 +66,72 @@ class Table extends Component
     public function updateOrderTree($datas)
     {
         foreach ($datas as $key => $data) {
-            if (isset($data['children'])) {
-                foreach ($data['children'] as $key2 => $data2) {
-                    if (isset($data2['children'])) {
-                        foreach ($data2['children'] as $key3 => $data3) {
-                            $category = Category::findOrFail($data3['id']);
+            if (isset($data["children"])) {
+                foreach ($data["children"] as $key2 => $data2) {
+                    if (isset($data2["children"])) {
+                        foreach ($data2["children"] as $key3 => $data3) {
+                            $category = Category::findOrFail($data3["id"]);
                             $category->order_menu = $key3;
-                            $category->parent_id = $data2['id'];
+                            $category->parent_id = $data2["id"];
                             $category->menu_level = 3;
                             $category->update();
                         }
                     } else {
-                        $category = Category::findOrFail($data2['id']);
+                        $category = Category::findOrFail($data2["id"]);
                         $category->order_menu = $key2;
-                        $category->parent_id = $data['id'];
+                        $category->parent_id = $data["id"];
                         $category->menu_level = 2;
                         $category->update();
                     }
                 }
             } else {
-                $category = Category::findOrFail($data['id']);
+                $category = Category::findOrFail($data["id"]);
                 $category->order_menu = $key;
                 $category->parent_id = 0;
                 $category->menu_level = 1;
                 $category->update();
             }
         }
-        $this->categoriesTrees = collect(Category::with('children')->get());
-        $this->emit('toast', ['success', 'Category has been updated']);
-    }
-
-    private function resetInputFields()
-    {
-        $this->name = null;
-        $this->image = null;
+        $this->emit("toast", [
+            "success",
+            __("crud::messages.message_updated", [
+                "item" => __("store::messages.category"),
+            ]),
+        ]);
     }
 
     public function store()
     {
-        $category = new Category();
-        $category->name = $this->name;
-        $category->parent_id = 0;
-        if (is_object($this->image)) {
-            $fileName = $this->image->store(
-                'public/store/categories',
-                'local'
-            );
-            $category->image = str_replace(
-                'public/store/categories/',
-                '',
-                $fileName
-            );
-        }
-        $category->save();
-        if ($category) {
-            $this->emit('toast', ['success', 'Category has been created']);
-            $this->dispatchBrowserEvent('closeModal');
-            $this->categoriesTrees = collect(Category::with('children')->get());
+        $this->resetValidation();
+        $validatedData = $this->validate([
+            "name" => "required",
+            "image" => "",
+        ]);
+        if ($validatedData) {
+            $category = new Category();
+            $category->name = $this->name;
+            $category->parent_id = 0;
+            if (is_object($this->image)) {
+                $fileName = $this->image->store(
+                    "public/store/categories",
+                    "local"
+                );
+                $category->image = str_replace(
+                    "public/store/categories/",
+                    "",
+                    $fileName
+                );
+            }
+            if ($category->save()) {
+                $this->dispatchBrowserEvent("closeModal");
+                $this->clear();
+                $this->emit("toast", [
+                    "success",
+                    __("crud::messages.message_created", [
+                        "item" => __("store::messages.category"),
+                    ]),
+                ]);
+            }
         }
     }
 
@@ -150,49 +149,51 @@ class Table extends Component
         $category = Category::find($this->categoryId);
         $category->name = $this->name;
         if (is_object($this->image)) {
-            $fileName = $this->image->store(
-                'public/store/categories',
-                'local'
-            );
-            $category->image = str_replace(
-                'public/store/categories/',
-                '',
-                $fileName
-            );
+            $imageName = $this->image->hashName();
+            $this->image->store("public/store/categories", "local");
+            $category->image = "store/categories/" . $imageName;
         }
-        $category->update();
-        $this->updateMode = false;
-        $this->resetInputFields();
-        $this->emit('notify', 'Brand berhasil diperbarui');
+        if ($category->update()) {
+            $this->dispatchBrowserEvent("closeModal");
+            $this->clear();
+            $this->emit("toast", [
+                "success",
+                __("crud::messages.message_created", [
+                    "item" => __("store::messages.category"),
+                ]),
+            ]);
+        }
     }
 
     public function delete($id)
     {
         $category = Category::findOrFail($id);
-        $category->delete();
-        $this->categoriesTrees = collect(Category::with('children')->get());
-        $this->emit('toast', ['success', 'Category has been deleted']);
-    }
-
-
-    public function cancel()
-    {
-        $this->updateMode = false;
-        $this->resetInputFields();
+        if ($category->delete()) {
+            $this->clear();
+            $this->emit("toast", [
+                "success",
+                __("crud::messages.message_deleted", [
+                    "item" => __("store::messages.category"),
+                ]),
+            ]);
+        }
     }
 
     public function render()
     {
-        $categories = Category::with('children')->withCount('products')->orderBy('order_menu', 'asc');
+        $categories = Category::with("children")
+            ->withCount("products")
+            ->where("parent_id", 0);
         if ($this->filterActive) {
-            $categories->where('status', $this->filterActive);
+            $categories->where("status", $this->filterActive);
         }
         if ($this->search !== null) {
-            $categories->where('name', 'like', '%' . $this->search . '%');
+            $categories->where("name", "like", "%" . $this->search . "%");
         }
-
-        return view('store::livewire.categories.table', [
-            'categories' => $categories->fastPaginate(10)
-        ])->extends('theme::backend.layouts.master');
+        $this->categoriesTrees = collect(Category::with("children")->get());
+        return view("store::livewire.categories.table", [
+            "categories" => $categories->fastPaginate(10),
+            "categoriesTrees" => $this->categoriesTrees,
+        ])->extends("theme::backend.layouts.master");
     }
 }

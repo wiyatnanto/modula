@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Cache;
 if (! function_exists('getMenu')) {
     function getMenu($name)
     {
-        return MenuItem::where('view','=',true)->with('children', function($query){
-            return $query->where('view','=',true);
+        return MenuItem::where('status',true)->with('children', function($query){
+            return $query->where('status',true);
         })->where('menu_id', 2)->orderBy('sort_order')->get();
     }
 }

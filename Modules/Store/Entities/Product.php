@@ -114,6 +114,11 @@ class Product extends Model
         return $this->hasOne(TryOn::class);
     }
 
+    // public function scopeStartsBefore(Builder $query, $date): Builder
+    // {
+    //     return $query->where("sale_pice", "!=", null);
+    // }
+
     protected static function newFactory()
     {
         return \Modules\Store\Database\factories\ProductFactory::new();

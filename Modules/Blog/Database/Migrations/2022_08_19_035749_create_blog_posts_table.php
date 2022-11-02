@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('blog_posts', function (Blueprint $table) {
             $table->id();
-            $table->string("title",191);
+            $table->string("title",255);
             $table->text("content");
             $table->text("slug");
-            $table->string("status",10)->default('draft');
             $table->text("featured_image")->nullable();
             $table->string("caption",191)->nullable();
             $table->timestamp('published_at')->nullable();
             $table->string('lang', 2)->default('id');
+            $table->boolean('status')->default(1);
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
             $table->softDeletes();

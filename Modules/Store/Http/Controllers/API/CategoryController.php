@@ -20,11 +20,17 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = QueryBuilder::for(Category::class)
-        ->allowedFilters([AllowedFilter::exact('slug'), 'name', 'status'])
-        ->allowedSorts('created_at')
-        ->allowedIncludes(['children','products', 'lastProduct.images']);
-
-        return response()->json($categories->fastPaginate(10));
+            ->allowedFilters([
+                AllowedFilter::exact("slug"),
+                "name",
+                AllowedFilter::exact("status"),
+                AllowedFilter::exact("parent_id"),
+            ])
+            ->allowedSorts("created_at", "order_menu")
+            ->allowedIncludes(["children", "products", "lastProduct.images"]);
+        return response()->json(
+            $categories->fastPaginate(request()->query("per_page"))
+        );
     }
 
     /**
@@ -33,7 +39,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('store::create');
+        return view("store::create");
     }
 
     /**
@@ -53,9 +59,11 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category = QueryBuilder::for(Category::class)
-        ->allowedIncludes(['products.brand','products.images']);
-        return response()->json($category->where('slug', $slug)->firstOrFail());
+        $category = QueryBuilder::for(Category::class)->allowedIncludes([
+            "products.brand",
+            "products.images",
+        ]);
+        return response()->json($category->where("slug", $slug)->firstOrFail());
     }
 
     /**
@@ -65,7 +73,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        return view('store::edit');
+        return view("store::edit");
     }
 
     /**

@@ -1,11 +1,11 @@
 <x-crud::organisms.modal size="md" id="createCategory">
     <x-slot name="header">
-        <h5 class="modal-title">Add New Category</h5>
+        <h5 class="modal-title">{{ __('crud::messages.add') }} {{ __('store::messages.category') }}</h5>
     </x-slot>
-    <x-crud::molecules.form-control name="name" label="Category">
+    <x-crud::molecules.form-control name="name" label="{{ __('store::messages.category_name') }}">
         <x-crud::atoms.input wire:model="name" />
     </x-crud::molecules.form-control>
-    <x-crud::molecules.form-control name="image" label="Image">
+    <x-crud::molecules.form-control name="image" label="{{ __('store::messages.category_image') }}">
         <div wire:ignore x-data="{ image: @entangle('image') }" x-init="() => {
             FilePond.registerPlugin(
                 FilePondPluginImagePreview,
@@ -48,7 +48,7 @@
                 if (value !== null) {
                     if (!value.includes('livewire-file:') && value !== null) {
                         file.files = [{
-                            source: '/storage/store/categories/' + value,
+                            source: '/storage/' + value,
                             options: {
                                 type: 'local'
                             }
@@ -64,7 +64,7 @@
     </x-crud::molecules.form-control>
     <x-slot name="footer">
         <x-crud::atoms.button size="sm" color="secondary" data-bs-dismiss="modal" aria-label="btn-close"
-            text="Cancel" />
-        <x-crud::atoms.button size="sm" color="primary" text="Create" wire:click.prevent="store" />
+            text="{{ __('crud::messages.cancel') }}" />
+        <x-crud::atoms.button size="sm" color="primary" text="{{ __('crud::messages.add') }}" wire:click.prevent="store" />
     </x-slot>
 </x-crud::organisms.modal>

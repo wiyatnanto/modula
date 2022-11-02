@@ -16,7 +16,7 @@
                                 size: 'small',
                                 centerVertical: true,
                                 message: `
-                                    Are you sure delete this items?
+                                    Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
                                 `,
                                 buttons: {
                                     ok:{
@@ -85,7 +85,7 @@
                                                     size: 'small',
                                                     centerVertical: true,
                                                     message: `
-                                                        Are you sure delete this items?
+                                                        Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
                                                     `,
                                                     buttons: {
                                                         ok:{

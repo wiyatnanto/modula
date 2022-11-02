@@ -22,9 +22,9 @@ class AuthController extends Controller
     public function login()
     {
         if (Auth::check()) {
-            return redirect('dashboard'); 
+            return redirect("dashboard");
         }
-        return view('auth::login');
+        return view("auth::login");
     }
 
     /**
@@ -34,9 +34,9 @@ class AuthController extends Controller
     public function register()
     {
         if (Auth::check()) {
-            return redirect('dashboard'); 
+            return redirect("dashboard");
         }
-        return view('auth::register');
+        return view("auth::register");
     }
 
     /**
@@ -46,27 +46,29 @@ class AuthController extends Controller
     public function recover()
     {
         if (Auth::check()) {
-            return redirect('dashboard'); 
+            return redirect("dashboard");
         }
-        return view('auth::recover');
+        return view("auth::recover");
     }
 
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver("google")->redirect();
     }
-
 
     public function handleGoogleCallback()
     {
-        $googleUser = Socialite::driver('google')->user();
-        $user = User::where('email', $googleUser->email)->first();
+        $googleUser = Socialite::driver("google")->user();
+        $user = User::where("email", $googleUser->email)->first();
         // dd($googleUser);
         if ($user) {
-            Storage::disk('local')->put('public/avatar/'.$googleUser->id.'.png', file_get_contents($googleUser->avatar));
+            Storage::disk("local")->put(
+                "public/avatar/" . $googleUser->id . ".png",
+                file_get_contents($googleUser->avatar)
+            );
             $user->update([
-                'name' => $googleUser->name,
-                'avatar' => $googleUser->id.'.png'
+                "name" => $googleUser->name,
+                "avatar" => $googleUser->id . ".png",
             ]);
         } else {
             // Storage::disk('local')->put('public/avatar/'.$googleUser->id.'.png', file_get_contents($googleUser->avatar));
@@ -76,69 +78,81 @@ class AuthController extends Controller
             //     'avatar' => $googleUser->id.'.png',
             //     'password' => '-'
             // ]);
-            return redirect()->route('register')->with('message', 'Email yang digunakan belum terdaftar');
+            return redirect()
+                ->route("register")
+                ->with("message", "Email yang digunakan belum terdaftar");
         }
-    
+
         Auth::login($user);
-            
-        return redirect('dashboard')->with('message', 'You have Successfully loggedin with Google account');
+
+        return redirect("dashboard")->with(
+            "message",
+            "You have Successfully loggedin with Google account"
+        );
     }
     public function postLogin(Request $request)
     {
-        
         $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'password' => 'required',
+            "email" => "required",
+            "password" => "required",
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('login')
-                        ->withErrors($validator)
-                        ->withInput()
-                        ->with('error','Email and password field is required');
+            return redirect()
+                ->route("login")
+                ->withErrors($validator)
+                ->withInput()
+                ->with("error", "Email and password field is required");
         }
-        $credentials = $request->only('email', 'password');
-        if(request()->ajax()){
+        $credentials = $request->only("email", "password");
+        if (request()->ajax()) {
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
-                $success['token'] =  $user->createToken('ROG')->plainTextToken; 
-                $success['name'] =  $user->name;
+                $success["token"] = $user->createToken("ROG")->plainTextToken;
+                $success["name"] = $user->name;
                 $response = [
-                    'success' => true,
-                    'data'    => $success,
-                    'message' => 'User login successfully.',
+                    "success" => true,
+                    "data" => $success,
+                    "message" => "User login successfully.",
                 ];
                 return response()->json($response);
             }
         }
-           
+
         if (Auth::attempt($credentials)) {
-            return redirect('dashboard')->with('success', 'You have Successfully loggedin');
+            return redirect("dashboard")->with(
+                "success",
+                __("auth::messages.login_success")
+            );
         }
-        return redirect()->route('login')->with('error','Oppes! You have entered invalid credentials');
+        return redirect()
+            ->route("login")
+            ->with("error", __("auth::messages.login_invalid"));
     }
 
     public function postRegister(Request $request)
-    {   
-        
+    {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required'
+            "name" => "required",
+            "email" => "required",
+            "password" => "required",
         ]);
 
         // dd($request->input('name'));
- 
+
         $user = User::create([
-            'name' => trim($request->input('name')),
-            'email' => strtolower($request->input('email')),
-            'avatar' => '-',
-            'password' => Hash::make($request->input('password')),
+            "name" => trim($request->input("name")),
+            "email" => strtolower($request->input("email")),
+            "avatar" => "-",
+            "password" => Hash::make($request->input("password")),
         ]);
 
         auth()->login($user);
 
-        return redirect('dashboard')->with('success', 'You have Successfully registered with Google account');
+        return redirect("dashboard")->with(
+            "success",
+            "You have Successfully registered with Google account"
+        );
     }
 
     public function logout()
@@ -146,6 +160,6 @@ class AuthController extends Controller
         Session::flush();
         Auth::logout();
 
-        return redirect('');
+        return redirect("");
     }
 }

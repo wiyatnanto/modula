@@ -148,22 +148,21 @@
                                                 closeButton: false,
                                                 size: 'small',
                                                 centerVertical: true,
-                                                message: `
-                                                    Are you sure delete this items?
-                                                `,
+                                                title: `Hapus Item?`,
+                                                message: `Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini?`,
                                                 buttons: {
-                                                    ok:{
-                                                        label: 'Yes',
-                                                        className: 'btn-sm btn-danger',
-                                                        callback: function(){
-                                                           window.livewire.emit('bulkDelete')         
-                                                        }
-                                                    },
                                                     no:{
-                                                        label: 'Cancel',
+                                                        label: 'Batal',
                                                         className: 'btn-sm btn-secondary',
                                                         callback: function(){
                                                                             
+                                                        }
+                                                    },
+                                                    ok:{
+                                                        label: 'Ya, Hapus',
+                                                        className: 'btn-sm btn-danger',
+                                                        callback: function(){
+                                                           window.livewire.emit('bulkDelete')         
                                                         }
                                                     }
                                                 }     
@@ -268,7 +267,7 @@
                                                                 size: 'small',
                                                                 centerVertical: true,
                                                                 message: `
-                                                                    Are you sure delete this items?
+                                                                    Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
                                                                 `,
                                                                 buttons: {
                                                                     ok:{

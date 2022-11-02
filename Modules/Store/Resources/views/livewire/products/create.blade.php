@@ -13,7 +13,7 @@
             <div class="col-md-8">
                 <div class="row row-sm mt-2">
                     @for ($i = 1; $i <= 5; $i++)
-                        <div class="col-6 col-sm">
+                        <div class="col-6 col-sm @error('images.' . $i) is-invalid @enderror">
                             <div class="mg-b-30">
                                 <div wire:ignore x-data x-init="() => {
                                     FilePond.registerPlugin(
@@ -788,8 +788,37 @@
                 </div>
                 <div>
                     @if ($hasVarian)
-                        <button wire:click="$set('hasVarian', false)" class="btn btn-xs btn-danger btn-icon-text">
-                            <i class="far fa-times btn-icon-prepend"></i> Remove Varian</button>
+                        <button x-data
+                            x-on:click="() => {
+                                bootbox.dialog({
+                                    closeButton: false,
+                                    size: 'small',
+                                    centerVertical: true,
+                                    title: `Hapus tipe varian?`,
+                                    message: `
+                                        Jika dihapus, data varian yang telah dimasukkan akan berubah dan tipe varian akan hilang dari pilihan varian
+                                    `,
+                                    buttons: {
+                                        no:{
+                                            label: 'Batal',
+                                            className: 'btn-sm btn-secondary',
+                                            callback: function(){
+                                                        
+                                            }
+                                        },
+                                        ok:{
+                                            label: 'Ya, Hapus',
+                                            className: 'btn-sm btn-danger',
+                                            callback: function(){
+                                                @this.set('hasVarian', false)              
+                                            }
+                                        }
+                                    }     
+                                });
+                            }
+                            "
+                            class="btn btn-xs btn-danger btn-icon-text">
+                            <i class="far fa-times btn-icon-prepend"></i> Hapus Varian</button>
                     @else
                         <button wire:click="$set('hasVarian', true)" class="btn btn-xs btn-primary btn-icon-text">
                             <i class="far fa-plus btn-icon-prepend"></i> Varian</button>
@@ -805,17 +834,46 @@
                                 <tr>
                                     <td width="300" class="pe-3">
                                         <label>Tipe Varian {{ $key + 1 }}</label>
-                                        <div wire:ignore class="mb-3" x-data x-init="() => {
-                                            let select = $($refs.select)
-                                            select.select2({
-                                                tags: true,
-                                                maximumSelectionLength: 2,
-                                                placeholder: 'Pilih Varian'
-                                            });
-                                            select.on('select2:select', function(e) {
-                                                Livewire.emit('selectAttributes', {{ $key }}, e.target.value)
-                                            })
-                                        }">
+                                        <div wire:ignore class="mb-3" x-data="{
+                                            variants: @entangle('variants'),
+                                            variantOptions: @entangle('variantOptions'),
+                                            disabled: true,
+                                        }"
+                                            x-init="() => {
+                                                let select = $($refs.select)
+                                                select.select2({
+                                                    tags: true,
+                                                    maximumSelectionLength: 2,
+                                                    placeholder: 'Pilih Varian'
+                                                });
+                                                select.on('select2:select', function(e) {
+                                                    if (variants[{{ $key }}]['name'] !== null) {
+                                                        bootbox.dialog({
+                                                            closeButton: false,
+                                                            size: 'small',
+                                                            centerVertical: true,
+                                                            title: `Ubah Tipe Varian?`,
+                                                            message: `Jika diubah,data varian yang telah dimasukkan akan terhapus`,
+                                                            buttons: {
+                                                                no: {
+                                                                    label: 'Batal',
+                                                                    className: 'btn-sm btn-secondary'
+                                                                },
+                                                                ok: {
+                                                                    label: 'Ya, Ubah',
+                                                                    className: 'btn-sm btn-primary',
+                                                                    callback: function() {
+                                                                        @this.emit('selectAttributes', {{ $key }}, e.target.value)
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    } else {
+                                                        @this.emit('selectAttributes', {{ $key }}, e.target.value)
+                                                    }
+                                                    //Livewire.emit('selectAttributes', {{ $key }}, e.target.value)
+                                                })
+                                            }">
                                             <select x-ref="select" class="form-select">
                                                 @foreach ($variantOptions as $variant)
                                                     <option></option>
@@ -1067,171 +1125,167 @@
             @endif
         </div>
     </x-crud::molecules.card>
-    <x-crud::molecules.card class="mt-3">
-        <h5 class="mb-4">Harga</h5>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <p>Minimum Pemesanan</p>
-                <p>Atur jumlah minimum yang harus dibeli untuk
-                    produk ini.</p>
-            </div>
-            <div class="col-md-8">
-                <input wire:model="minOrder" type="number" class="form-control" placeholder="Masukkan Minimum" />
-                @error('minOrder')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <p class="mb-2"><strong>Harga Satuan</strong>
-                    <span class="badge bg-light text-dark">wajib</span>
-                </p>
-            </div>
-            <div class="col-md-8">
-                <div x-data="{ selected: '' }" x-init="price = $($refs.price).maskMoney({ thousands: '.', precision: 0 });
-                $($refs.price).on('change.maskMoney', function() {
-                    @this.set('price', $($refs.price).val());
-                });">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Rp.</span>
+    @if (!$hasVarian)
+        <x-crud::molecules.card class="mt-3">
+            <h5 class="mb-4">Harga</h5>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <p class="mb-2"><strong>Harga Satuan</strong>
+                        <span class="badge bg-light text-dark">wajib</span>
+                    </p>
+                </div>
+                <div class="col-md-8">
+                    <div x-data="{ selected: '' }" x-init="price = $($refs.price).maskMoney({ thousands: '.', precision: 0 });
+                    $($refs.price).on('change.maskMoney', function() {
+                        @this.set('price', $($refs.price).val());
+                    });">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp.</span>
+                            </div>
+                            <input type="text" x-ref="price"
+                                class="form-control @error('price') is-invalid @enderror" placeholder="Harga">
+                            @error('price')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
                         </div>
-                        <input type="text" x-ref="price"
-                            class="form-control @error('price') is-invalid @enderror" placeholder="Harga">
-                        @error('price')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <p><strong>Potongan Harga (Diskon)</strong></p>
-            </div>
-            <div class="col-md-8">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Rp.</span>
+            <div class="row">
+                <div class="col-md-4">
+                    <p><strong>Potongan Harga (Diskon) {{ $sale_price }}</strong></p>
+                </div>
+                <div class="col-md-8">
+                    <div x-data="{ sale_price: @entangle('sale_price') }" x-init="() => {
+                        const sale_price = $($refs.sale_price).maskMoney({ thousands: '.', precision: 0 });
+                        $($refs.sale_price).on('change.maskMoney', function() {
+                            @this.set('sale_price', $($refs.sale_price).val());
+                        });
+                        $watch('sale_price', function(value) {
+                            @this.set('sale_price', value);
+                        })
+                    }">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp.</span>
+                            </div>
+                            <input type="text" x-ref="sale_price" wire:model="sale_price"
+                                class="form-control @error('sale_price') is-invalid @enderror" placeholder="Harga">
+                            @error('sale_price')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
-                    <input type="text" class="form-control" placeholder="0" aria-label="Rp">
                 </div>
             </div>
-        </div>
-    </x-crud::molecules.card>
-    <x-crud::molecules.card class="mt-3">
-        <h5 class="mb-4">Pengeloaan Produk</h5>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <p class="mb-2"><strong>Status Produk</strong></p>
+        </x-crud::molecules.card>
+        <x-crud::molecules.card class="mt-3">
+            <h5 class="mb-4">Pengeloaan Produk</h5>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <p class="mb-2"><strong>Status Produk</strong></p>
+                </div>
+                <div class="col-md-8">
+                    <x-crud::atoms.switch type="checkbox" checked disabled />
+                </div>
             </div>
-            <div class="col-md-8">
-                <x-crud::atoms.switch type="checkbox" checked disabled />
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <p><strong>Stok Produk </strong><span class="badge bg-light text-dark">wajib</span></p>
+                </div>
+                <div class="col-md-8">
+                    <x-crud::atoms.input type="number" placeholder="Stock" wire:model="quantity" />
+                </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <p><strong>Stok Produk </strong><span class="badge bg-light text-dark">wajib</span></p>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <p class="mb-2"><strong>SKU (Stock Keeping Unit)</strong></p>
+                    <p>Gunakan kode unik SKU jika kamu ingin menandai produkmu.</p>
+                </div>
+                <div class="col-md-8">
+                    <x-crud::atoms.input placeholder="SKU" wire:model="sku" />
+                </div>
             </div>
-            <div class="col-md-8">
-                <input wire:model="quantity" type="number"
-                    class="form-control @error('quantity') is-invalid @endif"
-                    placeholder="Masukkan Jumlah Stok">
+        </x-crud::molecules.card>
+        <x-crud::molecules.card class="mt-3">
+            <h5 class="mb-4">Berat dan Pengiriman Produk</h5>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <p class="mb-2"><strong>Berat Produk</strong></p>
+                    <p>Masukkan berat dengan menimbang produk
+                        <strong>setelah dikemas</strong>
+                    </p>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div wire:ignore>
+                                <div x-data="{ selected: '' }" x-init="select = $($refs.select).select2({
+                                    placeholder: 'Berat Produk'
+                                });
+                                select.on('select2:select', function(e) {
+                                    selected = event.target.value;
+                                    @this.set('weightType', e.target.value);
+                                });
+                                select.val('gr').trigger('change');
+                                @this.set('weightType', 'gr');">
+                                    <select x-ref="select" class="wd-100p" data-placeholder="Berat Produk">
+                                        <option value="gr">Gram (gr)</option>
+                                        <option value="kg">Kilogram (kg)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <x-crud::atoms.input placeholder="Berat Produk" wire:model="weight" />
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <p class="mb-2"><strong>SKU (Stock Keeping Unit)</strong></p>
-                <p>Gunakan kode unik SKU jika kamu ingin menandai produkmu.</strong>
-                </p>
-            </div>
-            <div class="col-md-8">
-                <input wire:model="sku" type="text" class="mg-t-20 form-control @error('sku') is-invalid @endif"
-                    placeholder="Masukkan SKU">
-            </div>
-        </div>
-    </x-crud::molecules.card>
-    <x-crud::molecules.card class="mt-3">
-        <h5 class="mb-4">Berat dan Pengiriman Produk</h5>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <p class="mb-2"><strong>Berat Produk</strong></p>
-                <p>Masukkan berat dengan menimbang produk
-                    <strong>setelah dikemas</strong>
-                </p>
-            </div>
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div wire:ignore>
-                            <div x-data="{ selected: '' }" x-init="select = $($refs.select).select2({
-                                placeholder: 'Berat Produk'
-                            });
-                            select.on('select2:select', function(e) {
-                                selected = event.target.value;
-                                @this.set('weightType', e.target.value);
-                            });
-                            select.val('gr').trigger('change');
-                            @this.set('weightType', 'gr');">
-                                <select x-ref="select" class="wd-100p" data-placeholder="Berat Produk">
-                                    <option value="gr">Gram (gr)</option>
-                                    <option value="kg">Kilogram (kg)</option>
-                                </select>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <p><strong>Ukuran Produk </strong><span class="badge bg-light text-dark">wajib</span></p>
+                    <p>Masukkan ukuran produk setelah dikemas untuk menghitung berat volume</p>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="input-group mg-b-10">
+                                <x-crud::atoms.input placeholder="Panjang Produk" wire:model="length" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="aria-panjang">cm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="input-group mg-b-10">
+                                <x-crud::atoms.input placeholder="Lebar Produk" wire:model="width" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="aria-lebar">cm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="input-group mg-b-10">
+                                <x-crud::atoms.input placeholder="Tinggi Produk" wire:model="height" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="aria-tinggi">cm</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-9">
-                        <input wire:model="weight" type="text" class="form-control"
-                            placeholder="Masukkan Berat" />
-                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <p><strong>Ukuran Produk </strong><span class="badge bg-light text-dark">wajib</span></p>
-                <p>Masukkan ukuran produk setelah dikemas untuk menghitung berat volume</p>
-            </div>
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="input-group mg-b-10">
-                            <input wire:model="length" type="text" class="form-control @error('length') is-invalid @endif"
-                    placeholder="Panjang" aria-describedby="aria-panjang">
-                <div class="input-group-append">
-                    <span class="input-group-text" id="aria-panjang">cm</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="input-group mg-b-10">
-                <input wire:model="width" type="text" class="form-control" placeholder="Lebar"
-                    aria-describedby="aria-lebar" />
-                <div class="input-group-append">
-                    <span class="input-group-text" id="aria-lebar">cm</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="input-group mg-b-10">
-                <input wire:model="height" type="text" class="form-control" placeholder="Tinggi"
-                    aria-describedby="aria-tinggi">
-                <div class="input-group-append">
-                    <span class="input-group-text" id="aria-tinggi">cm</span>
-                </div>
-            </div>
-        </div>
-    </x-crud::molecules.card>
+        </x-crud::molecules.card>
+    @endif
     <div class="d-flex justify-content-end mt-3">
         <a href="{{ url('store/products') }}" type="button" class="btn btn-sm btn-light me-2">Batal</a>
-        <button wire:click.prevent="storeAndNew()" type="button" class="btn btn-sm btn-secondary me-2">Simpan &
-            Tambah Baru</button>
-        <button wire:click.prevent="store()" type="button" class="btn btn-sm btn-primary">Simpan</button>
+        <button wire:click.prevent="store" type="button" class="btn btn-sm btn-primary me-2">Simpan</button>
+        <button wire:click.prevent="store" type="button" class="btn btn-sm btn-primary">Simpan dan
+            Tutup</button>
     </div>
 </div>
-</div>
-
 @push('style')
     <link rel="stylesheet" href="{{ asset('css/store.css') }}" />
     <style>
@@ -1366,6 +1420,10 @@
             position: relative;
             top: 110px;
             width: 100%;
+        }
+
+        .filepond--root[data-style-panel-layout~="integrated"] {
+            border: 1px solid #e1e5ed !important;
         }
     </style>
 @endpush

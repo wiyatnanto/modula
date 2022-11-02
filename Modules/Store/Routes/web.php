@@ -18,6 +18,7 @@ use Modules\Store\Http\Livewire\Categories\Table as CategoryTable;
 use Modules\Store\Http\Livewire\StoreFronts\Table as StoreFrontTable;
 use Modules\Store\Http\Livewire\StoreFronts\Update as StoreFrontUpdate;
 use Modules\Store\Http\Livewire\Branches\Table as BranchTable;
+use Modules\Store\Http\Livewire\PromoBanners\Table as PromoBannerTable;
 
 
 
@@ -30,4 +31,6 @@ Route::prefix('store')->middleware('auth')->group(function() {
     Route::get('/storefronts', StoreFrontTable::class)->name('store.storefront');
     Route::get('/storefronts/{id}/{slug}', StoreFrontUpdate::class)->name('store.storefront.update');
     Route::get('/branches', BranchTable::class)->name('store.branch');
+    Route::get('/promo-banners', PromoBannerTable::class)->name('store.promobanner');
+
 });

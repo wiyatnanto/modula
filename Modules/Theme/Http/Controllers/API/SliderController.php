@@ -20,6 +20,7 @@ class SliderController extends Controller
     public function index()
     {
         $sliders = QueryBuilder::for(Slider::class)
+            ->allowedSorts(["sort_order"])
             ->allowedFilters([AllowedFilter::exact("slug"), "name"])
             ->allowedIncludes(["items"]);
 

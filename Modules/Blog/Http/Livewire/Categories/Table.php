@@ -14,37 +14,53 @@ class Table extends Component
 
     public $categoryId, $name;
 
-    public $search = '';
+    public $search = "";
 
     public $selectAll = false;
     public $selected = [];
 
+    protected $paginationTheme = "bootstrap";
 
-    protected $paginationTheme = 'bootstrap';
+    protected $listeners = ["clear", "delete", "bulkDelete"];
 
-    protected $listeners = [
-        'clear',
-        'delete',
-        'bulkDelete'
-    ];
-
-    public function clear() {
+    public function clear()
+    {
+        $this->reset();
         $this->resetErrorBag();
         $this->resetValidation();
     }
 
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $categories = Category::where(
+                "name",
+                "ILIKE",
+                "%" . $this->search . "%"
+            )
+                ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
+                ->fastPaginate(10);
+            foreach ($categories as $item) {
+                $this->selected[$item->id] = true;
+            }
+        } else {
+            $this->selected = [];
+        }
+    }
+
     public function store()
-    {   
+    {
         $this->validate([
-            'name'=>'required|string|max:191'
+            "name" => "required|string|max:191",
         ]);
 
         $category = new Category();
         $category->name = $this->name;
         $category->save();
 
-        $this->emit('toast', ['success', 'Category has been created']);
-        $this->dispatchBrowserEvent('closeModal');
+        $this->emit("toast", ["success", "Category has been created"]);
+        $this->dispatchBrowserEvent("closeModal");
+        $this->clear();
     }
 
     public function edit($id)
@@ -59,16 +75,44 @@ class Table extends Component
         $category = Category::find($this->categoryId);
         $category->name = $this->name;
         $category->update();
-        $this->emit('toast', ['success', 'Category has been updated']);
-        $this->dispatchBrowserEvent('closeModal');
+        $this->emit("toast", ["success", "Category has been updated"]);
+        $this->dispatchBrowserEvent("closeModal");
+        $this->clear();
+    }
+
+    public function delete($id)
+    {
+        $category = Category::find($id)->first();
+        if ($category->delete()) {
+            $this->emit("toast", ["success", "Category has been deleted"]);
+            $this->dispatchBrowserEvent("closeModal");
+            $this->clear();
+        }
+    }
+
+    public function bulkDelete()
+    {
+        $selected = \Arr::where($this->selected, function ($value, $key) {
+            return $value == true;
+        });
+        $categories = Category::whereIn("id", array_keys($selected))->get();
+        if ($categories) {
+            $categories->each->delete();
+            $this->emit("toast", ["success", "Category has been deleted"]);
+            $this->clear();
+        }
     }
 
     public function render()
     {
-        return view('blog::livewire.categories.table',[
-            'categories' => Category::where('name','ILIKE','%'.$this->search.'%')
-            ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-            ->fastPaginate(10)
-        ])->extends('theme::backend.layouts.master');
+        return view("blog::livewire.categories.table", [
+            "categories" => Category::where(
+                "name",
+                "ILIKE",
+                "%" . $this->search . "%"
+            )
+                ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
+                ->fastPaginate(10),
+        ])->extends("theme::backend.layouts.master");
     }
 }

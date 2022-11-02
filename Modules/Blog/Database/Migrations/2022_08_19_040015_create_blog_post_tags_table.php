@@ -13,16 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blog_post_has_tags', function (Blueprint $table) {
+        Schema::create('blog_post_tags', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tag_id');
+            $table->foreign('tag_id')->references('id')->on('blog_tags');
             $table->unsignedBigInteger('post_id');
-            $table->string('post_type',100);
-            $table->timestamps();
-            $table->softDeletes();
-
-            $table->index('tag_id');
-            $table->foreign('tag_id')->references('id')->on('blog_tags')->onDelete('RESTRICT')->onUpdate('RESTRICT');
+            $table->foreign('post_id')->references('id')->on('blog_posts')->onDelete('cascade');
         });
     }
 
@@ -33,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('blog_post_has_tags');
+        Schema::dropIfExists('blog_post_tags');
     }
 };

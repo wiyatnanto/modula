@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 
 use Modules\Blog\Http\Controllers\API\PostController;
+use Modules\Blog\Http\Controllers\API\CategoryController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +23,5 @@ Route::middleware('auth:api')->get('/blog', function (Request $request) {
 
 Route::prefix('blog')->middleware('auth:api')->group( function () {
     Route::resource('posts', PostController::class);
+    Route::resource('categories', CategoryController::class);
 });

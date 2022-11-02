@@ -15,7 +15,7 @@ class Update extends Component
 
     public $search, $searchAllProducts;
     public $filterActive = 1;
-    
+
     public $slug;
     public $name;
     public $onAddProducts = false;
@@ -28,17 +28,13 @@ class Update extends Component
 
     protected $listeners = [
         '$refresh',
-        'reloadTable',
-        'deleteStoreFrontProduct'
+        "reloadTable",
+        "deleteStoreFrontProduct",
     ];
-
-    public function toggleSidebar(){
-        $this->minimize = $this->minimize ? false : true;
-    }
 
     public function mount($id)
     {
-        $storeFront = StoreFront::with('products')->findOrFail($id);
+        $storeFront = StoreFront::with("products")->findOrFail($id);
         $this->storeFrontId = $storeFront->id;
         $this->name = $storeFront->name;
         $this->slug = $storeFront->slug;
@@ -48,78 +44,119 @@ class Update extends Component
     {
         $storeFront = StoreFront::findOrFail($this->storeFrontId);
         $storeFront->name = $this->name;
-        $storeFront->save();
-        $this->emit('toast', ['success', 'Store Front has been updated']);
+        if ($storeFront->save()) {
+            $this->emit("toast", [
+                "success",
+                __("crud::messages.message_updated", [
+                    "item" => __("store::messages.storefront"),
+                ]),
+            ]);
+        }
     }
 
     public function reloadTable()
     {
-        $this->emit('toast', ['success', 'Store Front has been updated']);
+        $this->emit("toast", [
+            "success",
+            __("crud::messages.message_updated", [
+                "item" => __("store::messages.storefront"),
+            ]),
+        ]);
     }
 
     public function openProducts()
     {
-        $storeFront = StoreFront::with('products')->findOrFail($this->storeFrontId);
-        foreach($storeFront->products as $value)
-        {
+        $storeFront = StoreFront::with("products")->findOrFail(
+            $this->storeFrontId
+        );
+        foreach ($storeFront->products as $value) {
             $this->selectedProducts[$value->id] = true;
         }
     }
 
     public function updateStoreFrontProducts($closeModal = false)
     {
-        $selected = array_keys(\Arr::where($this->selectedProducts, function ($value, $key) {
-            return $value == true;
-        })); 
-        $storeFront = StoreFront::with('products')->findOrFail($this->storeFrontId);
-        $storeFrontProducts = $storeFront->products->pluck('id')->toArray();
+        $selected = array_keys(
+            \Arr::where($this->selectedProducts, function ($value, $key) {
+                return $value == true;
+            })
+        );
+        $storeFront = StoreFront::with("products")->findOrFail(
+            $this->storeFrontId
+        );
+        $storeFrontProducts = $storeFront->products->pluck("id")->toArray();
         foreach ($selected as $key => $productId) {
-            $updated[] = array('storefront_id' => $storeFront->id, 'product_id' => $productId);
+            $updated[] = [
+                "storefront_id" => $storeFront->id,
+                "product_id" => $productId,
+            ];
         }
-        if(isset($updated)){
+        if (isset($updated)) {
             $storeFront->products()->sync([]);
             $storeFront->products()->sync($updated);
-            $this->emitTo('store::store-front.update','reloadTable');
-            $this->emit('toast', ['success', 'Store Front has been updated']);
-            if($closeModal){
-                $this->dispatchBrowserEvent('closeModal');
+            $this->emitTo("store::store-front.update", "reloadTable");
+            $this->emit("toast", [
+                "success",
+                __("crud::messages.message_updated", [
+                    "item" => __("store::messages.storefront"),
+                ]),
+            ]);
+            if ($closeModal) {
+                $this->dispatchBrowserEvent("closeModal");
             }
         }
     }
 
     public function deleteStoreFrontProduct($productId)
     {
-        $storeFront = StoreFront::with('products')->findOrFail($this->storeFrontId);
-        $storeFrontProducts = $storeFront->products->pluck('id','id')->toArray();
+        $storeFront = StoreFront::with("products")->findOrFail(
+            $this->storeFrontId
+        );
+        $storeFrontProducts = $storeFront->products
+            ->pluck("id", "id")
+            ->toArray();
         unset($storeFrontProducts[$productId]);
         foreach ($storeFrontProducts as $key => $productId) {
-            $updated[] = array('storefront_id' => $storeFront->id, 'product_id' => $productId);
+            $updated[] = [
+                "storefront_id" => $storeFront->id,
+                "product_id" => $productId,
+            ];
         }
-        if(isset($updated)){
+        if (isset($updated)) {
             $storeFront->products()->sync([]);
             $storeFront->products()->sync($updated);
-            $this->emitTo('store::store-front.update','reloadTable');
-            $this->emit('toast', ['success', 'Store Front has been updated']);
+            $this->emitTo("store::store-front.update", "reloadTable");
+            $this->emit("toast", ["success", "Store Front has been updated"]);
         }
     }
 
     public function render()
     {
-        $storeFront = StoreFront::with(['products' => function($query){
-            if($this->search !== null){
-                $query->where('name','like', '%'.$this->search.'%');
-            }
-        }])->findOrFail($this->storeFrontId);
-        $products = $storeFront->products;
-
-
+        $storeFront = StoreFront::with([
+            "products" => function ($query) {
+                if ($this->search !== null) {
+                    $query->where("name", "like", "%" . $this->search . "%");
+                }
+            },
+        ])->findOrFail($this->storeFrontId);
+        $products = Product::whereIn("id", $storeFront->products->pluck("id"));
         // all products
-        $allProducts = Product::with(['brand', 'images', 'categories',
-            'storefronts', 'variants', 'variantValues', 'variantOptions.variantValues'
+        $allProducts = Product::with([
+            "brand",
+            "images",
+            "categories",
+            "storefronts",
+            "variants",
+            "variantValues",
+            "variantOptions.variantValues",
         ]);
 
         if ($this->searchAllProducts !== null) {
-            $allProducts->where('name', 'ILIKE', '%' . $this->searchAllProducts . '%');
+            $allProducts->where(
+                "name",
+                "ILIKE",
+                "%" . $this->searchAllProducts . "%"
+            );
         }
         // if(count($this->categoriesFilter) > 0){
         //     $allProducts->whereHas('categories', function ($query){
@@ -139,11 +176,13 @@ class Update extends Component
         // }
 
         // end
-        return view('store::livewire.storefronts.update',[
-            'storeFront' => $storeFront,
-            'products' => $products,
-            'allProducts' => $allProducts->fastPaginate(10)
-        ])
-        ->extends('theme::backend.layouts.master');
+        return view("store::livewire.storefronts.update", [
+            "storeFront" => $storeFront,
+            "products" => $storeFront
+                ->products()
+                ->paginate(10)
+                ->setPageName("other_page"),
+            "allProducts" => $allProducts->fastPaginate(10),
+        ])->extends("theme::backend.layouts.master");
     }
 }

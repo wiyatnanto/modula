@@ -20,24 +20,31 @@ class Table extends Component
     public $name;
     public $image;
     public $address;
-    public $coordinate = ["lang" => null, "Long" => null];
+    public $coordinate = ["lat" => null, "lng" => null];
 
     public $updateMode = false;
     public $minimize = false;
 
     public $listeners = [
-        'delete' => 'delete',
+        "delete" => "delete",
     ];
 
-    public function hydrate()
+    public function clear()
     {
-        $this->dispatchBrowserEvent('hydrateEvent');
+        $this->reset();
+        $this->resetErrorBag();
+        $this->resetValidation();
     }
 
-    public function toggleFilterActive()
-    {
-        $this->filterActive = $this->filterActive ? 0 : 1;
-    }
+    // public function hydrate()
+    // {
+    //     $this->dispatchBrowserEvent("hydrateEvent");
+    // }
+
+    // public function toggleFilterActive()
+    // {
+    //     $this->filterActive = $this->filterActive ? 0 : 1;
+    // }
 
     public function toggleActive($id)
     {
@@ -56,39 +63,35 @@ class Table extends Component
     {
         $this->resetValidation();
         $validatedData = $this->validate([
-            'name' => 'required',
-            'address' => 'required',
-            'coordinate.lat' => 'required',
-            'coordinate.long' => 'required',
-            'image' => 'required'
+            "name" => "required",
+            "address" => "required",
+            "coordinate.lat" => "required",
+            "coordinate.lng" => "required",
+            "image" => "required",
         ]);
         if ($validatedData) {
             $branch = new Branch();
             $branch->name = $this->name;
             $branch->address = $this->address;
-            $branch->coordinate = $this->coordinate;
+            $branch->coordinate = json_encode($this->coordinate);
+
             if (is_object($this->image)) {
-                $fileName = $this->image->store(
-                    'public/store/branches',
-                    'local'
-                );
+                $imageName = $this->image->hashName();
+                $this->image->store("public/store/branches", "local");
                 $images[] = new BranchImage([
-                    'branch_id' => $branch->id,
-                    'image' => str_replace(
-                        'public/store/branches/',
-                        '',
-                        $fileName
-                    ),
-                    'main_image' => 1,
-                    'order_image' => 0,
+                    "branch_id" => $branch->id,
+                    "image" => "store/branches/" . $imageName,
+                    "main_image" => 1,
+                    "order_image" => 0,
                 ]);
             }
             $branch->save();
             $branch->images()->saveMany($images);
 
-            if($branch){
-                $this->emit('toast', ['success', 'Branch has been created']);
-                $this->dispatchBrowserEvent('closeModal');
+            if ($branch) {
+                $this->emit("toast", ["success", "Branch has been created"]);
+                $this->dispatchBrowserEvent("closeModal");
+                $this->clear();
             }
         }
     }
@@ -99,7 +102,7 @@ class Table extends Component
         $this->branchId = $branch->id;
         $this->name = $branch->name;
         $this->address = $branch->address;
-        $this->coordinate = json_decode($branch->coordinate, TRUE);
+        $this->coordinate = json_decode($branch->coordinate, true);
         $this->image = $branch->images[0]->image;
         $this->updateMode = true;
     }
@@ -111,37 +114,32 @@ class Table extends Component
         $branch->address = $this->address;
         $branch->coordinate = $this->coordinate;
         if (is_object($this->image)) {
-            $fileName = $this->image->store(
-                'public/store/branches',
-                'local'
-            );
+            $imageName = $this->image->hashName();
+            $this->image->store("public/store/branches", "local");
             $images[] = new BranchImage([
-                'branch_id' => $branch->id,
-                'image' => str_replace(
-                    'public/store/branches/',
-                    '',
-                    $fileName
-                ),
-                'main_image' => 1,
-                'order_image' => 0,
+                "branch_id" => $branch->id,
+                "image" => "store/branches/" . $imageName,
+                "main_image" => 1,
+                "order_image" => 0,
             ]);
             $branch->images()->delete();
             $branch->images()->saveMany($images);
         }
-        if($branch->update()){
+        if ($branch->update()) {
             $this->updateMode = false;
             $this->resetInputFields();
-            $this->emit('toast', ['success', 'Branch has been updated']);
-            $this->dispatchBrowserEvent('closeModal');
+            $this->emit("toast", ["success", "Branch has been updated"]);
+            $this->dispatchBrowserEvent("closeModal");
+            $this->clear();
         }
     }
 
     public function delete($id)
     {
         $branch = Branch::findOrFail($id);
-        if($branch->delete()){
-            $this->emit('toast', ['success', 'Branch has been deleted']);
-            $this->dispatchBrowserEvent('closeModal');
+        if ($branch->delete()) {
+            $this->emit("toast", ["success", "Branch has been deleted"]);
+            $this->dispatchBrowserEvent("closeModal");
         }
     }
 
@@ -153,15 +151,16 @@ class Table extends Component
 
     public function render()
     {
-        $branches = Branch::with('images');
-        
+        $branches = Branch::with("images");
+
         if ($this->search !== null) {
             // $branches->where('name', 'like', '%' . $this->search . '%');
-            $branches->where('name', 'ILIKE', '%' . $this->search . '%');
+            $branches->where("name", "ILIKE", "%" . $this->search . "%");
         }
-        return view('store::livewire.branches.table', [
-            'branches' => $branches->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')->fastPaginate(10),
-        ])
-        ->extends('theme::backend.layouts.master');
+        return view("store::livewire.branches.table", [
+            "branches" => $branches
+                ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
+                ->fastPaginate(10),
+        ])->extends("theme::backend.layouts.master");
     }
 }

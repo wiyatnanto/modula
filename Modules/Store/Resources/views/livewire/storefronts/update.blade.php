@@ -1,55 +1,55 @@
 <div>
     <x-crud::molecules.breadcrumb :items="[
-        'Dashboard' => '/dashboard',
-        'Store' => '/store/products',
-        'Store Fronts' => '/store/storefronts/' . $storeFrontId . '/' . $slug,
+        __('store::messages.dashboard') => '/dashboard',
+        __('store::messages.products') => '/store/products',
+        __('store::messages.storefronts') => '/store/storefronts/' . $storeFrontId . '/' . $slug,
     ]" />
     <x-crud::molecules.card>
         <x-slot name="header">
             <div class="d-flex justify-content-end align-items-center">
                 <div class="me-auto">
-                    <h5 class="card-title mb-0">
-                        <a href="{{ url('store/storefronts') }}" class="text-dark">
-                            <x-crud::atoms.icon icon="long-arrow-left" />
-                        </a>
-                    </h5>
+                    <h5 class="card-title mb-0">{{ __('crud::messages.update') }}</h5>
                 </div>
-                {{-- <div class="me-2">
-                    <x-crud::atoms.button class="btn-icon-text" size="xs" color="secondary" wire:click="update">
-                        <x-crud::atoms.icon icon="long-arrow-left" /> Kembali ke Etalase
-                    </x-crud::atoms.button>
-                </div> --}}
+                <div class="me-2">
+                    <a href="{{ url('store/storefronts') }}" class="btn btn-xs btn-secondary">
+                        {{ __('crud::messages.cancel') }}
+                    </a>
+                </div>
                 <div>
-                    <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" wire:click="update">
-                        Update
+                    <x-crud::atoms.button size="xs" color="primary" wire:click="update">
+                        {{-- <x-crud::atoms.icon class="btn-icon-prepend" icon="save" /> --}}
+                        {{ __('crud::messages.update') }}
                     </x-crud::atoms.button>
                 </div>
             </div>
         </x-slot>
-        <x-crud::molecules.form-control name="name" label="Store Fronts">
+        <x-crud::molecules.form-control name="name" label="{{ __('store::messages.storefront_name') }}">
             <x-crud::atoms.input wire:model="name" />
-            <p class="mg-t-5 tx-13 text-muted">Nama etalase yang sesuai kategori produk lebih mudah
-                dicari pembeli</p>
+            <p class="mg-t-5 tx-13 text-muted">{{ __('store::messages.storefront_name_note') }}</p>
         </x-crud::molecules.form-control>
-        <div class="d-flex justify-content-start align-items-center mt-4">
+        <div class="d-flex justify-content-start align-items-center mt-2">
             <div>
                 <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" data-bs-toggle="modal"
                     data-bs-target="#addProducts" wire:click="openProducts">
-                    <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" /> Add Products
+                    <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" />
+                    {{ __('store::messages.product') }}
                 </x-crud::atoms.button>
             </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mt-2">
             <table class="table table-category">
                 <thead>
                     @if ($products)
                         <tr>
-                            <th scope="col" class="tx-bold">
-                                Kategori
+                            <th scope="col" class="lign-middle x-bold">
+                                {{ __('store::messages.product') }}
                             </th>
-                            <th scope="col" class="tx-bold">Merek</th>
-                            <th scope="col" class="tx-bold">Harga</th>
-                            <th scope="col" class="tx-bold"></th>
+                            <th scope="col" class="lign-middle tx-bold" width="100">
+                                {{ __('store::messages.brand') }}</th>
+                            <th scope="col" class="lign-middle tx-bold" width="100">
+                                {{ __('store::messages.price') }}</th>
+                            <th scope="col" class="lign-middle tx-bold" width="50">
+                                {{ __('crud::messages.action') }}</th>
                         </tr>
                     @endif
                 </thead>
@@ -60,11 +60,11 @@
                                 <td class="align-middle">
                                     <div class="media d-flex align-items-center">
                                         @if (count($product->images) > 0)
-                                            <img src="{{ asset('storage/store/products/' . $product->images->first()?->image) }}"
+                                            <img src="{{ asset('storage/' . $product->images->first()?->image) }}"
                                                 class="rounded me-2" alt="">
                                         @endif
                                         <div class="media-body">
-                                            <p class="product-title">
+                                            <p>
                                                 {{ $product->name }}
                                             </p>
                                         </div>
@@ -76,60 +76,47 @@
                                 <td class="align-middle">
                                     {{ number_format(round($product->price), 0, ',', '.') }}
                                 </td>
-                                <td class="align-middle">
+                                <td class="align-middle text-center">
                                     <a type="button" class="text-danger" x-data
                                         x-on:click="() => {
                                         bootbox.dialog({
                                             closeButton: false,
                                             size: 'small',
                                             centerVertical: true,
-                                            message: `
-                                                Are you sure delete this items?
-                                            `,
+                                            title: `{{ __('crud::messages.confirm_delete_title') }} {{ __('crud::messages.of') }} {{ __('store::messages.storefront') }}` ,
+                                            message: `{{ __('crud::messages.confirm_delete_body') }}`,
                                             buttons: {
+                                                no:{
+                                                    label: '{{ __('crud::messages.cancel') }}',
+                                                    className: 'btn-sm btn-secondary'
+                                                },
                                                 ok:{
-                                                    label: 'Yes',
+                                                    label: '{{ __('crud::messages.confirm_delete_yes') }}',
                                                     className: 'btn-sm btn-danger',
                                                     callback: function(){
-                                                        @this.emit('deleteStoreFrontProduct', {{ $product->id }})              
-                                                    }
-                                                },
-                                                no:{
-                                                    label: 'Cancel',
-                                                    className: 'btn-sm btn-secondary',
-                                                    callback: function(){
-                                                                        
+                                                        @this.emit('deleteStoreFrontProduct', {{ $product->id }})               
                                                     }
                                                 }
                                             }     
                                         });
                                     }">
-                                        <x-crud::atoms.icon icon="trash-alt" />
+                                        <x-crud::atoms.icon icon="minus-circle" />
                                     </a>
                                 </td>
                             </tr>
                         @endforeach
-                    @else
-                        <tr>
-                            <td colspan="4">
-                                <div class="ht-100p d-flex flex-column align-items-center justify-content-center">
-                                    <div class="wd-100p wd-sm-300 wd-lg-300 mg-b-15">
-                                        <img src="https://assets.tokopedia.net/assets-tokopedia-lite/v2/icarus/kratos/dadc0fe1.jpg"
-                                            class="img-fluid" alt="">
-                                        <h5 class="text-center tx-16 tx-medium">Oops, produk yang kamu cari
-                                            tidak ditemukan</h5>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
                     @endif
                 </tbody>
             </table>
         </div>
+        <div class="mt-3">
+            {{ $products->links('pagination::bootstrap-5-livewire') }}
+        </div>
     </x-crud::molecules.card>
     <x-crud::organisms.modal size="lg" id="addProducts">
         <x-slot name="header">
-            <h5 class="modal-title">Add Products</h5>
+            <h5 class="modal-title">{{ __('crud::messages.add') }}
+                {{ __('store::messages.product') }}</h5>
         </x-slot>
         <div class="d-flex justify-content-start align-items-center">
             <div>
@@ -143,12 +130,12 @@
                         <th scope="col" width="80">
                             {{ count($selectedProducts) > 0 ? count($selectedProducts) . ' Choices' : 'Choice' }}</th>
                         <th scope="col" class="align-middle tx-bold" wire:click.prevent="sortBy('name')">
-                            Produk
+                            {{ __('store::messages.product') }}
                             <x-crud::molecules.sorticon name="name" sortField="{{ $sortField }}"
                                 sortAsc="{{ $sortAsc }}" />
                         </th>
-                        <th scope="col" class="align-middle tx-bold">Merek</th>
-                        <th scope="col" class="align-middle tx-bold">Harga</th>
+                        <th scope="col" class="align-middle tx-bold">{{ __('store::messages.brand') }}</th>
+                        <th scope="col" class="align-middle tx-bold">{{ __('store::messages.price') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -162,15 +149,13 @@
                                     <div class="media d-flex align-items-center">
                                         @foreach ($product->images as $key_image => $image)
                                             @if (!$key_image)
-                                                <img src="{{ asset('storage/store/products/' . $image->image) }}"
-                                                    class="rounded me-2" alt="">
+                                                <img src="{{ asset('storage/' . $image->image) }}" class="rounded me-2"
+                                                    alt="">
                                             @endif
                                         @endforeach
                                         <div class="media-body">
-                                            <p class="product-title">
-                                                <a href="{{ asset('store/products/edit-product/' . $product->id) }}">
-                                                    {{ $product->name }}
-                                                </a>
+                                            <p>
+                                                {{ $product->name }}
                                             </p>
                                             <p>SKU: {{ $product->sku }}</p>
                                         </div>
@@ -186,22 +171,21 @@
                                 </td>
                             </tr>
                         @endforeach
-                    @else
-                        <tr class="mt-2">
-                            <td class="align-middle" colspan="8">
-                                Product not found
-                            </td>
-                        </tr>
                     @endif
                 </tbody>
             </table>
         </div>
+        <div class="mt-3">
+            {{ $allProducts->links('pagination::bootstrap-5-livewire') }}
+        </div>
         <x-slot name="footer">
             <x-crud::atoms.button size="sm" color="secondary" data-bs-dismiss="modal" aria-label="btn-close"
-                text="Close" />
-            <x-crud::atoms.button size="sm" color="primary" text="Add Products"
+                text="{{ __('crud::messages.cancel') }}" />
+            <x-crud::atoms.button size="sm" color="primary"
+                text="{{ __('crud::messages.add') }} {{ __('store::messages.products') }}"
                 wire:click.prevent="updateStoreFrontProducts" />
-            <x-crud::atoms.button size="sm" color="primary" text="Add Products & Close"
+            <x-crud::atoms.button size="sm" color="primary"
+                text="{{ __('crud::messages.add') }} {{ __('store::messages.products') }} & {{ __('crud::messages.close') }}"
                 wire:click.prevent="updateStoreFrontProducts(true)" />
         </x-slot>
     </x-crud::organisms.modal>

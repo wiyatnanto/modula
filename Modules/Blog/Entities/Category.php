@@ -11,21 +11,31 @@ class Category extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'blog_categories';
+    protected $table = "blog_categories";
 
     protected $fillable = [];
 
     public function setNameAttribute($value)
     {
-        $this->attributes['name'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
+        $this->attributes["name"] = $value;
+        $this->attributes["slug"] = Str::slug($value);
     }
 
-    public function SubCategories()
+    // public function SubCategories()
+    // {
+    //     return $this->hasMany(Category::class, "parent_id");
+    // }
+
+    public function posts()
     {
-        return $this->hasMany(Category::class,'parent_id');
+        return $this->belongsToMany(
+            Post::class,
+            "blog_post_categories",
+            "category_id",
+            "post_id"
+        );
     }
-    
+
     protected static function newFactory()
     {
         return \Modules\Blog\Database\factories\CategoryFactory::new();

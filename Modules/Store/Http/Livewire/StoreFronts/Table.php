@@ -13,7 +13,7 @@ use Modules\Store\Entities\StoreFront;
 class Table extends Component
 {
     use WithPagination, WithSorting;
-    
+
     public $search;
     public $name;
     public $filterActive = 0;
@@ -22,42 +22,59 @@ class Table extends Component
 
     public $minimize = false;
     public $listeners = [
-        'storeStoreFront' => 'storeStoreFront',
-        'delete' => 'delete'
+        "storeStoreFront" => "storeStoreFront",
+        "delete" => "delete",
     ];
 
-    public function hydrate()
+    public function clear()
     {
-        $this->dispatchBrowserEvent('hydrateEvent');
+        $this->reset();
+        $this->resetErrorBag();
+        $this->resetValidation();
     }
 
-    public function toggleFilterActive(){
-        $this->filterActive = $this->filterActive ? 0 : 1;
-    }
-
-    public function toggleActive($id){
+    public function toggleActive($id)
+    {
         $storeFronts = StoreFront::findOrFail($id);
         $storeFronts->status = $storeFronts->status ? 0 : 1;
         $storeFronts->update();
-        $this->emit('toast', ['success', 'Store Front has been updated']);
+        $this->emit("toast", [
+            "success",
+            __("crud::messages.message_updated", [
+                "item" => __("store::messages.storefront"),
+            ]),
+        ]);
     }
 
-    public function updateOrder($list){
-        foreach($list as $key => $val){
-            $storeFronts = StoreFront::findOrFail($val['value']);
-            $storeFronts->order_menu = $val['order'];
+    public function updateOrder($list)
+    {
+        foreach ($list as $key => $val) {
+            $storeFronts = StoreFront::findOrFail($val["value"]);
+            $storeFronts->order_menu = $val["order"];
             $storeFronts->update();
+            $this->emit("toast", [
+                "success",
+                __("crud::messages.message_updated", [
+                    "item" => __("store::messages.storefront"),
+                ]),
+            ]);
         }
     }
 
     public function store()
     {
-        $storeFront = new StoreFront;
+        $storeFront = new StoreFront();
         $storeFront->name = $this->name;
         $storeFront->order_menu = 0;
         $storeFront->save();
-        $this->emit('toast', ['success', 'Store Front has been created']);
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatchBrowserEvent("closeModal");
+        $this->clear();
+        $this->emit("toast", [
+            "success",
+            __("crud::messages.message_created", [
+                "item" => __("store::messages.storefront"),
+            ]),
+        ]);
     }
 
     public function edit($id)
@@ -70,22 +87,30 @@ class Table extends Component
     {
         $storeFront = StoreFront::findOrFail($id);
         $storeFront->products()->sync([]);
-        $storeFront->delete();
-        $this->emit('toast', ['success', 'Store Front has been deleted']);
+        if ($storeFront->delete()) {
+            $this->emit("toast", [
+                "success",
+                __("crud::messages.message_deleted", [
+                    "item" => __("store::messages.storefront"),
+                ]),
+            ]);
+        }
     }
 
     public function render()
     {
-        $storeFronts = StoreFront::with('products.images')->orderBy('order_menu', 'asc');
-        if($this->filterActive){
-            $storeFronts->where('status', $this->filterActive);
+        $storeFronts = StoreFront::with("products.images")->orderBy(
+            "order_menu",
+            "asc"
+        );
+        if ($this->filterActive) {
+            $storeFronts->where("status", $this->filterActive);
         }
         if ($this->search !== null) {
-            $storeFronts->where('name', 'like', '%' . $this->search . '%');
+            $storeFronts->where("name", "like", "%" . $this->search . "%");
         }
-        return view('store::livewire.storefronts.table',[
-            'storeFronts' => $storeFronts->fastPaginate(10)
-        ])
-        ->extends('theme::backend.layouts.master');
+        return view("store::livewire.storefronts.table", [
+            "storeFronts" => $storeFronts->fastPaginate(10),
+        ])->extends("theme::backend.layouts.master");
     }
 }

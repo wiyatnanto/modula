@@ -30,12 +30,13 @@ class Update extends Component
     public $sale_price;
     public $minOrder = 1;
     public $weightType;
-    public $weight = '10';
-    public $length = '10';
-    public $width = '10';
-    public $height = '10';
+    public $weight = "10";
+    public $length = "10";
+    public $width = "10";
+    public $height = "10";
     public $brand;
     public $sku;
+    public $status;
 
     public $bulkSelectVariant = false;
 
@@ -54,21 +55,23 @@ class Update extends Component
     public $imageRight, $imageFront, $imageLeft;
 
     public $listeners = [
-        'removeImage' => 'removeImage',
-        'selectAttributes' => 'selectAttributes',
-        'selectAttributeValues' => 'selectAttributeValues',
+        "removeImage" => "removeImage",
+        "selectAttributes" => "selectAttributes",
+        "selectAttributeValues" => "selectAttributeValues",
+        "removeVarian" => "removeVarian",
+        "addVarian" => "addVarian",
     ];
 
     public function mount($id)
     {
         $product = Product::with([
-            'brand',
-            'images',
-            'categories',
-            'storefronts',
-            'variants',
-            'variantOptions',
-            'variantValues',
+            "brand",
+            "images",
+            "categories",
+            "storefronts",
+            "variants",
+            "variantOptions",
+            "variantValues",
         ])->findOrFail($id);
 
         $this->product_id = $id;
@@ -80,18 +83,22 @@ class Update extends Component
                 ? $product->categories->first()->id
                 : 0;
         if (count($product->storefronts)) {
-            $this->storefront = $product->storefronts->pluck('id')->toArray();
+            $this->storefront = $product->storefronts->pluck("id")->toArray();
         }
         $this->description = $product->description;
+
         $this->quantity = $product->quantity;
         $this->minOrder = $product->min_order;
-        $this->price = number_format(round($product->price), 0, ',', '.');
-        $this->sale_price = number_format(
-            round($product->sale_price),
-            0,
-            ',',
-            '.'
-        );
+        $this->price =
+            $product->price !== null
+                ? number_format(round($product->price), 0, ",", ".")
+                : $product->price;
+        $this->sale_price =
+            $product->sale_price !== null
+                ? number_format(round($product->sale_price), 0, ",", ".")
+                : $product->sale_price;
+
+        $this->status = $product->status;
         $this->weight = $product->weight;
         $this->length = $product->length;
         $this->width = $product->width;
@@ -105,9 +112,9 @@ class Update extends Component
 
         foreach (VariantOption::get() as $variantOption) {
             $this->variantOptions[] = [
-                'type' => $variantOption->name,
-                'variants' => $variantOption->variantValues
-                    ->pluck('value')
+                "type" => $variantOption->name,
+                "variants" => $variantOption->variantValues
+                    ->pluck("value")
                     ->toArray(),
             ];
         }
@@ -117,10 +124,10 @@ class Update extends Component
             $variants = [];
             foreach ($product->variantOptions as $index => $option) {
                 $variants[] = [
-                    'name' => $option->name,
-                    'values' => collect($product->variantValues)
-                        ->where('variant_id', $option->id)
-                        ->pluck('value'),
+                    "name" => $option->name,
+                    "values" => collect($product->variantValues)
+                        ->where("variant_id", $option->id)
+                        ->pluck("value"),
                 ];
             }
             $this->variants = $variants;
@@ -130,7 +137,7 @@ class Update extends Component
 
     public function updatedVariantOptions()
     {
-        dd('asdasdas');
+        dd("asdasdas");
     }
 
     public function removeImage($key)
@@ -140,30 +147,30 @@ class Update extends Component
 
     public function updatedImageRight($image)
     {
-        $this->image_config_json['image_right'][
-            'image_preview'
+        $this->image_config_json["image_right"][
+            "image_preview"
         ] = $image->temporaryUrl();
-        $this->dispatchBrowserEvent('updateImageRight', $image->temporaryUrl());
+        $this->dispatchBrowserEvent("updateImageRight", $image->temporaryUrl());
     }
 
     public function updatedImageFront($image)
     {
-        $this->image_config_json['image_front'][
-            'image_preview'
+        $this->image_config_json["image_front"][
+            "image_preview"
         ] = $image->temporaryUrl();
-        $this->dispatchBrowserEvent('updateImageFront', $image->temporaryUrl());
+        $this->dispatchBrowserEvent("updateImageFront", $image->temporaryUrl());
         $this->dispatchBrowserEvent(
-            'updateImagePreview',
+            "updateImagePreview",
             $image->temporaryUrl()
         );
     }
 
     public function updatedImageLeft($image)
     {
-        $this->image_config_json['image_left'][
-            'image_preview'
+        $this->image_config_json["image_left"][
+            "image_preview"
         ] = $image->temporaryUrl();
-        $this->dispatchBrowserEvent('updateImageLeft', $image->temporaryUrl());
+        $this->dispatchBrowserEvent("updateImageLeft", $image->temporaryUrl());
     }
 
     public function updatedBulkSelectVariant()
@@ -171,11 +178,11 @@ class Update extends Component
         $this->productVariants = collect($this->productVariants)->map(function (
             $productVariant
         ) {
-            if (isset($productVariant['selected'])) {
-                $productVariant['selected'] = $this->bulkSelectVariant;
+            if (isset($productVariant["selected"])) {
+                $productVariant["selected"] = $this->bulkSelectVariant;
                 return $productVariant;
             } else {
-                $productVariant['selected'] = $this->bulkSelectVariant;
+                $productVariant["selected"] = $this->bulkSelectVariant;
                 return $productVariant;
             }
         });
@@ -184,26 +191,26 @@ class Update extends Component
     public function setBulkVariant()
     {
         $valid = $this->validate([
-            'bulkVariantValues.price' => 'required',
-            'bulkVariantValues.sku' => '',
-            'bulkVariantValues.quantity' => 'required',
-            'bulkVariantValues.weight' => '',
+            "bulkVariantValues.price" => "required",
+            "bulkVariantValues.sku" => "",
+            "bulkVariantValues.quantity" => "required",
+            "bulkVariantValues.weight" => "",
         ]);
         if ($valid) {
             $this->productVariants = collect($this->productVariants)->map(
                 function ($productVariant) {
-                    $productVariant['price'] =
-                        $this->bulkVariantValues['price'];
-                    $productVariant['sku'] = isset(
-                        $this->bulkVariantValues['sku']
+                    $productVariant["price"] =
+                        $this->bulkVariantValues["price"];
+                    $productVariant["sku"] = isset(
+                        $this->bulkVariantValues["sku"]
                     )
-                        ? $this->bulkVariantValues['sku']
-                        : '';
-                    $productVariant['quantity'] =
-                        $this->bulkVariantValues['quantity'];
-                    $productVariant['weight'] =
-                        $this->bulkVariantValues['weight'];
-                    $productVariant['status'] = true;
+                        ? $this->bulkVariantValues["sku"]
+                        : "";
+                    $productVariant["quantity"] =
+                        $this->bulkVariantValues["quantity"];
+                    $productVariant["weight"] =
+                        $this->bulkVariantValues["weight"];
+                    $productVariant["status"] = true;
                     return $productVariant;
                 }
             );
@@ -214,7 +221,7 @@ class Update extends Component
     {
         if (count($this->variants) > 0) {
             $values = collect($this->variants)
-                ->pluck('values')
+                ->pluck("values")
                 ->toArray();
             $first = array_shift($values);
             $this->productVariants = collect($first)
@@ -238,39 +245,39 @@ class Update extends Component
                 )
             );
             $checkVariant = $this->productVariantDatas
-                ->where('unique_id', $unique_id)
+                ->where("unique_id", $unique_id)
                 ->first();
             if ($checkVariant) {
                 return [
-                    'variants' => explode('-', $checkVariant->variant_values),
-                    'unique_id' => $checkVariant->unique_id,
-                    'sku' => $checkVariant->sku,
-                    'quantity' => $checkVariant->quantity,
-                    'weight' => $checkVariant->weight,
-                    'price' => number_format(
+                    "variants" => explode("-", $checkVariant->variant_values),
+                    "unique_id" => $checkVariant->unique_id,
+                    "sku" => $checkVariant->sku,
+                    "quantity" => $checkVariant->quantity,
+                    "weight" => $checkVariant->weight,
+                    "price" => number_format(
                         round($checkVariant->price),
                         0,
-                        ',',
-                        '.'
+                        ",",
+                        "."
                     ),
-                    'sale_price' => number_format(
+                    "sale_price" => number_format(
                         round($checkVariant->sale_price),
                         0,
-                        ',',
-                        '.'
+                        ",",
+                        "."
                     ),
-                    'status' => $checkVariant->status
+                    "status" => $checkVariant->status,
                 ];
             } else {
                 return [
-                    'variants' => $productVariant,
-                    'unique_id' => $unique_id,
-                    'sku' => null,
-                    'quantity' => null,
-                    'weight' => null,
-                    'price' => null,
-                    'sale_price' => null,
-                    'status' => null
+                    "variants" => $productVariant,
+                    "unique_id" => $unique_id,
+                    "sku" => null,
+                    "quantity" => null,
+                    "weight" => null,
+                    "price" => null,
+                    "sale_price" => null,
+                    "status" => null,
                 ];
             }
         });
@@ -279,7 +286,7 @@ class Update extends Component
     public function updatedHasVarian($value)
     {
         if ($value) {
-            $this->variants[] = ['name' => null, 'values' => []];
+            $this->variants[] = ["name" => null, "values" => []];
             $this->defineCombinationAttributes();
         } else {
             $this->variants = [];
@@ -288,11 +295,11 @@ class Update extends Component
 
     public function addVarian()
     {
-        $this->variants[] = ['name' => null, 'values' => [], 'options' => []];
+        $this->variants[] = ["name" => null, "values" => [], "options" => []];
         $this->productVariants = [];
         $this->variantOptions[] = [
-            'type' => null,
-            'variants' => [],
+            "type" => null,
+            "variants" => [],
         ];
     }
 
@@ -300,24 +307,22 @@ class Update extends Component
     {
         unset($this->variants[$key]);
         $this->defineCombinationAttributes();
-        $this->productVariants = [];
+        // $this->productVariants = [];
     }
 
     public function selectAttributes($index, $name)
     {
         $options = [];
-        $variantOption = VariantOption::where('name', $name)
-            ->with('variantValues')
+        $variantOption = VariantOption::where("name", $name)
+            ->with("variantValues")
             ->first();
         if ($variantOption) {
-            $options = $variantOption->variantValues
-            ->pluck('value')
-            ->toArray();
+            $options = $variantOption->variantValues->pluck("value")->toArray();
         }
-        $this->variants[$index] = ['name' => $name, 'values' => []];
-        $this->emit('updateAttributeValueOptions', [
-            'index' => $index,
-            'options' => $options,
+        $this->variants[$index] = ["name" => $name, "values" => []];
+        $this->emit("updateAttributeValueOptions", [
+            "index" => $index,
+            "options" => $options,
         ]);
     }
 
@@ -325,9 +330,9 @@ class Update extends Component
     {
         $values = [];
         foreach ($value as $item) {
-            $values[] = $item['id'];
+            $values[] = $item["id"];
         }
-        $this->variants[$index]['values'] = $values;
+        $this->variants[$index]["values"] = $values;
         $this->defineCombinationAttributes();
     }
 
@@ -335,46 +340,53 @@ class Update extends Component
     {
         $this->resetValidation();
         $validatedData = $this->validate([
-            'brand' => 'required',
-            'sku' => '',
-            'name' => 'required',
-            'category' => 'required',
-            'storefront' => '',
-            'description' => '',
-            'quantity' => 'required',
-            'minOrder' => 'required',
-            'price' => 'required',
-            'sale_price' => '',
-            'weight' => '',
-            'length' => '',
-            'width' => '',
-            'height' => '',
-            'images.1' => 'required',
+            "brand" => "required",
+            "sku" => "",
+            "name" => "required",
+            "category" => "required",
+            "storefront" => "",
+            "description" => "",
+            "quantity" => "required",
+            "minOrder" => "required",
+            "price" => "required",
+            "sale_price" => "",
+            "status" => "",
+            "weight" => "",
+            "length" => "",
+            "width" => "",
+            "height" => "",
+            "images.1" => "required",
         ]);
 
         $valid = $this->validate([
-            'productVariants.*.price' => 'required',
-            'productVariants.*.sku' => '',
-            'productVariants.*.quantity' => 'required',
-            'productVariants.*.weight' => '',
+            "productVariants.*.price" => "required",
+            "productVariants.*.sku" => "",
+            "productVariants.*.quantity" => "required",
+            "productVariants.*.weight" => "",
         ]);
         if ($validatedData) {
             $product = Product::findOrFail($this->product_id);
-            $product->brand_id = $validatedData['brand'];
-            $product->sku = '-';
-            $product->name = $validatedData['name'];
-            $product->description = $validatedData['description'];
-            $product->quantity = $validatedData['quantity'];
-            $product->min_order = $validatedData['minOrder'];
-            $product->weight = $validatedData['weight'];
-            $product->length = $validatedData['length'];
-            $product->width = $validatedData['width'];
-            $product->height = $validatedData['height'];
-            $product->price =
-                str_replace('.', '', $validatedData['price']) . '.00';
-            $product->sale_price =
-                str_replace('.', '', $validatedData['sale_price']) . '.00';
-            $product->status = 1;
+            $product->brand_id = $validatedData["brand"];
+            $product->sku = "-";
+            $product->name = $validatedData["name"];
+            $product->description = $validatedData["description"];
+            if ($this->hasVarian) {
+                $product->price = null;
+                $product->sale_price = null;
+            } else {
+                $product->quantity = $validatedData["quantity"];
+                $product->min_order = $validatedData["minOrder"];
+                $product->weight = $validatedData["weight"];
+                $product->length = $validatedData["length"];
+                $product->width = $validatedData["width"];
+                $product->height = $validatedData["height"];
+                $product->price =
+                    str_replace(".", "", $validatedData["price"]) . ".00";
+                $product->sale_price = $validatedData["sale_price"]
+                    ? str_replace(".", "", $validatedData["sale_price"]) . ".00"
+                    : $validatedData["sale_price"];
+                $product->status = $validatedData["status"];
+            }
             $product->featured = 0;
             $product->save();
             $images = [];
@@ -384,25 +396,25 @@ class Update extends Component
                     if ($this->images[$i] !== null) {
                         if (is_object($this->images[$i])) {
                             $imageName = $this->images[$i]->store(
-                                'public/store/products',
-                                'local'
+                                "public/store/products",
+                                "local"
                             );
                             $images[] = new Image([
-                                'product_id' => $product->id,
-                                'image' => str_replace(
-                                    'public/',
-                                    '',
+                                "product_id" => $product->id,
+                                "image" => str_replace(
+                                    "public/",
+                                    "",
                                     $imageName
                                 ),
-                                'main_image' => $i === 1 ? 1 : 0,
-                                'order_image' => $i,
+                                "main_image" => $i === 1 ? 1 : 0,
+                                "order_image" => $i,
                             ]);
                         } else {
                             $images[] = new Image([
-                                'product_id' => $product->id,
-                                'image' => $this->images[$i],
-                                'main_image' => $i === 1 ? 1 : 0,
-                                'order_image' => $i,
+                                "product_id" => $product->id,
+                                "image" => $this->images[$i],
+                                "main_image" => $i === 1 ? 1 : 0,
+                                "order_image" => $i,
                             ]);
                         }
                     }
@@ -410,23 +422,23 @@ class Update extends Component
                 $product->images()->delete();
                 $product->images()->saveMany($images);
             }
-            $product->categories()->sync($validatedData['category']);
+            $product->categories()->sync($validatedData["category"]);
             $attach = [];
             foreach (
-                collect($validatedData['storefront'])
-                    ->where('selected', false)
-                    ->pluck('text')
+                collect($validatedData["storefront"])
+                    ->where("selected", false)
+                    ->pluck("text")
                 as $item
             ) {
                 $attach[] = StoreFront::create([
-                    'name' => $item,
-                    'order_menu' => 0,
+                    "name" => $item,
+                    "order_menu" => 0,
                 ])->id;
             }
             $product->storefronts()->sync(
-                collect($validatedData['storefront'])
-                    ->where('selected', true)
-                    ->pluck('id')
+                collect($validatedData["storefront"])
+                    ->where("selected", true)
+                    ->pluck("id")
                     ->merge($attach)
             );
             if ($this->hasVarian) {
@@ -434,45 +446,49 @@ class Update extends Component
                 $variantValues = [];
                 $variants = [];
                 foreach ($this->variants as $key => $variant) {
-                    if ($variant['name'] !== null) {
+                    if ($variant["name"] !== null) {
                         $variant_id = VariantOption::firstOrCreate([
-                            'name' => $variant['name'],
-                            'frontend_type' => 'select',
+                            "name" => $variant["name"],
+                            "frontend_type" => "select",
                         ])->id;
-                        foreach ($variant['values'] as $value) {
+                        foreach ($variant["values"] as $value) {
                             $value_id = VariantValue::firstOrCreate([
-                                'variant_id' => $variant_id,
-                                'value' => $value,
+                                "variant_id" => $variant_id,
+                                "value" => $value,
                             ])->id;
-                           
+
                             $variantValues[] = [
-                                'value_id' => $value_id,
+                                "value_id" => $value_id,
                             ];
                         }
-                        
+
                         $variantOptions[] = [
-                            'variant_id' => $variant_id,
+                            "variant_id" => $variant_id,
                         ];
                         // dd($variantValues);
                     }
                 }
-               
+                // dd($this->productVariants);
                 foreach ($this->productVariants as $key => $productVariant) {
                     $variants[] = new Variant([
-                        'product_id' => $product->id,
-                        'variant_values' => strval(
-                            implode('-', $productVariant['variants'])
+                        "product_id" => $product->id,
+                        "variant_values" => strval(
+                            implode("-", $productVariant["variants"])
                         ),
-                        'unique_id' => $productVariant['unique_id'],
-                        'sku' => $productVariant['sku'],
-                        'quantity' => $productVariant['quantity'],
-                        'weight' => $productVariant['weight'],
-                        'price' =>
-                            str_replace('.', '', $productVariant['price']) .
-                            '.00',
-                        'sale_price' => str_replace('.', '', $productVariant['sale_price']) .
-                        '.00',
-                        'status' => $productVariant['status'] || false
+                        "unique_id" => $productVariant["unique_id"],
+                        "sku" => $productVariant["sku"],
+                        "quantity" => $productVariant["quantity"],
+                        "weight" => $productVariant["weight"],
+                        "price" =>
+                            str_replace(".", "", $productVariant["price"]) .
+                            ".00",
+                        "sale_price" =>
+                            str_replace(
+                                ".",
+                                "",
+                                $productVariant["sale_price"]
+                            ) . ".00",
+                        "status" => $productVariant["status"] || false,
                     ]);
                 }
                 $product->variantOptions()->sync([]);
@@ -488,39 +504,39 @@ class Update extends Component
             }
             if (is_object($this->imageRight)) {
                 $imageRight = $this->imageRight->store(
-                    'public/store/tryons',
-                    'local'
+                    "public/store/tryons",
+                    "local"
                 );
-                $this->image_config_json['image_right']['image'] = str_replace(
-                    'public/store/tryons/',
-                    '',
+                $this->image_config_json["image_right"]["image"] = str_replace(
+                    "public/store/tryons/",
+                    "",
                     $imageRight
                 );
-                unset($this->image_config_json['image_right']['image_preview']);
+                unset($this->image_config_json["image_right"]["image_preview"]);
             }
             if (is_object($this->imageFront)) {
                 $imageFront = $this->imageFront->store(
-                    'public/store/tryons',
-                    'local'
+                    "public/store/tryons",
+                    "local"
                 );
-                $this->image_config_json['image_front']['image'] = str_replace(
-                    'public/store/tryons/',
-                    '',
+                $this->image_config_json["image_front"]["image"] = str_replace(
+                    "public/store/tryons/",
+                    "",
                     $imageFront
                 );
-                unset($this->image_config_json['image_front']['image_preview']);
+                unset($this->image_config_json["image_front"]["image_preview"]);
             }
             if (is_object($this->imageLeft)) {
                 $imageLeft = $this->imageLeft->store(
-                    'public/store/tryons',
-                    'local'
+                    "public/store/tryons",
+                    "local"
                 );
-                $this->image_config_json['image_left']['image'] = str_replace(
-                    'public/store/tryons/',
-                    '',
+                $this->image_config_json["image_left"]["image"] = str_replace(
+                    "public/store/tryons/",
+                    "",
                     $imageLeft
                 );
-                unset($this->image_config_json['image_left']['image_preview']);
+                unset($this->image_config_json["image_left"]["image_preview"]);
             }
             // $tryOn = new TryOn([
             //     'product_id' => $product->id,
@@ -531,9 +547,9 @@ class Update extends Component
             // $product->tryon()->save($tryOn);
 
             if ($product) {
-                $this->emit('toast', ['success', 'Product has been created']);
-                if($redirect){
-                    return redirect()->to('/store/products');
+                $this->emit("toast", ["success", "Product has been created"]);
+                if ($redirect) {
+                    return redirect()->to("/store/products");
                 }
             }
         }
@@ -541,15 +557,15 @@ class Update extends Component
 
     public function render()
     {
-        return view('store::livewire.products.update', [
-            'categories' => Category::get(),
-            'categoriesTrees' => collect(
-                Category::where('parent_id', 0)
-                    ->with('children.children')
+        return view("store::livewire.products.update", [
+            "categories" => Category::get(),
+            "categoriesTrees" => collect(
+                Category::where("parent_id", 0)
+                    ->with("children.children")
                     ->get()
             ),
-            'brands' => Brand::get(),
-            'storefronts' => StoreFront::get(),
-        ])->extends('theme::backend.layouts.master');
+            "brands" => Brand::get(),
+            "storefronts" => StoreFront::get(),
+        ])->extends("theme::backend.layouts.master");
     }
 }

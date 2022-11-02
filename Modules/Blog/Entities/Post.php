@@ -11,41 +11,60 @@ class Post extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'blog_posts';
+    protected $table = "blog_posts";
 
-    protected $fillable = ['title', 'content', 'slug', 'status', 'featured_image', 'caption', 'published_at', 'user_id'];
+    protected $fillable = [
+        "title",
+        "content",
+        "slug",
+        "status",
+        "featured_image",
+        "caption",
+        "published_at",
+        "user_id",
+    ];
 
     public function setTitleAttribute($value)
     {
-        $this->attributes['title'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
+        $this->attributes["title"] = $value;
+        $this->attributes["slug"] = Str::slug($value);
     }
 
     public function category()
     {
-        return $this->morphToMany(Category::class,'post', 'blog_post_has_categories');
+        return $this->belongsToMany(
+            Category::class,
+            "blog_post_categories",
+            "post_id",
+            "category_id"
+        );
     }
 
     public function tags()
     {
-        return $this->morphToMany(Tag::class,'post','blog_post_has_tags');
+        return $this->belongsToMany(
+            Tag::class,
+            "blog_post_tags",
+            "post_id",
+            "tag_id"
+        );
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class, "user_id");
     }
 
     public function minContent()
     {
-        return mb_strimwidth($this->content,0,200,"...");
+        return mb_strimwidth($this->content, 0, 200, "...");
     }
 
     public function getLinkAttribute()
     {
-        return $this->created_at->format('Y/m/d/').$this->slug;
+        return $this->created_at->format("Y/m/d/") . $this->slug;
     }
-    
+
     protected static function newFactory()
     {
         return \Modules\Blog\Database\factories\PostFactory::new();

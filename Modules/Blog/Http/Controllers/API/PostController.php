@@ -9,6 +9,7 @@ use Modules\Blog\Entities\Post;
 use Modules\Blog\Transformers\PostResource;
 
 use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class PostController extends Controller
 {
@@ -19,10 +20,17 @@ class PostController extends Controller
     public function index()
     {
         $posts = QueryBuilder::for(Post::class)
-        ->allowedSorts('created_at')
-        ->allowedIncludes(['category','tags','user']);
+            ->allowedSorts("created_at")
+            ->allowedIncludes(["category", "tags", "user"])
+            ->allowedFilters([
+                AllowedFilter::exact("lang"),
+                "id",
+                AllowedFilter::exact("category.slug"),
+            ]);
 
-        return response()->json($posts->fastPaginate(5));
+        return response()->json(
+            $posts->fastPaginate(request()->query("per_page"))
+        );
     }
 
     /**
@@ -31,7 +39,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('blog::create');
+        return view("blog::create");
     }
 
     /**
@@ -51,10 +59,13 @@ class PostController extends Controller
      */
     public function show($slug)
     {
-        $post = QueryBuilder::for(Post::class)
-        ->allowedIncludes(['category','tags','user']);
+        $post = QueryBuilder::for(Post::class)->allowedIncludes([
+            "category",
+            "tags",
+            "user",
+        ]);
 
-        return response()->json($post->where('slug', $slug)->firstOrFail());
+        return response()->json($post->where("slug", $slug)->firstOrFail());
     }
 
     /**
@@ -64,7 +75,7 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        return view('blog::edit');
+        return view("blog::edit");
     }
 
     /**

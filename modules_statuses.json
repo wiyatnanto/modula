@@ -8,5 +8,5 @@
     "Core": true,
     "Blog": true,
     "Store": true,
-    "Chat": true
+    "Chat": false
 }

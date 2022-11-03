@@ -186,7 +186,7 @@ class Table extends Component
         $this->tagOptions = Tag::pluck("name", "slug")->toArray();
 
         return view("blog::livewire.posts.table", [
-            "pages" => Post::where("title", "ILIKE", "%" . $this->search . "%")
+            "posts" => Post::where("title", "ILIKE", "%" . $this->search . "%")
                 ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
                 ->fastPaginate(10),
         ])->extends("theme::backend.layouts.master");

@@ -6,13 +6,14 @@
                 <div class="me-auto">
                     <h5 class="card-title mb-0">{{ __('blog::messages.categories') }}</h5>
                 </div>
-                <div class="me-3">
+                <div class="me-2">
                     <x-crud::atoms.input size="sm" wire:model="search"
                         placeholder="{{ __('crud::messages.search') }} {{ __('blog::messages.category') }}" />
                 </div>
                 <div>
-                    <x-crud::atoms.button size="sm" color="primary" data-bs-toggle="modal"
+                    <x-crud::atoms.button class="btn-icon-text" size="xs" color="primary" data-bs-toggle="modal"
                         data-bs-target="#createCategory">
+                        <x-crud::atoms.icon class="btn-icon-prepend" icon="plus" />
                         {{ __('crud::messages.add') }} {{ __('blog::messages.category') }}
                     </x-crud::atoms.button>
                 </div>
@@ -41,28 +42,24 @@
                                         closeButton: false,
                                         size: 'small',
                                         centerVertical: true,
-                                        message: `
-                                            Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
-                                        `,
+                                        title: `{{ __('crud::messages.confirm_delete_title') }}`,
+                                        message: `{{ __('crud::messages.confirm_delete_body') }}`,
                                         buttons: {
+                                            no:{
+                                                label: '{{ __('crud::messages.cancel') }}',
+                                                className: 'btn-sm btn-secondary'
+                                            },
                                             ok:{
-                                                label: 'Yes',
+                                                label: '{{ __('crud::messages.confirm_delete_yes') }}',
                                                 className: 'btn-sm btn-danger',
                                                 callback: function(){
-                                                   window.livewire.emit('bulkDelete')         
-                                                }
-                                            },
-                                            no:{
-                                                label: 'Cancel',
-                                                className: 'btn-sm btn-secondary',
-                                                callback: function(){
-                                                                    
+                                                    Livewire.emit('bulkDelete')              
                                                 }
                                             }
-                                        }     
+                                        }   
                                     });
                                 }">
-                                    Hapus Sekaligus
+                                    {{ __('crud::messages.bulk_delete') }}
                                     <x-crud::atoms.icon icon="trash-alt" class="btn-icon-append" />
                                 </x-crud::atoms.button>
                             </th>
@@ -92,25 +89,21 @@
                                                         closeButton: false,
                                                         size: 'small',
                                                         centerVertical: true,
-                                                        message: `
-                                                            Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
-                                                        `,
+                                                        title: `{{ __('crud::messages.confirm_delete_title') }}`,
+                                                        message: `{{ __('crud::messages.confirm_delete_body') }}`,
                                                         buttons: {
+                                                            no:{
+                                                                label: '{{ __('crud::messages.cancel') }}',
+                                                                className: 'btn-sm btn-secondary'
+                                                            },
                                                             ok:{
-                                                                label: 'Yes',
+                                                                label: '{{ __('crud::messages.confirm_delete_yes') }}',
                                                                 className: 'btn-sm btn-danger',
                                                                 callback: function(){
-                                                                    @this.emit('delete', {{ $category->id }})              
-                                                                }
-                                                            },
-                                                            no:{
-                                                                label: 'Cancel',
-                                                                className: 'btn-sm btn-secondary',
-                                                                callback: function(){
-                                                                                    
+                                                                    Livewire.emit('delete', {{ $category->id }})              
                                                                 }
                                                             }
-                                                        }     
+                                                        }
                                                     });
                                                 ">{{ __('crud::messages.delete') }}</button>
                                         </div>

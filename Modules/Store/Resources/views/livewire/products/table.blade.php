@@ -192,11 +192,10 @@
                                             @endif
                                         @endforeach
                                         <div class="media-body">
-                                            <p class="product-title">
-                                                <a href="{{ asset('store/products/edit-product/' . $product->id) }}">
-                                                    {{ $product->name }}
-                                                </a>
-                                            </p>
+                                            <a class="fw-bold"
+                                                href="{{ asset('store/products/edit-product/' . $product->id) }}">
+                                                {{ $product->name }}
+                                            </a>
                                             <p>SKU: {{ $product->sku }}</p>
                                         </div>
                                     </div>

@@ -10,6 +10,7 @@ return [
     "remove" => "Hapus",
     "update" => "Perbarui",
     "delete" => "Hapus",
+    "bulk_delete" => "Hapus Sekaligus",
     "close" => "Tutup",
     "edit" => "Ubah",
     "showing" => "Tampil",

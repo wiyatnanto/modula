@@ -10,7 +10,7 @@
                 <div class="me-auto">
                     <h5 class="card-title mb-0">{{ __('store::messages.storefronts') }}</h5>
                 </div>
-                <div class="me-3">
+                <div class="me-2">
                     <x-crud::atoms.input size="sm" wire:model="search"
                         placeholder="{{ __('crud::messages.search') }} {{ __('store::messages.storefront') }}" />
                 </div>
@@ -50,12 +50,10 @@
                                         <img src="{{ count($storeFront->products) > 0 ? asset('storage/' . $storeFront->products->first()->images->first()->image) : asset('modules/core/images/placeholder.png') }}"
                                             class="rounded me-2" alt="">
                                         <div class="media-body">
-                                            <p class="product-title">
-                                                <a
-                                                    href="{{ asset('store/storefronts/' . $storeFront->id . '/' . $storeFront->slug) }}">
-                                                    {{ $storeFront->name }}
-                                                </a>
-                                            </p>
+                                            <a href="#" class="fw-bold"
+                                                href="{{ asset('store/storefronts/' . $storeFront->id . '/' . $storeFront->slug) }}">
+                                                {{ $storeFront->name }}
+                                            </a>
                                             <p>{{ count($storeFront->products) }} {{ __('store::messages.product') }}
                                             </p>
                                         </div>

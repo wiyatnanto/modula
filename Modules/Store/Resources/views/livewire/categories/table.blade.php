@@ -54,13 +54,11 @@
                                 <td class="align-middle">
                                     <div class="media d-flex align-items-center">
                                         <div class="media-body">
-                                            <p class="product-title">
-                                                <a href="#" data-bs-toggle="modal"
-                                                    data-bs-target="#updateCategory"
-                                                    wire:click="edit({{ $category->id }})">
-                                                    {{ $category->name }}
-                                                </a>
-                                            </p>
+                                            <a href="#" class="fw-bold" data-bs-toggle="modal"
+                                                data-bs-target="#updateCategory"
+                                                wire:click="edit({{ $category->id }})">
+                                                {{ $category->name }}
+                                            </a>
                                             <p>{{ $category->products_count }} {{ __('store::messages.product') }}
                                             </p>
                                         </div>
@@ -81,27 +79,27 @@
                                             <div x-data>
                                                 <button class="dropdown-item action-delete"
                                                     x-on:click="() => {
-                                                            bootbox.dialog({
-                                                                closeButton: false,
-                                                                size: 'small',
-                                                                centerVertical: true,
-                                                                title: `{{ __('crud::messages.confirm_delete_title') }}`,
-                                                                message: `{{ __('crud::messages.confirm_delete_body') }}`,
-                                                                buttons: {
-                                                                    no:{
-                                                                        label: '{{ __('crud::messages.cancel') }}',
-                                                                        className: 'btn-sm btn-secondary'
-                                                                    },
-                                                                    ok:{
-                                                                        label: '{{ __('crud::messages.confirm_delete_yes') }}',
-                                                                        className: 'btn-sm btn-danger',
-                                                                        callback: function(){
-                                                                            @this.emit('delete', {{ $category->id }})              
-                                                                        }
+                                                        bootbox.dialog({
+                                                            closeButton: false,
+                                                            size: 'small',
+                                                            centerVertical: true,
+                                                            title: `{{ __('crud::messages.confirm_delete_title') }}`,
+                                                            message: `{{ __('crud::messages.confirm_delete_body') }}`,
+                                                            buttons: {
+                                                                no:{
+                                                                    label: '{{ __('crud::messages.cancel') }}',
+                                                                    className: 'btn-sm btn-secondary'
+                                                                },
+                                                                ok:{
+                                                                    label: '{{ __('crud::messages.confirm_delete_yes') }}',
+                                                                    className: 'btn-sm btn-danger',
+                                                                    callback: function(){
+                                                                        @this.emit('delete', {{ $category->id }})                
                                                                     }
-                                                                }     
-                                                            });
-                                                        }">{{ __('crud::messages.delete') }}</button>
+                                                                }
+                                                            }   
+                                                        });
+                                                    }">{{ __('crud::messages.delete') }}</button>
                                             </div>
                                         @endcan
                                     </x-crud::molecules.dropdown>

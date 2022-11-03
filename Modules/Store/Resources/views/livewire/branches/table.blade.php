@@ -9,7 +9,7 @@
                 <div class="me-auto">
                     <h5 class="card-title mb-0">{{ __('store::messages.branches') }}</h5>
                 </div>
-                <div class="me-3">
+                <div class="me-2">
                     <x-crud::atoms.input size="sm" wire:model="search"
                         placeholder="{{ __('crud::messages.search') }} {{ __('store::messages.branch') }}" />
                 </div>
@@ -35,8 +35,10 @@
                             <th scope="col" class="align-middle tx-bold text-center" width="70">
                                 {{ __('store::messages.branch_location') }}
                             </th>
-                            <th scope="col" class="align-middle tx-bold" width="40">{{ __('crud::messages.active') }}</th>
-                            <th scope="col" class="align-middle tx-bold" width="50">{{ __('crud::messages.action') }}</th>
+                            <th scope="col" class="align-middle tx-bold" width="40">
+                                {{ __('crud::messages.active') }}</th>
+                            <th scope="col" class="align-middle tx-bold" width="50">
+                                {{ __('crud::messages.action') }}</th>
                         </tr>
                     @endif
                 </thead>
@@ -49,12 +51,10 @@
                                         <img src="{{ asset('storage/' . $branch->images[0]->image) }}"
                                             class="rounded img-cover me-2" alt="Gambar {{ $branch->name }}">
                                         <div class="media-body">
-                                            <p class="product-title">
-                                                <a type="button" data-bs-toggle="modal" data-bs-target="#updateBranch"
-                                                    wire:click="edit({{ $branch->id }})">
-                                                    {{ $branch->name }}
-                                                </a>
-                                            </p>
+                                            <a href="#" class="fw-bold" data-bs-toggle="modal"
+                                                data-bs-target="#updateBranch" wire:click="edit({{ $branch->id }})">
+                                                {{ $branch->name }}
+                                            </a>
                                             <p>{{ __('store::messages.product') }}</p>
                                         </div>
                                     </div>
@@ -80,31 +80,27 @@
                                             <div x-data>
                                                 <button class="dropdown-item action-delete"
                                                     x-on:click="() => {
-                                                            bootbox.dialog({
-                                                                closeButton: false,
-                                                                size: 'small',
-                                                                centerVertical: true,
-                                                                message: `
-                                                                    Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
-                                                                `,
-                                                                buttons: {
-                                                                    ok:{
-                                                                        label: 'Yes',
-                                                                        className: 'btn-sm btn-danger',
-                                                                        callback: function(){
-                                                                            @this.emit('delete', {{ $branch->id }})              
-                                                                        }
-                                                                    },
-                                                                    no:{
-                                                                        label: 'Cancel',
-                                                                        className: 'btn-sm btn-secondary',
-                                                                        callback: function(){
-                                                                                            
-                                                                        }
+                                                        bootbox.dialog({
+                                                            closeButton: false,
+                                                            size: 'small',
+                                                            centerVertical: true,
+                                                            title: `{{ __('crud::messages.confirm_delete_title') }}`,
+                                                            message: `{{ __('crud::messages.confirm_delete_body') }}`,
+                                                            buttons: {
+                                                                no:{
+                                                                    label: '{{ __('crud::messages.cancel') }}',
+                                                                    className: 'btn-sm btn-secondary'
+                                                                },
+                                                                ok:{
+                                                                    label: '{{ __('crud::messages.confirm_delete_yes') }}',
+                                                                    className: 'btn-sm btn-danger',
+                                                                    callback: function(){
+                                                                        @this.emit('delete', {{ $branch->id }})               
                                                                     }
-                                                                }     
-                                                            });
-                                                        }">{{ __('crud::messages.delete') }}</button>
+                                                                }
+                                                            }
+                                                        });
+                                                    }">{{ __('crud::messages.delete') }}</button>
                                             </div>
                                         @endcan
                                     </x-crud::molecules.dropdown>

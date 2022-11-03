@@ -10,7 +10,7 @@
                 <div class="me-auto">
                     <h5 class="card-title mb-0">{{ __('store::messages.brands') }}</h5>
                 </div>
-                <div class="me-3">
+                <div class="me-2">
                     <x-crud::atoms.input size="sm" wire:model="search"
                         placeholder="{{ __('crud::messages.search') }} {{ __('store::messages.brand') }}" />
                 </div>
@@ -49,12 +49,10 @@
                                         <img src="{{ asset('storage/' . $brand->image) }}" class="rounded me-2"
                                             alt="Brand Image">
                                         <div class="media-body">
-                                            <p class="product-title">
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#updateBrand"
-                                                    wire:click="edit({{ $brand->id }})">
-                                                    {{ $brand->name }}
-                                                </a>
-                                            </p>
+                                            <a href="#" class="fw-bold" data-bs-toggle="modal"
+                                                data-bs-target="#updateBrand" wire:click="edit({{ $brand->id }})">
+                                                {{ $brand->name }}
+                                            </a>
                                             <p>{{ $brand->products_count }} {{ __('store::messages.product') }}</p>
                                         </div>
                                     </div>
@@ -74,50 +72,33 @@
                                             <div x-data>
                                                 <button class="dropdown-item action-delete"
                                                     x-on:click="() => {
-                                                            bootbox.dialog({
-                                                                closeButton: false,
-                                                                size: 'small',
-                                                                centerVertical: true,
-                                                                message: `
-                                                                    Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
-                                                                `,
-                                                                buttons: {
-                                                                    ok:{
-                                                                        label: 'Yes',
-                                                                        className: 'btn-sm btn-danger',
-                                                                        callback: function(){
-                                                                            @this.emit('delete', {{ $brand->id }})              
-                                                                        }
-                                                                    },
-                                                                    no:{
-                                                                        label: 'Cancel',
-                                                                        className: 'btn-sm btn-secondary',
-                                                                        callback: function(){
-                                                                                            
-                                                                        }
+                                                        bootbox.dialog({
+                                                            closeButton: false,
+                                                            size: 'small',
+                                                            centerVertical: true,
+                                                            title: `{{ __('crud::messages.confirm_delete_title') }}`,
+                                                            message: `{{ __('crud::messages.confirm_delete_body') }}`,
+                                                            buttons: {
+                                                                no:{
+                                                                    label: '{{ __('crud::messages.cancel') }}',
+                                                                    className: 'btn-sm btn-secondary'
+                                                                },
+                                                                ok:{
+                                                                    label: '{{ __('crud::messages.confirm_delete_yes') }}',
+                                                                    className: 'btn-sm btn-danger',
+                                                                    callback: function(){
+                                                                        @this.emit('delete', {{ $brand->id }})              
                                                                     }
-                                                                }     
-                                                            });
-                                                        }">{{ __('crud::messages.delete') }}</button>
+                                                                }
+                                                            }
+                                                        });
+                                                    }">{{ __('crud::messages.delete') }}</button>
                                             </div>
                                         @endcan
                                     </x-crud::molecules.dropdown>
                                 </td>
                             </tr>
                         @endforeach
-                    @else
-                        <tr>
-                            <td colspan="4">
-                                <div class="ht-100p d-flex flex-column align-items-center justify-content-center">
-                                    <div class="wd-100p wd-sm-300 wd-lg-300 mg-b-15">
-                                        <img src="https://assets.tokopedia.net/assets-tokopedia-lite/v2/icarus/kratos/dadc0fe1.jpg"
-                                            class="img-fluid" alt="">
-                                        <h5 class="text-center tx-16 tx-medium">Oops, produk yang kamu
-                                            cari tidak ditemukan</h5>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
                     @endif
                 </tbody>
             </table>

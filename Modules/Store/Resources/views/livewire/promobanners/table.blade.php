@@ -9,7 +9,7 @@
                 <div class="me-auto">
                     <h5 class="card-title mb-0">{{ __('store::messages.promo_banners') }}</h5>
                 </div>
-                <div class="me-3">
+                <div class="me-2">
                     <x-crud::atoms.input size="sm" wire:model="search"
                         placeholder="{{ __('crud::messages.search') }} {{ __('store::messages.promo_banner') }}" />
                 </div>
@@ -48,13 +48,11 @@
                                         <img src="{{ asset('storage/' . $promobanner->image) }}" class="rounded me-2"
                                             alt="">
                                         <div class="media-body">
-                                            <p class="product-title">
-                                                <a href="#" data-bs-toggle="modal"
-                                                    data-bs-target="#updatePromoBanner"
-                                                    wire:click="edit({{ $promobanner->id }})">
-                                                    {{ $promobanner->title }}
-                                                </a>
-                                            </p>
+                                            <a href="#" class="fw-bold" data-bs-toggle="modal"
+                                                data-bs-target="#updatePromoBanner"
+                                                wire:click="edit({{ $promobanner->id }})">
+                                                {{ $promobanner->title }}
+                                            </a>
                                         </div>
                                     </div>
                                 </td>
@@ -73,31 +71,27 @@
                                             <div x-data>
                                                 <button class="dropdown-item action-delete"
                                                     x-on:click="() => {
-                                                            bootbox.dialog({
-                                                                closeButton: false,
-                                                                size: 'small',
-                                                                centerVertical: true,
-                                                                message: `
-                                                                    Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
-                                                                `,
-                                                                buttons: {
-                                                                    ok:{
-                                                                        label: 'Yes',
-                                                                        className: 'btn-sm btn-danger',
-                                                                        callback: function(){
-                                                                            @this.emit('delete', {{ $promobanner->id }})              
-                                                                        }
-                                                                    },
-                                                                    no:{
-                                                                        label: 'Cancel',
-                                                                        className: 'btn-sm btn-secondary',
-                                                                        callback: function(){
-                                                                                            
-                                                                        }
+                                                        bootbox.dialog({
+                                                            closeButton: false,
+                                                            size: 'small',
+                                                            centerVertical: true,
+                                                            title: `{{ __('crud::messages.confirm_delete_title') }}`,
+                                                            message: `{{ __('crud::messages.confirm_delete_body') }}`,
+                                                            buttons: {
+                                                                no:{
+                                                                    label: '{{ __('crud::messages.cancel') }}',
+                                                                    className: 'btn-sm btn-secondary'
+                                                                },
+                                                                ok:{
+                                                                    label: '{{ __('crud::messages.confirm_delete_yes') }}',
+                                                                    className: 'btn-sm btn-danger',
+                                                                    callback: function(){
+                                                                        @this.emit('delete', {{ $promobanner->id }})               
                                                                     }
-                                                                }     
-                                                            });
-                                                        }">{{ __('crud::messages.delete') }}</button>
+                                                                }
+                                                            } 
+                                                        });
+                                                    }">{{ __('crud::messages.delete') }}</button>
                                             </div>
                                         @endcan
                                     </x-crud::molecules.dropdown>

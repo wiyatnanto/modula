@@ -1,4 +1,4 @@
-<x-crud::organisms.modal size="xl" preventSubmit="store()" submitLabel="Create" id="createPage" title="Create Page">
+<x-crud::organisms.modal size="xl" id="createPage">
     <x-slot name="header">
         <h5 class="modal-title">{{ __('crud::messages.add') }} {{ __('blog::messages.page') }}</h5>
     </x-slot>

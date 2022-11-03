@@ -1,5 +1,4 @@
-<x-crud::organisms.modal preventSubmit="update({{ $tagId }})" submitLabel="Update" id="updateTag"
-    title="Update Tag">
+<x-crud::organisms.modal size="md" id="updateTag">
     <x-slot name="header">
         <h5 class="modal-title">Update Tag</h5>
     </x-slot>

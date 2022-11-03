@@ -9,7 +9,7 @@
                 <div class="me-auto">
                     <h5 class="card-title mb-0">{{ __('blog::messages.pages') }}</h5>
                 </div>
-                <div class="me-3">
+                <div class="me-2">
                     <x-crud::atoms.input size="sm" wire:model="search"
                         placeholder="{{ __('crud::messages.search') }} {{ __('blog::messages.page') }}" />
                 </div>
@@ -45,32 +45,28 @@
                             <th scope="col" class="align-middle text-bold p-0" colspan="3">
                                 <x-crud::atoms.button size="xs" color="danger" class="btn-icon-text"
                                     x-on:click="() => {
-                                bootbox.dialog({
-                                    closeButton: false,
-                                    size: 'small',
-                                    centerVertical: true,
-                                    message: `
-                                        Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
-                                    `,
-                                    buttons: {
-                                        ok:{
-                                            label: 'Yes',
-                                            className: 'btn-sm btn-danger',
-                                            callback: function(){
-                                               window.livewire.emit('bulkDelete')         
-                                            }
-                                        },
-                                        no:{
-                                            label: 'Cancel',
-                                            className: 'btn-sm btn-secondary',
-                                            callback: function(){
-                                                                
-                                            }
-                                        }
-                                    }     
-                                });
-                            }">
-                                    Hapus Sekaligus
+                                        bootbox.dialog({
+                                            closeButton: false,
+                                            size: 'small',
+                                            centerVertical: true,
+                                            title: `{{ __('crud::messages.confirm_delete_title') }}`,
+                                            message: `{{ __('crud::messages.confirm_delete_body') }}`,
+                                            buttons: {
+                                                no:{
+                                                    label: '{{ __('crud::messages.cancel') }}',
+                                                    className: 'btn-sm btn-secondary'
+                                                },
+                                                ok:{
+                                                    label: '{{ __('crud::messages.confirm_delete_yes') }}',
+                                                    className: 'btn-sm btn-danger',
+                                                    callback: function(){
+                                                        Livewire.emit('bulkDelete')              
+                                                    }
+                                                }
+                                            }    
+                                        });
+                                    }">
+                                    {{ __('crud::messages.bulk_delete') }}
                                     <x-crud::atoms.icon icon="trash-alt" class="btn-icon-append" />
                                 </x-crud::atoms.button>
                             </th>
@@ -106,25 +102,21 @@
                                                     closeButton: false,
                                                     size: 'small',
                                                     centerVertical: true,
-                                                    message: `
-                                                        Penghapusan item tidak dapat dibatalkan, anda yakin menghapus item ini??
-                                                    `,
+                                                    title: `{{ __('crud::messages.confirm_delete_title') }}`,
+                                                    message: `{{ __('crud::messages.confirm_delete_body') }}`,
                                                     buttons: {
+                                                        no:{
+                                                            label: '{{ __('crud::messages.cancel') }}',
+                                                            className: 'btn-sm btn-secondary'
+                                                        },
                                                         ok:{
-                                                            label: 'Yes',
+                                                            label: '{{ __('crud::messages.confirm_delete_yes') }}',
                                                             className: 'btn-sm btn-danger',
                                                             callback: function(){
-                                                                @this.emit('delete', {{ $page->id }})              
-                                                            }
-                                                        },
-                                                        no:{
-                                                            label: 'Cancel',
-                                                            className: 'btn-sm btn-secondary',
-                                                            callback: function(){
-                                                                                
+                                                                Livewire.emit('delete', {{ $page->id }})              
                                                             }
                                                         }
-                                                    }     
+                                                    }  
                                                 });
                                             ">{{ __('crud::messages.delete') }}</button>
                                         </div>
@@ -137,7 +129,7 @@
             </table>
         </div>
         <div class="mt-2">
-            {{ $pages->links() }}
+            {{ $pages->links('pagination::bootstrap-5-livewire') }}
         </div>
     </x-crud::molecules.card>
     @include('blog::livewire.pages.create')

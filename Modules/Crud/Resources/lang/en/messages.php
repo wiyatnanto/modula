@@ -10,6 +10,7 @@ return [
     "remove" => "Remove",
     "update" => "Update",
     "delete" => "Delete",
+    "bulk_delete" => "Bulk Delete",
     "close" => "Close",
     "edit" => "Edit",
     "showing" => "Showing",

@@ -1,5 +1,4 @@
-<x-crud::organisms.modal size="md" preventSubmit="update({{ $categoryId }})" submitLabel="Update" id="updateCategory"
-    title="Update Page">
+<x-crud::organisms.modal size="md" id="updateCategory">
     <x-slot name="header">
         <h5 class="modal-title">{{ __('crud::messages.update') }} {{ __('blog::messages.category') }}</h5>
     </x-slot>

@@ -1,6 +1,6 @@
-<x-crud::organisms.modal preventSubmit="store()" submitLabel="Create" id="createTag">
+<x-crud::organisms.modal size="md" id="createTag">
     <x-slot name="header">
-        <h5 class="modal-title">Add New Tag</h5>
+         <h5 class="modal-title">{{ __('crud::messages.add') }} {{ __('blog::messages.tag') }}</h5>
     </x-slot>
     <div class="mb-3">
         <label for="name" class="form-label">Tag Name</label>
@@ -10,8 +10,9 @@
         @enderror
     </div>
     <x-slot name="footer">
-        <x-crud::atoms.button size="sm" color="secondary" data-bs-dismiss="modal" aria-label="btn-close"
-            text="Cancel" />
-        <x-crud::atoms.button size="sm" color="primary" text="Create" wire:click.prevent="store" />
+        <x-crud::atoms.button size="sm" color="secondary" text="{{ __('crud::messages.cancel') }}"
+            data-bs-dismiss="modal" aria-label="btn-close" />
+        <x-crud::atoms.button size="sm" color="primary" text="{{ __('crud::messages.add') }}"
+            wire:click.prevent="store" />
     </x-slot>
 </x-crud::organisms.modal>

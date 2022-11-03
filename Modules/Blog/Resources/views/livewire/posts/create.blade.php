@@ -1,6 +1,6 @@
-<x-crud::organisms.modal size="xl" preventSubmit="store()" submitLabel="Create" id="createPost" title="Create Post">
+<x-crud::organisms.modal size="xl" id="createPost">
     <x-slot name="header">
-        <h5 class="modal-title">Add New Post</h5>
+        <h5 class="modal-title">{{ __('crud::messages.add') }} {{ __('blog::messages.post') }}</h5>
     </x-slot>
     <x-crud::molecules.tabs active="content">
         <x-crud::molecules.tab title="Content" name="content">

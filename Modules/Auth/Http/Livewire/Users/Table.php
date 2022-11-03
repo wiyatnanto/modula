@@ -65,7 +65,7 @@ class Table extends Component
         if ($value) {
             $this->selected = User::where(
                 "name",
-                "ILIKE",
+                "LIKE",
                 "%" . $this->search . "%"
             )
                 ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
@@ -157,7 +157,7 @@ class Table extends Component
     public function render()
     {
         return view("auth::livewire.users.table", [
-            "users" => User::where("name", "ILIKE", "%" . $this->search . "%")
+            "users" => User::where("name", "LIKE", "%" . $this->search . "%")
                 ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
                 ->fastPaginate(10),
         ])->extends("theme::backend.layouts.master");

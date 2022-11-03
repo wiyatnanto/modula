@@ -35,7 +35,7 @@ class Table extends Component
         if ($value) {
             $this->selected = User::where(
                 "name",
-                "ILIKE",
+                "LIKE",
                 "%" . $this->search . "%"
             )
                 ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
@@ -93,7 +93,7 @@ class Table extends Component
         return view("auth::livewire.permissions.table", [
             "permissions" => Permission::where(
                 "name",
-                "ILIKE",
+                "LIKE",
                 "%" . $this->search . "%"
             )
                 ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")

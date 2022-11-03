@@ -154,7 +154,7 @@ class Update extends Component
         if ($this->searchAllProducts !== null) {
             $allProducts->where(
                 "name",
-                "ILIKE",
+                "LIKE",
                 "%" . $this->searchAllProducts . "%"
             );
         }

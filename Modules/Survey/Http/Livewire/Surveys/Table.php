@@ -38,7 +38,7 @@ class Table extends Component
         if ($value) {
             $this->selected = User::where(
                 'name',
-                'ILIKE',
+                'LIKE',
                 '%' . $this->search . '%'
             )
             ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
@@ -114,7 +114,7 @@ class Table extends Component
     public function render()
     {
         return view('survey::livewire.surveys.table', [
-            'surveys' => Survey::where('name','ILIKE', '%' . $this->search . '%')->withCount('results')->orderBy('created_at','desc')->fastPaginate(10),
+            'surveys' => Survey::where('name','LIKE', '%' . $this->search . '%')->withCount('results')->orderBy('created_at','desc')->fastPaginate(10),
         ])->extends('theme::backend.layouts.master');
     }
 }

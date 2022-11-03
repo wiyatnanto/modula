@@ -151,7 +151,7 @@ class Table extends Component
     {
         $promobanners = PromoBanner::where("status", $this->filterActive);
         if ($this->search !== null) {
-            $promobanners->where("name", "ILIKE", "%" . $this->search . "%");
+            $promobanners->where("name", "LIKE", "%" . $this->search . "%");
         }
         return view("store::livewire.promobanners.table", [
             "promobanners" => $promobanners

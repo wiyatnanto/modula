@@ -35,7 +35,7 @@ class Table extends Component
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $pages = Page::where("title", "ILIKE", "%" . $this->search . "%")
+            $pages = Page::where("title", "LIKE", "%" . $this->search . "%")
                 ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
                 ->fastPaginate(10);
             foreach ($pages as $item) {
@@ -112,7 +112,7 @@ class Table extends Component
     public function render()
     {
         return view("blog::livewire.pages.table", [
-            "pages" => Page::where("title", "ILIKE", "%" . $this->search . "%")
+            "pages" => Page::where("title", "LIKE", "%" . $this->search . "%")
                 ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
                 ->fastPaginate(10),
         ])->extends("theme::backend.layouts.master");

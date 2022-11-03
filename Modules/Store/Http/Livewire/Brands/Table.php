@@ -127,7 +127,7 @@ class Table extends Component
     {
         $brands = Brand::withCount("products");
         if ($this->search !== null) {
-            $brands->where("name", "ILIKE", "%" . $this->search . "%");
+            $brands->where("name", "LIKE", "%" . $this->search . "%");
         }
         return view("store::livewire.brands.table", [
             "brands" => $brands

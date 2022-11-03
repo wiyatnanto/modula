@@ -66,7 +66,7 @@ class Table extends Component
     public function render()
     {
         return view('blog::livewire.tags.table',[
-            'tags' => Tag::where('name','ILIKE','%'.$this->search.'%')
+            'tags' => Tag::where('name','LIKE','%'.$this->search.'%')
             ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
             ->fastPaginate(10)
         ])->extends('theme::backend.layouts.master');

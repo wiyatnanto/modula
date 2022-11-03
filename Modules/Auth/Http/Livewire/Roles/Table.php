@@ -49,7 +49,7 @@ class Table extends Component
         if ($value) {
             $this->selected = Role::where(
                 "name",
-                "ILIKE",
+                "LIKE",
                 "%" . $this->search . "%"
             )
                 ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
@@ -122,7 +122,7 @@ class Table extends Component
     public function render()
     {
         return view("auth::livewire.roles.table", [
-            "roles" => Role::where("name", "ILIKE", "%" . $this->search . "%")
+            "roles" => Role::where("name", "LIKE", "%" . $this->search . "%")
                 ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
                 ->paginate(10),
         ])->extends("theme::backend.layouts.master");

@@ -61,7 +61,7 @@ class Table extends Component
             ]);
             
             if ($this->search !== null) {
-                $products->where('name', 'ILIKE', '%' . $this->search . '%');
+                $products->where('name', 'LIKE', '%' . $this->search . '%');
             }
             if(count($this->categoriesFilter) > 0){
                 $products->whereHas('categories', function ($query){
@@ -192,7 +192,7 @@ class Table extends Component
         ]);
         
         if ($this->search !== null) {
-            $products->where('name', 'ILIKE', '%' . $this->search . '%');
+            $products->where('name', 'LIKE', '%' . $this->search . '%');
         }
         if(count($this->categoriesFilter) > 0){
             $products->whereHas('categories', function ($query){

@@ -155,7 +155,7 @@ class Table extends Component
 
         if ($this->search !== null) {
             // $branches->where('name', 'like', '%' . $this->search . '%');
-            $branches->where("name", "ILIKE", "%" . $this->search . "%");
+            $branches->where("name", "LIKE", "%" . $this->search . "%");
         }
         return view("store::livewire.branches.table", [
             "branches" => $branches

@@ -35,7 +35,7 @@ class Table extends Component
         if ($value) {
             $categories = Category::where(
                 "name",
-                "ILIKE",
+                "LIKE",
                 "%" . $this->search . "%"
             )
                 ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")
@@ -108,7 +108,7 @@ class Table extends Component
         return view("blog::livewire.categories.table", [
             "categories" => Category::where(
                 "name",
-                "ILIKE",
+                "LIKE",
                 "%" . $this->search . "%"
             )
                 ->orderBy($this->sortField, $this->sortAsc ? "asc" : "desc")

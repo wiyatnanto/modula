@@ -23,5 +23,5 @@ Route::middleware('auth:api')->get('/blog', function (Request $request) {
 
 Route::prefix('blog')->middleware('auth:api')->group( function () {
     Route::resource('posts', PostController::class);
-    Route::resource('categories', CategoryController::class);
+    // Route::resource('categories', CategoryController::class);
 });

@@ -22,6 +22,7 @@ class BlogServiceProvider extends ServiceProvider
      *
      * @return void
      */
+    protected $defer = true;
     public function boot()
     {
         $this->registerTranslations();
